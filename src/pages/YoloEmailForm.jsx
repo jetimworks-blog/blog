@@ -71,6 +71,7 @@ export const YoloEmailForm = () => {
   const [fromName, setFromName] = useState('');
   const [formData, setFormData] = useState({
     to: '',
+    recipientName: '',
     subject: '',
     prompt: '',
   });
@@ -85,6 +86,7 @@ export const YoloEmailForm = () => {
     if (historyData) {
       setFormData({
         to: historyData.to || '',
+        recipientName: historyData.recipientName || '',
         subject: historyData.subject || '',
         prompt: historyData.prompt || '',
       });
@@ -158,9 +160,13 @@ export const YoloEmailForm = () => {
     setIsLoading(true);
 
     try {
-      // Append sender name instruction to prompt
+      // Build enhanced prompt with recipient name and subject
       const senderName = getSenderName(user, fromName);
-      const enhancedPrompt = `${formData.prompt}\n\nSign the email that it is from ${senderName}.`;
+      const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.to);
+      let enhancedPrompt = formData.prompt;
+      enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
+      enhancedPrompt += `\n\nThe expected subject for this email is '${formData.subject}'. Use it in context for the email.`;
+      enhancedPrompt += `\n\nSign the email that it is from ${senderName}.`;
       
       // Step 1: Generate HTML preview using process 'gen'
       const previewPayload = {
@@ -198,9 +204,13 @@ export const YoloEmailForm = () => {
     setIsLoading(true);
 
     try {
-      // Append sender name instruction to prompt
+      // Build enhanced prompt with recipient name and subject
       const senderName = getSenderName(user, fromName);
-      const enhancedPrompt = `${formData.prompt}\n\nSign the email that it is from ${senderName}.`;
+      const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.to);
+      let enhancedPrompt = formData.prompt;
+      enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
+      enhancedPrompt += `\n\nThe expected subject for this email is '${formData.subject}'. Use it in context for the email.`;
+      enhancedPrompt += `\n\nSign the email that it is from ${senderName}.`;
       
       const previewPayload = {
         process: 'gen',
@@ -369,7 +379,7 @@ export const YoloEmailForm = () => {
                 Enter the recipient's email address. We'll make sure they receive something worth opening.
               </p>
 
-              <div className="mb-4 sm:mb-6">
+              <div className="mb-4 sm:mb-6 space-y-4">
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                   <Input
@@ -385,6 +395,13 @@ export const YoloEmailForm = () => {
                     autoFocus
                   />
                 </div>
+                <Input
+                  name="recipientName"
+                  label="Recipient Name (optional)"
+                  placeholder="Jane Smith"
+                  value={formData.recipientName}
+                  onChange={handleChange}
+                />
               </div>
             </motion.div>
           )}

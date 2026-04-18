@@ -155,6 +155,7 @@ export const DetailedEmailForm = () => {
   const [formData, setFormData] = useState({
     // Step 1: Basics
     to: '',
+    recipientName: '',
     subject: '',
     prompt: '',
     // Step 2: Tone & Style
@@ -189,6 +190,7 @@ export const DetailedEmailForm = () => {
       setFormData(prev => ({
         ...prev,
         to: historyData.to || prev.to,
+        recipientName: historyData.recipientName || prev.recipientName,
         subject: historyData.subject || prev.subject,
         prompt: historyData.prompt || prev.prompt,
       }));
@@ -249,7 +251,12 @@ export const DetailedEmailForm = () => {
 
   const buildEnhancedPrompt = () => {
     let enhancedPrompt = formData.prompt;
-    
+
+    // Include recipient name and subject
+    const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.to);
+    enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
+    enhancedPrompt += `\n\nThe expected subject for this email is '${formData.subject}'. Use it in context for the email.`;
+
     // Include tone - either from preset or custom description
     if (useCustomTone && customTone.trim()) {
       // Only use custom description, skip all preset styles
@@ -267,7 +274,7 @@ export const DetailedEmailForm = () => {
       enhancedPrompt += `\nContent spacing: ${formData.spacing}`;
       enhancedPrompt += `\nHeader style: ${formData.headerStyle}`;
     }
-    
+
     // Always include word count
     enhancedPrompt += `\nWord count: ${formData.wordCountMin}-${formData.wordCountMax} words`;
     if (formData.keyMessage) {
@@ -439,7 +446,14 @@ export const DetailedEmailForm = () => {
                 onChange={(e) => updateFormData('to', e.target.value)}
                 error={errors.to}
               />
-              
+
+              <Input
+                label="Recipient Name (optional)"
+                placeholder="Jane Smith"
+                value={formData.recipientName}
+                onChange={(e) => updateFormData('recipientName', e.target.value)}
+              />
+
               <Input
                 label="Subject Line"
                 placeholder="Quick question about..."
@@ -447,7 +461,7 @@ export const DetailedEmailForm = () => {
                 onChange={(e) => updateFormData('subject', e.target.value)}
                 error={errors.subject}
               />
-              
+
               <Textarea
                 label="What do you want to say?"
                 placeholder="I need to reach out to the marketing team about the upcoming product launch. They need to review the deck and give their feedback by Friday..."
