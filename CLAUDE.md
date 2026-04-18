@@ -56,6 +56,13 @@ Flow:
 3. User confirms → `emailAPI.confirm({ process: 'email', to, subject, html, prompt })` → sends email
 4. `pendingPrompt` cleared after successful send
 
+### Prompt Enhancement
+
+Both forms inject contextual information into the prompt before generation:
+- **Recipient name**: Optional field; if not provided, extracted from email address (e.g., `john.doe@example.com` → `John Doe`). Injected as: `The Recipient name is X.`
+- **Subject**: Injected as: `The expected subject for this email is 'XXX'. Use it in context for the email.`
+- **Sender name**: Appended at the end as: `Sign the email that it is from {senderName}.`
+
 ### Routing (`src/App.jsx`)
 
 Public routes: `/login`, `/register`, `/features` (LandingPage)
