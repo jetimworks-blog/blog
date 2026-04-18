@@ -10,30 +10,28 @@ import { configAPI } from '../lib/api';
 
 export const HomePage = () => {
   const { user } = useAuth();
-  const [showApiKeyBanner, setShowApiKeyBanner] = useState(true);
+  const [showApiKeyBanner, setShowApiKeyBanner] = useState(false);
+  const [apiKeyLoaded, setApiKeyLoaded] = useState(false);
 
   useEffect(() => {
     loadConfig();
-    checkJustSignedUp();
   }, []);
-
-  const checkJustSignedUp = () => {
-    const justSignedUp = localStorage.getItem('justSignedUp') === 'true';
-    const settingsUpdated = localStorage.getItem('settingsUpdated') === 'true';
-    if (justSignedUp && !settingsUpdated) {
-      setShowApiKeyBanner(true);
-      localStorage.removeItem('justSignedUp');
-    }
-  };
 
   const loadConfig = async () => {
     try {
       const response = await configAPI.get();
-      if (response.data.has_resend_key) {
-        setShowApiKeyBanner(false);
-      }
+      // Show banner if from_name is default "Anonymous" or not set
+      const fromName = response.data.from_name || 'Anonymous';
+      setShowApiKeyBanner(fromName === 'Anonymous');
+      setApiKeyLoaded(true);
     } catch (error) {
-      console.error('Failed to load config:', error);
+      // If config doesn't exist yet (404), show banner for new users
+      if (error.response?.status === 404) {
+        setShowApiKeyBanner(true);
+      } else {
+        console.error('Failed to load config:', error);
+      }
+      setApiKeyLoaded(true);
     }
   };
 
@@ -78,7 +76,7 @@ export const HomePage = () => {
         </motion.div>
 
         {/* Sender Details Warning Banner */}
-        {showApiKeyBanner && (
+        {apiKeyLoaded && showApiKeyBanner && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}

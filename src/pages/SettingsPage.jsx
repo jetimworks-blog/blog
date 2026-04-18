@@ -365,7 +365,7 @@ export const SettingsPage = () => {
               <div className="flex items-start gap-2">
                 <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
                 <p className="text-xs text-amber-700">
-                  <strong>Important:</strong> Only change the Sender Name if you do not have a valid Resend API Key. With a valid API key, you can send from your own domain.
+                  <strong>Important:</strong> You can only change the Sender Email if your Resend API Key is registered with that email domain.
                 </p>
               </div>
             </div>

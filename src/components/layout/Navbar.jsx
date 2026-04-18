@@ -131,16 +131,22 @@ export const Navbar = () => {
             })}
 
             {isAuthenticated && (
-              <button
-                onClick={() => {
-                  logout();
-                  setMobileMenuOpen(false);
-                }}
-                className="flex items-center gap-3 w-full px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-all"
-              >
-                <LogOut size={20} />
-                <span>Logout</span>
-              </button>
+              <>
+                <div className="flex items-center gap-2 px-4 py-3 text-zinc-600 max-w-full overflow-hidden">
+                  <User size={20} className="flex-shrink-0" />
+                  <span className="text-sm truncate">{user?.email}</span>
+                </div>
+                <button
+                  onClick={() => {
+                    logout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-3 w-full px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                >
+                  <LogOut size={20} />
+                  <span>Logout</span>
+                </button>
+              </>
             )}
           </div>
         </motion.div>
