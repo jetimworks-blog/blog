@@ -121,14 +121,14 @@ export const RegisterPage = () => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: 'spring' }}
-              className="w-16 h-16 bg-brand-blue rounded-2xl flex items-center justify-center mx-auto mb-4"
+              className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
             >
               <Sparkles className="w-8 h-8 text-white" />
             </motion.div>
-            <h1 className="text-3xl font-serif font-bold text-navy-900 mb-2">
+            <h1 className="text-3xl text-zinc-900 mb-2">
               Create Your Account
             </h1>
-            <p className="text-navy-600">
+            <p className="text-zinc-600">
               Join the email crafting revolution
             </p>
           </div>
@@ -138,7 +138,7 @@ export const RegisterPage = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-4">
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-navy-400" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                   <Input
                     name="email"
                     type="email"
@@ -152,7 +152,7 @@ export const RegisterPage = () => {
                 </div>
 
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-navy-400" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                   <Input
                     name="password"
                     type="password"
@@ -181,7 +181,7 @@ export const RegisterPage = () => {
                             className={`h-1 flex-1 rounded-full transition-colors ${
                               i <= passwordStrength.strength
                                 ? strengthColors[passwordStrength.color]
-                                : 'bg-navy-100'
+                                : 'bg-zinc-100'
                             }`}
                           />
                         ))}
@@ -200,7 +200,7 @@ export const RegisterPage = () => {
                 </AnimatePresence>
 
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-navy-400" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                   <Input
                     name="confirmPassword"
                     type="password"
@@ -226,14 +226,14 @@ export const RegisterPage = () => {
             </form>
 
             {/* Password Requirements */}
-            <div className="mt-4 p-4 bg-navy-50 rounded-lg">
-              <p className="text-xs font-medium text-navy-500 mb-2">Password requirements:</p>
+            <div className="mt-4 p-4 bg-zinc-50 rounded-lg">
+              <p className="text-xs font-medium text-zinc-500 mb-2">Password requirements:</p>
               <ul className="space-y-1">
                 {passwordRequirements.map((req) => (
                   <li 
                     key={req.key} 
                     className={`text-xs flex items-center gap-2 ${
-                      passwordStrength.checks?.[req.key] ? 'text-green-600' : 'text-navy-400'
+                      passwordStrength.checks?.[req.key] ? 'text-green-600' : 'text-zinc-400'
                     }`}
                   >
                     {passwordStrength.checks?.[req.key] ? (
@@ -250,19 +250,19 @@ export const RegisterPage = () => {
             {/* Divider */}
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-navy-200" />
+                <div className="w-full border-t border-zinc-200" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-navy-400">or</span>
+                <span className="px-4 bg-white text-zinc-400">or</span>
               </div>
             </div>
 
             {/* Login Link */}
-            <p className="text-center text-navy-600 text-sm">
+            <p className="text-center text-zinc-600 text-sm">
               Already have an account?{' '}
               <Link
                 to="/login"
-                className="font-medium text-brand-blue hover:text-navy-700 transition-colors"
+                className="font-medium text-primary-600 hover:text-zinc-700 transition-colors"
               >
                 Sign in
               </Link>
@@ -273,7 +273,7 @@ export const RegisterPage = () => {
           <div className="text-center mt-6">
             <Link
               to="/features"
-              className="text-sm text-navy-400 hover:text-navy-600 transition-colors"
+              className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors"
             >
               ← Back to home
             </Link>

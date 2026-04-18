@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { Layout } from '../components/layout/Layout';
 import { Button } from '../components/ui/Button';
@@ -37,6 +37,31 @@ const getSenderName = (user, fromName) => {
 
 const steps = ['Recipient', 'Details', 'Preview', 'Send'];
 
+const getEmailsSentCount = () => {
+  const count = localStorage.getItem('emailsSentCount');
+  return count ? parseInt(count, 10) : 0;
+};
+
+const incrementEmailsSentCount = () => {
+  const newCount = getEmailsSentCount() + 1;
+  localStorage.setItem('emailsSentCount', newCount.toString());
+  return newCount;
+};
+
+// Simple confetti effect using CSS animations
+const ConfettiPiece = ({ delay, x }) => (
+  <motion.div
+    initial={{ y: -20, x, opacity: 1, rotate: 0 }}
+    animate={{ y: '100vh', opacity: 0, rotate: 720 }}
+    transition={{ duration: 2, delay, ease: 'easeOut' }}
+    className="absolute w-3 h-3 rounded-full"
+    style={{
+      backgroundColor: ['#4F46E5', '#8B5CF6', '#06B6D4', '#F59E0B', '#10B981'][Math.floor(Math.random() * 5)],
+      left: `${x}%`,
+    }}
+  />
+);
+
 export const YoloEmailForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -51,6 +76,8 @@ export const YoloEmailForm = () => {
   });
   const [generatedHtml, setGeneratedHtml] = useState('');
   const [errors, setErrors] = useState({});
+  const [emailsSentCount, setEmailsSentCount] = useState(getEmailsSentCount);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Preload form data from history if available
   useEffect(() => {
@@ -211,7 +238,7 @@ export const YoloEmailForm = () => {
     try {
       // Get the prompt from sessionStorage
       const savedPrompt = sessionStorage.getItem('pendingPrompt') || '';
-      
+
       // Step 3: Confirm and send email with pre-generated HTML
       const confirmPayload = {
         process: 'email',
@@ -222,15 +249,21 @@ export const YoloEmailForm = () => {
       };
 
       const sendResponse = await emailAPI.confirm(confirmPayload);
-      
+
       if (sendResponse.data.success) {
         // Clear the prompt from sessionStorage after successful send
         sessionStorage.removeItem('pendingPrompt');
+        // Update emails sent counter
+        const newCount = incrementEmailsSentCount();
+        setEmailsSentCount(newCount);
+        // Trigger confetti
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 2500);
         toast.success('Email sent! 🎉', {
           description: `Your email has been delivered to ${formData.to}.`,
         });
-        navigate('/result', { 
-          state: { 
+        navigate('/result', {
+          state: {
             email: generatedHtml,
             subject: formData.subject,
             to: formData.to,
@@ -271,11 +304,26 @@ export const YoloEmailForm = () => {
 
   return (
     <Layout>
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Confetti Overlay */}
+      <AnimatePresence>
+        {showConfetti && (
+          <div className="fixed inset-0 z-50 pointer-events-none overflow-hidden">
+            {[...Array(30)].map((_, i) => (
+              <ConfettiPiece
+                key={i}
+                delay={i * 0.05}
+                x={Math.random() * 100}
+              />
+            ))}
+          </div>
+        )}
+      </AnimatePresence>
+
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Back Button */}
         <Link
           to="/home"
-          className="inline-flex items-center gap-2 text-navy-600 hover:text-navy-800 transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-zinc-600 hover:text-zinc-800 transition-colors mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Home
@@ -285,28 +333,28 @@ export const YoloEmailForm = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
-              <Zap className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
+              <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-serif font-bold text-navy-900">
+              <h1 className="text-xl sm:text-2xl md:text-3xl text-zinc-900">
                 YOLO Quick Send
               </h1>
-              <p className="text-navy-500">Just tell us what you need</p>
+              <p className="text-zinc-500 text-sm sm:text-base">Just tell us what you need</p>
             </div>
           </div>
         </motion.div>
 
         {/* Progress Steps */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <ProgressSteps steps={steps} currentStep={currentStep} />
         </div>
 
         {/* Form Card */}
-        <Card variant="bordered">
+        <Card variant="bordered" className="p-4 sm:p-6">
           {/* Step 0: Recipient */}
           {currentStep === 0 && (
             <motion.div
@@ -314,24 +362,26 @@ export const YoloEmailForm = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
             >
-              <h2 className="text-xl font-serif font-bold text-navy-800 mb-4">
+              <h2 className="text-lg sm:text-xl text-zinc-800 mb-3 sm:mb-4">
                 Who's getting this email? 📧
               </h2>
-              <p className="text-navy-600 mb-6">
+              <p className="text-zinc-600 mb-4 sm:mb-6 text-sm sm:text-base">
                 Enter the recipient's email address. We'll make sure they receive something worth opening.
               </p>
-              
-              <div className="mb-6">
+
+              <div className="mb-4 sm:mb-6">
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-navy-400" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                   <Input
                     name="to"
                     type="email"
+                    inputMode="email"
+                    autoComplete="email"
                     placeholder="friend@amazing.com"
                     value={formData.to}
                     onChange={handleChange}
                     error={errors.to}
-                    className="pl-12"
+                    className="pl-12 min-h-12 sm:min-h-0"
                     autoFocus
                   />
                 </div>
@@ -346,13 +396,13 @@ export const YoloEmailForm = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
             >
-              <h2 className="text-xl font-serif font-bold text-navy-800 mb-4">
+              <h2 className="text-lg sm:text-xl text-zinc-800 mb-3 sm:mb-4">
                 What's this about? 📝
               </h2>
-              <p className="text-navy-600 mb-6">
+              <p className="text-zinc-600 mb-4 sm:mb-6 text-sm sm:text-base">
                 Give us the subject line and a rough idea of what you want to say. Don't worry about perfect words — that's our job!
               </p>
-              
+
               <div className="space-y-4">
                 <Input
                   name="subject"
@@ -362,7 +412,7 @@ export const YoloEmailForm = () => {
                   onChange={handleChange}
                   error={errors.subject}
                 />
-                
+
                 <Textarea
                   name="prompt"
                   label="Your Email Idea"
@@ -384,73 +434,79 @@ export const YoloEmailForm = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
             >
-              <h2 className="text-xl font-serif font-bold text-navy-800 mb-4">
+              <h2 className="text-lg sm:text-xl text-zinc-800 mb-3 sm:mb-4">
                 Review Your Email Preview 👀
               </h2>
-              <p className="text-navy-600 mb-6">
+              <p className="text-zinc-600 mb-4 sm:mb-6 text-sm sm:text-base">
                 Here's what your email looks like. If it needs changes, regenerate or go back to edit.
               </p>
-              
+
               {/* Preview Section */}
-              <div className="border border-navy-200 rounded-xl overflow-hidden mb-6">
-                <div className="bg-navy-50 px-4 py-2 border-b border-navy-200 flex items-center justify-between">
-                  <span className="text-sm font-medium text-navy-600">Email Preview</span>
+              <div className="border border-zinc-200 rounded-xl overflow-hidden mb-4 sm:mb-6">
+                <div className="bg-zinc-50 px-4 py-2 border-b border-zinc-200 flex items-center justify-between">
+                  <span className="text-sm font-medium text-zinc-600">Email Preview</span>
                   <button
                     onClick={handleRegeneratePreview}
-                    className="flex items-center gap-1 text-sm text-brand-blue hover:text-brand-blue/80 transition-colors"
+                    className="flex items-center gap-1 text-sm text-primary-600 hover:text-primary-600/80 transition-colors min-h-10 px-2"
                   >
                     <RefreshCw className="w-4 h-4" />
                     Regenerate
                   </button>
                 </div>
-                <div 
-                  className="p-6 bg-white max-h-96 overflow-auto [&_table]:w-full [&_*]:max-w-full"
-                  dangerouslySetInnerHTML={{ __html: generatedHtml || '<p class="text-navy-400">No preview generated</p>' }}
+                <div
+                  className="p-4 sm:p-6 bg-white max-h-64 sm:max-h-96 overflow-auto [&_table]:w-full [&_*]:max-w-full"
+                  dangerouslySetInnerHTML={{ __html: generatedHtml || '<p class="text-zinc-400">No preview generated</p>' }}
                 />
               </div>
-              
+
               {/* Summary */}
-              <div className="space-y-2 p-4 bg-navy-50 rounded-xl">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-navy-500">To:</span>
-                  <span className="font-medium text-navy-800">{formData.to}</span>
+              <div className="space-y-2 p-3 sm:p-4 bg-zinc-50 rounded-xl text-sm sm:text-base">
+                <div className="flex items-center justify-between">
+                  <span className="text-zinc-500">To:</span>
+                  <span className="font-medium text-zinc-800 truncate ml-2">{formData.to}</span>
                 </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-navy-500">Subject:</span>
-                  <span className="font-medium text-navy-800">{formData.subject}</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-zinc-500">Subject:</span>
+                  <span className="font-medium text-zinc-800 truncate ml-2">{formData.subject}</span>
                 </div>
               </div>
             </motion.div>
           )}
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between items-center mt-8 pt-6 border-t border-navy-100">
+          <div className={`flex flex-col sm:flex-row justify-between items-center gap-3 mt-6 sm:mt-8 pt-6 border-t border-zinc-100 ${currentStep === 2 ? 'sm:flex-col-reverse sm:gap-4' : ''}`}>
             <Button
               variant="ghost"
               onClick={handleBack}
               disabled={currentStep === 0}
+              className="w-full sm:w-auto min-h-11"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
 
             {currentStep === 0 && (
-              <Button onClick={handleNext}>
+              <Button onClick={handleNext} className="w-full sm:w-auto min-h-11">
                 Next
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             )}
 
             {currentStep === 1 && (
-              <Button onClick={handleGeneratePreview}>
+              <Button onClick={handleGeneratePreview} className="w-full sm:w-auto min-h-11">
                 <Eye className="w-4 h-4 mr-2" />
                 Generate Preview
               </Button>
             )}
 
             {currentStep === 2 && (
-              <Button onClick={handleSendEmail} className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600">
-                <Send className="w-4 h-4 mr-2" />
+              <Button
+                variant="glow"
+                size="lg"
+                onClick={handleSendEmail}
+                className="w-full sm:w-auto min-h-12"
+              >
+                <Send className="w-5 h-5 mr-2" />
                 Send Email
               </Button>
             )}

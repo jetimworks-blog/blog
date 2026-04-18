@@ -55,7 +55,7 @@ export const LoginPage = () => {
     
     try {
       const result = await login(formData.email, formData.password);
-      
+
       if (result.success) {
         toast.success('Welcome back! 👋', {
           description: 'Ready to craft some emails?',
@@ -90,14 +90,14 @@ export const LoginPage = () => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: 'spring' }}
-              className="w-16 h-16 bg-brand-blue rounded-2xl flex items-center justify-center mx-auto mb-4"
+              className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
             >
               <Sparkles className="w-8 h-8 text-white" />
             </motion.div>
-            <h1 className="text-3xl font-serif font-bold text-navy-900 mb-2">
+            <h1 className="text-3xl text-zinc-900 mb-2">
               Welcome Back
             </h1>
-            <p className="text-navy-600">
+            <p className="text-zinc-600">
               Sign in to continue crafting
             </p>
           </div>
@@ -107,7 +107,7 @@ export const LoginPage = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-4">
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-navy-400" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                   <Input
                     name="email"
                     type="email"
@@ -121,7 +121,7 @@ export const LoginPage = () => {
                 </div>
 
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-navy-400" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                   <Input
                     name="password"
                     type="password"
@@ -149,19 +149,19 @@ export const LoginPage = () => {
             {/* Divider */}
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-navy-200" />
+                <div className="w-full border-t border-zinc-200" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-navy-400">or</span>
+                <span className="px-4 bg-white text-zinc-400">or</span>
               </div>
             </div>
 
             {/* Register Link */}
-            <p className="text-center text-navy-600 text-sm">
+            <p className="text-center text-zinc-600 text-sm">
               Don't have an account?{' '}
               <Link
                 to="/register"
-                className="font-medium text-brand-blue hover:text-navy-700 transition-colors"
+                className="font-medium text-primary-600 hover:text-zinc-700 transition-colors"
               >
                 Create one
               </Link>
@@ -172,7 +172,7 @@ export const LoginPage = () => {
           <div className="text-center mt-6">
             <Link
               to="/features"
-              className="text-sm text-navy-400 hover:text-navy-600 transition-colors"
+              className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors"
             >
               ← Back to home
             </Link>

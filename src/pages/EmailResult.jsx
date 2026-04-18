@@ -26,10 +26,10 @@ export const EmailResult = () => {
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <AlertCircle className="w-8 h-8 text-red-600" />
               </div>
-              <h2 className="text-xl font-serif font-bold text-navy-900 mb-2">
+              <h2 className="text-xl text-zinc-900 mb-2">
                 Something went wrong
               </h2>
-              <p className="text-navy-600 mb-6">
+              <p className="text-zinc-600 mb-6">
                 {error || "We couldn't craft your email. Please try again."}
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -91,10 +91,10 @@ export const EmailResult = () => {
             <Check className="w-10 h-10 text-white" />
           </motion.div>
           
-          <h1 className="text-3xl md:text-4xl font-serif font-bold text-navy-900 mb-2">
+          <h1 className="text-3xl md:text-4xl text-zinc-900 mb-2">
             {mode === 'detailed' ? 'Your Masterpiece is Ready! ✨' : 'Email Crafted! 🎉'}
           </h1>
-          <p className="text-lg text-navy-600">
+          <p className="text-lg text-zinc-600">
             {mode === 'detailed' 
               ? 'Every detail has been perfected. Review your creation below.' 
               : 'Quick and painless. Your email is ready to send.'
@@ -110,12 +110,12 @@ export const EmailResult = () => {
         >
           <Card variant="elevated" className="overflow-hidden">
             {/* Email Header Info */}
-            <div className="bg-navy-50 border-b border-navy-100 p-4">
+            <div className="bg-zinc-50 border-b border-zinc-100 p-4">
               <div className="flex items-center gap-3 mb-3">
-                <Mail className="w-5 h-5 text-navy-400" />
-                <span className="text-sm font-medium text-navy-700">Email Preview</span>
+                <Mail className="w-5 h-5 text-zinc-400" />
+                <span className="text-sm font-medium text-zinc-700">Email Preview</span>
                 {mode === 'detailed' && (
-                  <span className="px-2 py-0.5 bg-brand-blue/10 text-brand-blue text-xs rounded-full flex items-center gap-1">
+                  <span className="px-2 py-0.5 bg-primary-600/10 text-primary-600 text-xs rounded-full flex items-center gap-1">
                     <Sparkles size={12} />
                     Crafted with Care
                   </span>
@@ -124,12 +124,12 @@ export const EmailResult = () => {
               
               <div className="space-y-2 text-sm">
                 <div className="flex items-start gap-3">
-                  <span className="text-navy-500 w-16 flex-shrink-0">To:</span>
-                  <span className="text-navy-800 font-medium">{to}</span>
+                  <span className="text-zinc-500 w-16 flex-shrink-0">To:</span>
+                  <span className="text-zinc-800 font-medium">{to}</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="text-navy-500 w-16 flex-shrink-0">Subject:</span>
-                  <span className="text-navy-800 font-medium">{subject}</span>
+                  <span className="text-zinc-500 w-16 flex-shrink-0">Subject:</span>
+                  <span className="text-zinc-800 font-medium">{subject}</span>
                 </div>
               </div>
             </div>
@@ -186,8 +186,8 @@ export const EmailResult = () => {
           className="mt-12 text-center"
         >
           <Card className="inline-block">
-            <p className="text-navy-500 text-sm">
-              <span className="font-medium text-navy-700">Tip:</span> You can copy the HTML directly and paste it into your email platform for best results. Most email clients render HTML beautifully! 📧
+            <p className="text-zinc-500 text-sm">
+              <span className="font-medium text-zinc-700">Tip:</span> You can copy the HTML directly and paste it into your email platform for best results. Most email clients render HTML beautifully! 📧
             </p>
           </Card>
         </motion.div>

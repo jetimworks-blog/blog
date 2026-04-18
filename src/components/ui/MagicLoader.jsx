@@ -76,9 +76,9 @@ export const MagicLoader = ({
   // Variant styles
   const variantStyles = useMemo(() => ({
     default: {
-      gradient: 'from-brand-blue to-navy-600',
+      gradient: 'from-primary-600 to-primary-600',
       glow: 'rgba(37, 99, 235, 0.4)',
-      accent: 'text-brand-blue'
+      accent: 'text-primary-600'
     },
     generating: {
       gradient: 'from-purple-500 to-pink-500',
@@ -98,7 +98,7 @@ export const MagicLoader = ({
     <div className="flex flex-col items-center justify-center py-12 px-4 relative">
       {/* Animated Title */}
       <motion.h2 
-        className="text-2xl md:text-3xl font-serif font-bold text-navy-800 mb-2 text-center"
+        className="text-2xl md:text-3xl text-zinc-800 mb-2 text-center"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -107,7 +107,7 @@ export const MagicLoader = ({
       </motion.h2>
       
       <motion.p 
-        className="text-navy-500 mb-10"
+        className="text-zinc-500 mb-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
@@ -183,9 +183,9 @@ export const MagicLoader = ({
           transition={{ duration: 0.3 }}
           className="mb-8"
         >
-          <div className="flex items-center gap-2 px-4 py-2 bg-navy-50 rounded-full border border-navy-100">
+          <div className="flex items-center gap-2 px-4 py-2 bg-zinc-50 rounded-full border border-zinc-100">
             <Wand2 className={`w-4 h-4 ${styles.accent}`} />
-            <span className="text-navy-700 font-medium">
+            <span className="text-zinc-700 font-medium">
               {currentLabel}
             </span>
           </div>
@@ -216,7 +216,7 @@ export const MagicLoader = ({
         {[...Array(6)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 bg-brand-blue/20 rounded-full"
+            className="absolute w-2 h-2 bg-primary-600/20 rounded-full"
             initial={{ 
               x: Math.random() * 100 + '%', 
               y: '100%',

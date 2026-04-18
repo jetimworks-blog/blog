@@ -41,43 +41,47 @@ export const LandingPage = () => {
   return (
     <Layout showFooter={false}>
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-b from-white to-navy-50">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-20 left-10 w-72 h-72 border-2 border-navy-700 rounded-full" />
-          <div className="absolute top-40 right-20 w-96 h-96 border border-brand-blue rounded-full" />
-          <div className="absolute bottom-20 left-1/4 w-64 h-64 border border-navy-400 rounded-full" />
-        </div>
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-zinc-950">
+        {/* Dot grid pattern */}
+        <div className="absolute inset-0 opacity-[0.07]" style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.5) 1px, transparent 0)',
+          backgroundSize: '40px 40px'
+        }} />
+
+        {/* Gradient orbs */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-500/20 rounded-full blur-3xl" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left: Content */}
             <motion.div {...fadeInUp} className="text-center lg:text-left">
               <motion.span
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="inline-block px-4 py-2 bg-brand-blue/10 text-brand-blue rounded-full text-sm font-medium mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500/10 border border-primary-500/20 text-primary-400 rounded-full text-sm font-medium mb-6"
               >
-                ✨ Craft Emails That Get Opened
+                <Sparkles size={16} />
+                AI-Powered Email Writing
               </motion.span>
 
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-navy-900 mb-6 leading-tight"
+                className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
               >
                 Email Writing,{' '}
-                <span className="text-brand-blue">Reimagined</span>
+                <span className="gradient-text">Reimagined</span>
               </motion.h1>
 
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-xl text-navy-600 mb-8 max-w-lg mx-auto lg:mx-0"
+                className="text-xl text-zinc-400 mb-10 max-w-lg mx-auto lg:mx-0"
               >
-                Stop struggling with the perfect words. Our AI-powered email crafter 
+                Stop struggling with the perfect words. Our AI-powered email crafter
                 transforms your ideas into compelling, professional emails in seconds.
               </motion.p>
 
@@ -113,9 +117,9 @@ export const LandingPage = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="mt-6 text-sm text-navy-400"
+                className="mt-6 text-sm text-zinc-500"
               >
-                No credit card required • Free to get started
+                No credit card required — Free to get started
               </motion.p>
             </motion.div>
 
@@ -127,27 +131,27 @@ export const LandingPage = () => {
               className="relative hidden lg:block"
             >
               <div className="relative">
-                {/* Main Card */}
+                {/* Main glass card */}
                 <motion.div
                   animate={{ y: [0, -10, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                  className="bg-white rounded-2xl shadow-2xl p-8 border border-navy-100"
+                  className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl"
                 >
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-brand-blue rounded-lg flex items-center justify-center">
+                    <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-accent-500 rounded-xl flex items-center justify-center">
                       <Sparkles className="w-5 h-5 text-white" />
                     </div>
-                    <span className="font-serif font-bold text-lg text-navy-800">Email Crafter</span>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div className="h-3 bg-navy-100 rounded w-full" />
-                    <div className="h-3 bg-navy-100 rounded w-3/4" />
-                    <div className="h-3 bg-navy-100 rounded w-5/6" />
+                    <span className="font-semibold text-lg text-zinc-900">Email Crafter</span>
                   </div>
 
-                  <div className="mt-6 p-4 bg-navy-50 rounded-xl">
-                    <p className="text-sm text-navy-600 italic">
+                  <div className="space-y-4">
+                    <div className="h-3 bg-zinc-200 rounded w-full" />
+                    <div className="h-3 bg-zinc-200 rounded w-3/4" />
+                    <div className="h-3 bg-zinc-200 rounded w-5/6" />
+                  </div>
+
+                  <div className="mt-6 p-4 bg-zinc-100 rounded-xl">
+                    <p className="text-sm text-zinc-600 italic">
                       "Your email has been crafted with care. Ready to impress?"
                     </p>
                   </div>
@@ -157,21 +161,21 @@ export const LandingPage = () => {
                 <motion.div
                   animate={{ y: [0, 10, 0] }}
                   transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-                  className="absolute -top-6 -right-6 bg-white rounded-xl shadow-lg p-4"
+                  className="absolute -top-6 -right-6 bg-white/80 backdrop-blur-xl border border-white/20 rounded-xl shadow-lg p-4"
                 >
-                  <Zap className="w-8 h-8 text-yellow-500" />
+                  <Zap className="w-8 h-8 text-amber-500" />
                 </motion.div>
 
                 <motion.div
                   animate={{ y: [0, -8, 0] }}
                   transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                  className="absolute -bottom-4 -left-8 bg-white rounded-xl shadow-lg p-4"
+                  className="absolute -bottom-4 -left-8 bg-white/80 backdrop-blur-xl border border-white/20 rounded-xl shadow-lg p-4"
                 >
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
                       <span className="text-white text-xs">✓</span>
                     </div>
-                    <span className="text-sm font-medium text-navy-700">Done!</span>
+                    <span className="text-sm font-medium text-zinc-700">Done!</span>
                   </div>
                 </motion.div>
               </div>
@@ -181,7 +185,7 @@ export const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section className="py-24 bg-zinc-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -189,15 +193,15 @@ export const LandingPage = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-navy-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-zinc-900 mb-4">
               Why Choose Email Crafter?
             </h2>
-            <p className="text-lg text-navy-600 max-w-2xl mx-auto">
+            <p className="text-lg text-zinc-600 max-w-2xl mx-auto">
               We've built the email writing tool we've always wanted. Simple, powerful, delightful.
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
@@ -208,14 +212,14 @@ export const LandingPage = () => {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className="h-full text-center hover:shadow-xl transition-shadow">
-                    <div className="w-14 h-14 bg-brand-blue/10 rounded-xl flex items-center justify-center mx-auto mb-4">
-                      <Icon className="w-7 h-7 text-brand-blue" />
+                  <Card hoverable className="h-full text-center">
+                    <div className="w-14 h-14 bg-gradient-to-br from-primary-500/10 to-accent-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <Icon className="w-7 h-7 text-primary-600" />
                     </div>
-                    <h3 className="font-serif font-bold text-lg text-navy-800 mb-2">
+                    <h3 className="font-semibold text-lg text-zinc-900 mb-2">
                       {feature.title}
                     </h3>
-                    <p className="text-navy-600 text-sm">
+                    <p className="text-zinc-600 text-sm">
                       {feature.description}
                     </p>
                   </Card>
@@ -227,22 +231,25 @@ export const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-navy-800">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-24 bg-zinc-950 relative overflow-hidden">
+        {/* Gradient background effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-600/10 via-transparent to-accent-500/10" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary-500/20 rounded-full blur-3xl" />
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Ready to Transform Your Email Game?
             </h2>
+            <p className="text-xl text-zinc-400 mb-10">
+              Join thousands of professionals who write better emails in seconds.
+            </p>
             <Link to="/register">
-              <Button 
-                variant="secondary" 
-                size="lg"
-                className="bg-white hover:bg-navy-50 text-navy-800 border-white"
-              >
+              <Button size="lg">
                 Get Started — It's Free
               </Button>
             </Link>
@@ -251,9 +258,9 @@ export const LandingPage = () => {
       </section>
 
       {/* Footer */}
-      <section className="py-8 bg-navy-900">
+      <section className="py-8 bg-zinc-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-navy-400 text-sm">
+          <p className="text-center text-zinc-500 text-sm">
             © {new Date().getFullYear()} Email Crafter. Crafted with care for email lovers everywhere.
           </p>
         </div>

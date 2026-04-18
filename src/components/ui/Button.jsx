@@ -6,13 +6,14 @@ const variants = {
   primary: 'btn-primary',
   secondary: 'btn-secondary',
   ghost: 'btn-ghost',
-  danger: 'bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg active:scale-95 disabled:opacity-50',
+  danger: 'btn-danger',
+  glow: 'btn-glow',
 };
 
 const sizes = {
-  sm: 'py-2 px-4 text-sm',
-  md: 'py-3 px-6',
-  lg: 'py-4 px-8 text-lg',
+  sm: 'py-2 px-4 text-sm min-h-10 sm:min-h-0',
+  md: 'py-3 px-6 min-h-11 sm:min-h-0',
+  lg: 'py-4 px-8 text-lg min-h-12 sm:min-h-0',
 };
 
 export const Button = ({

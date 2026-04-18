@@ -213,7 +213,7 @@ export const SettingsPage = () => {
         <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
           <div className="flex flex-col items-center gap-4">
             <LoadingSpinner size={32} />
-            <p className="text-navy-500">Loading settings...</p>
+            <p className="text-zinc-500">Loading settings...</p>
           </div>
         </div>
       </Layout>
@@ -230,14 +230,14 @@ export const SettingsPage = () => {
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-navy-600 to-navy-800 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-800 rounded-xl flex items-center justify-center">
               <Settings className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-serif font-bold text-navy-900">
+              <h1 className="text-2xl md:text-3xl text-zinc-900">
                 Settings
               </h1>
-              <p className="text-navy-500">Configure your email sending setup</p>
+              <p className="text-zinc-500">Configure your email sending setup</p>
             </div>
           </div>
         </motion.div>
@@ -250,14 +250,14 @@ export const SettingsPage = () => {
         >
           <Card variant="bordered">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-brand-blue/10 rounded-lg flex items-center justify-center">
-                <Key className="w-5 h-5 text-brand-blue" />
+              <div className="w-10 h-10 bg-primary-600/10 rounded-lg flex items-center justify-center">
+                <Key className="w-5 h-5 text-primary-600" />
               </div>
               <div>
-                <h2 className="text-lg font-serif font-bold text-navy-800">
+                <h2 className="text-lg text-zinc-800">
                   Resend API Key
                 </h2>
-                <p className="text-sm text-navy-500">
+                <p className="text-sm text-zinc-500">
                   Required for sending emails through Resend
                 </p>
               </div>
@@ -301,7 +301,7 @@ export const SettingsPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowKey(!showKey)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-navy-400 hover:text-navy-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
                 >
                   {showKey ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -339,23 +339,23 @@ export const SettingsPage = () => {
         >
           <Card variant="bordered">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-brand-blue/10 rounded-lg flex items-center justify-center">
-                <User className="w-5 h-5 text-brand-blue" />
+              <div className="w-10 h-10 bg-primary-600/10 rounded-lg flex items-center justify-center">
+                <User className="w-5 h-5 text-primary-600" />
               </div>
               <div>
-                <h2 className="text-lg font-serif font-bold text-navy-800">
+                <h2 className="text-lg text-zinc-800">
                   Sender Information
                 </h2>
-                <p className="text-sm text-navy-500">
+                <p className="text-sm text-zinc-500">
                   Customize how your emails appear to recipients
                 </p>
               </div>
             </div>
 
-            <div className="bg-navy-50 border border-navy-200 rounded-lg p-3 mb-4">
+            <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-3 mb-4">
               <div className="flex items-start gap-2">
-                <Mail className="w-4 h-4 text-navy-500 mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-navy-600">
+                <Mail className="w-4 h-4 text-zinc-500 mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-zinc-600">
                   If not set, emails will come from <strong>free-email@jetimworks.com</strong> with the sender name <strong>Anonymous</strong>.
                 </p>
               </div>
@@ -410,25 +410,25 @@ export const SettingsPage = () => {
           transition={{ delay: 0.2 }}
           className="mt-6"
         >
-          <Card className="bg-navy-50 border-navy-200">
-            <h3 className="font-serif font-bold text-navy-800 mb-3">
+          <Card className="bg-zinc-50 border-zinc-200">
+            <h3 className="text-zinc-800 mb-3">
               How to get your Resend API key
             </h3>
-            <ol className="space-y-3 text-sm text-navy-600">
+            <ol className="space-y-3 text-sm text-zinc-600">
               <li className="flex items-start gap-3">
-                <span className="w-6 h-6 bg-navy-200 rounded-full flex items-center justify-center text-xs font-medium text-navy-700 flex-shrink-0">1</span>
-                <span>Sign up for a free account at <a href="https://resend.com" target="_blank" rel="noopener noreferrer" className="text-brand-blue hover:underline flex items-center gap-1">Resend <ExternalLink size={12} /></a></span>
+                <span className="w-6 h-6 bg-zinc-200 rounded-full flex items-center justify-center text-xs font-medium text-zinc-700 flex-shrink-0">1</span>
+                <span>Sign up for a free account at <a href="https://resend.com" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline flex items-center gap-1">Resend <ExternalLink size={12} /></a></span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="w-6 h-6 bg-navy-200 rounded-full flex items-center justify-center text-xs font-medium text-navy-700 flex-shrink-0">2</span>
+                <span className="w-6 h-6 bg-zinc-200 rounded-full flex items-center justify-center text-xs font-medium text-zinc-700 flex-shrink-0">2</span>
                 <span>Navigate to the API Keys section in your dashboard</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="w-6 h-6 bg-navy-200 rounded-full flex items-center justify-center text-xs font-medium text-navy-700 flex-shrink-0">3</span>
-                <span>Create a new API key and copy the key starting with <code className="bg-navy-100 px-1 rounded">re_</code></span>
+                <span className="w-6 h-6 bg-zinc-200 rounded-full flex items-center justify-center text-xs font-medium text-zinc-700 flex-shrink-0">3</span>
+                <span>Create a new API key and copy the key starting with <code className="bg-zinc-100 px-1 rounded">re_</code></span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="w-6 h-6 bg-navy-200 rounded-full flex items-center justify-center text-xs font-medium text-navy-700 flex-shrink-0">4</span>
+                <span className="w-6 h-6 bg-zinc-200 rounded-full flex items-center justify-center text-xs font-medium text-zinc-700 flex-shrink-0">4</span>
                 <span>Paste it above and save. You're all set!</span>
               </li>
             </ol>
@@ -463,7 +463,7 @@ export const SettingsPage = () => {
           className="mt-6"
         >
           <Card className="border-red-200 bg-red-50">
-            <h3 className="font-serif font-bold text-red-800 mb-2">
+            <h3 className="text-red-800 mb-2">
               Danger Zone
             </h3>
             <p className="text-sm text-red-600 mb-4">
@@ -488,10 +488,10 @@ export const SettingsPage = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl"
           >
-            <h3 className="text-lg font-serif font-bold text-navy-900 mb-2">
+            <h3 className="text-lg text-zinc-900 mb-2">
               Delete API Key?
             </h3>
-            <p className="text-navy-600 mb-6">
+            <p className="text-zinc-600 mb-6">
               This will remove your Resend API key from our system. You can add it again later.
             </p>
             <div className="flex gap-3 justify-end">
@@ -522,13 +522,13 @@ export const SettingsPage = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl"
           >
-            <h3 className="text-lg font-serif font-bold text-red-900 mb-2">
+            <h3 className="text-lg text-red-900 mb-2">
               Delete Account?
             </h3>
-            <p className="text-navy-600 mb-4">
+            <p className="text-zinc-600 mb-4">
               This action cannot be undone. All your data, including your API key and email history, will be permanently deleted.
             </p>
-            <p className="text-sm text-navy-500 mb-4">
+            <p className="text-sm text-zinc-500 mb-4">
               Please enter your password to confirm.
             </p>
             <div className="relative mb-6">
@@ -542,7 +542,7 @@ export const SettingsPage = () => {
               <button
                 type="button"
                 onClick={() => setShowDeletePassword(!showDeletePassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-navy-400 hover:text-navy-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
               >
                 {showDeletePassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>

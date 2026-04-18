@@ -145,7 +145,7 @@ export const HistoryPage = () => {
         <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
           <div className="flex flex-col items-center gap-4">
             <LoadingSpinner size={32} />
-            <p className="text-navy-500">Loading your email history...</p>
+            <p className="text-zinc-500">Loading your email history...</p>
           </div>
         </div>
       </Layout>
@@ -162,14 +162,14 @@ export const HistoryPage = () => {
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-navy-600 to-navy-800 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-accent-500 rounded-xl flex items-center justify-center">
               <History className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-serif font-bold text-navy-900">
+              <h1 className="text-2xl md:text-3xl text-zinc-900">
                 Email History
               </h1>
-              <p className="text-navy-500">Your past creations, all in one place</p>
+              <p className="text-zinc-500">Your past creations, all in one place</p>
             </div>
           </div>
         </motion.div>
@@ -181,7 +181,7 @@ export const HistoryPage = () => {
           transition={{ delay: 0.1 }}
           className="mb-6"
         >
-          <p className="text-sm text-navy-500">
+          <p className="text-sm text-zinc-500">
             {total} total records
           </p>
         </motion.div>
@@ -194,13 +194,13 @@ export const HistoryPage = () => {
             transition={{ delay: 0.2 }}
           >
             <Card className="text-center py-12">
-              <div className="w-16 h-16 bg-navy-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Mail className="w-8 h-8 text-navy-400" />
+              <div className="w-16 h-16 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-8 h-8 text-zinc-400" />
               </div>
-              <h3 className="text-lg font-serif font-bold text-navy-800 mb-2">
+              <h3 className="text-lg text-zinc-800 mb-2">
                 No emails crafted yet
               </h3>
-              <p className="text-navy-500 mb-6">
+              <p className="text-zinc-500 mb-6">
                 Your email masterpieces will appear here once you create some.
               </p>
               <Button onClick={() => navigate('/home')}>
@@ -219,7 +219,7 @@ export const HistoryPage = () => {
                 transition={{ delay: index * 0.05 }}
               >
                 <Card 
-                  className={`transition-all ${expandedId === item.id ? 'ring-2 ring-brand-blue/30' : ''} cursor-pointer`}
+                  className={`transition-all ${expandedId === item.id ? 'ring-2 ring-primary-600/30' : ''} cursor-pointer`}
                   onClick={() => handleCardClick(item)}
                 >
                   {/* Item Header */}
@@ -231,7 +231,7 @@ export const HistoryPage = () => {
                           inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium
                           ${item.process === 'email' 
                             ? 'bg-yellow-100 text-yellow-700' 
-                            : 'bg-brand-blue/10 text-brand-blue'
+                            : 'bg-primary-600/10 text-primary-600'
                           }
                         `}>
                           {getProcessIcon(item.process)}
@@ -252,30 +252,30 @@ export const HistoryPage = () => {
                         )}
 
                         {/* Duration */}
-                        <span className="inline-flex items-center gap-1 text-xs text-navy-400">
+                        <span className="inline-flex items-center gap-1 text-xs text-zinc-400">
                           <Clock size={12} />
                           {formatDuration(item.duration_ms)}
                         </span>
 
                         {/* Date */}
-                        <span className="text-xs text-navy-400 flex items-center gap-1">
+                        <span className="text-xs text-zinc-400 flex items-center gap-1">
                           <Calendar size={12} />
                           {formatDate(item.created_at)}
                         </span>
                       </div>
                       
                       {/* Subject */}
-                      <h3 className="font-medium text-navy-800 truncate">
+                      <h3 className="font-medium text-zinc-800 truncate">
                         {item.subject || 'No subject'}
                       </h3>
 
                       {/* Recipient */}
-                      <p className="text-sm text-navy-500 truncate">
+                      <p className="text-sm text-zinc-500 truncate">
                         To: {item.to}
                       </p>
 
                       {/* Prompt (always visible) */}
-                      <p className="text-sm text-navy-400 mt-2 line-clamp-2">
+                      <p className="text-sm text-zinc-400 mt-2 line-clamp-2">
                         <span className="font-medium">Prompt:</span> {item.prompt || 'No prompt recorded'}
                       </p>
                     </div>
@@ -301,7 +301,7 @@ export const HistoryPage = () => {
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="mt-4 pt-4 border-t border-navy-100"
+                      className="mt-4 pt-4 border-t border-zinc-100"
                     >
                       {/* Error Message (if failed) */}
                       {!item.success && item.error_message && (
@@ -313,8 +313,8 @@ export const HistoryPage = () => {
 
                       {/* Prompt */}
                       <div className="mb-4">
-                        <p className="text-xs text-navy-400 mb-1">Prompt:</p>
-                        <p className="text-sm text-navy-700 bg-navy-50 p-3 rounded-lg">
+                        <p className="text-xs text-zinc-400 mb-1">Prompt:</p>
+                        <p className="text-sm text-zinc-700 bg-zinc-50 p-3 rounded-lg">
                           {item.prompt || 'No prompt recorded'}
                         </p>
                       </div>

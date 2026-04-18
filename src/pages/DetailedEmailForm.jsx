@@ -120,6 +120,31 @@ const headerStyleOptions = [
   { value: 'split', label: 'Split Design', desc: 'Text + image' },
 ];
 
+const getEmailsSentCount = () => {
+  const count = localStorage.getItem('emailsSentCount');
+  return count ? parseInt(count, 10) : 0;
+};
+
+const incrementEmailsSentCount = () => {
+  const newCount = getEmailsSentCount() + 1;
+  localStorage.setItem('emailsSentCount', newCount.toString());
+  return newCount;
+};
+
+// Simple confetti effect using CSS animations
+const ConfettiPiece = ({ delay, x }) => (
+  <motion.div
+    initial={{ y: -20, x, opacity: 1, rotate: 0 }}
+    animate={{ y: '100vh', opacity: 0, rotate: 720 }}
+    transition={{ duration: 2, delay, ease: 'easeOut' }}
+    className="absolute w-3 h-3 rounded-full"
+    style={{
+      backgroundColor: ['#4F46E5', '#8B5CF6', '#06B6D4', '#F59E0B', '#10B981'][Math.floor(Math.random() * 5)],
+      left: `${x}%`,
+    }}
+  />
+);
+
 export const DetailedEmailForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -154,6 +179,8 @@ export const DetailedEmailForm = () => {
   const [errors, setErrors] = useState({});
   const [useCustomTone, setUseCustomTone] = useState(false);
   const [customTone, setCustomTone] = useState('');
+  const [emailsSentCount, setEmailsSentCount] = useState(getEmailsSentCount);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Preload form data from history if available
   useEffect(() => {
@@ -335,7 +362,7 @@ export const DetailedEmailForm = () => {
     try {
       // Get the prompt from sessionStorage
       const savedPrompt = sessionStorage.getItem('pendingPrompt') || '';
-      
+
       // Confirm and send email with pre-generated HTML
       const confirmPayload = {
         process: 'email',
@@ -346,15 +373,21 @@ export const DetailedEmailForm = () => {
       };
 
       const sendResponse = await emailAPI.confirm(confirmPayload);
-      
+
       if (sendResponse.data.success) {
         // Clear the prompt from sessionStorage after successful send
         sessionStorage.removeItem('pendingPrompt');
+        // Update emails sent counter
+        const newCount = incrementEmailsSentCount();
+        setEmailsSentCount(newCount);
+        // Trigger confetti
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 2500);
         toast.success('Email sent! ✨', {
           description: `Your email has been delivered to ${formData.to}.`,
         });
-        navigate('/result', { 
-          state: { 
+        navigate('/result', {
+          state: {
             email: generatedHtml,
             subject: formData.subject,
             to: formData.to,
@@ -390,10 +423,10 @@ export const DetailedEmailForm = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
-            <h2 className="text-xl font-serif font-bold text-navy-800 mb-2">
+            <h2 className="text-xl text-zinc-800 mb-2">
               The Basics 📧
             </h2>
-            <p className="text-navy-600 mb-6">
+            <p className="text-zinc-600 mb-6">
               Let's start with who's receiving this and what it's about.
             </p>
             
@@ -435,10 +468,10 @@ export const DetailedEmailForm = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
-            <h2 className="text-xl font-serif font-bold text-navy-800 mb-2">
+            <h2 className="text-xl text-zinc-800 mb-2">
               Tone & Style 🎨
             </h2>
-            <p className="text-navy-600 mb-6">
+            <p className="text-zinc-600 mb-6">
               Set the mood. How do you want this email to feel?
             </p>
             
@@ -446,7 +479,7 @@ export const DetailedEmailForm = () => {
               {/* Tone Toggle */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <label className="text-sm font-medium text-navy-700">
+                  <label className="text-sm font-medium text-zinc-700">
                     Choose how to define your tone
                   </label>
                 </div>
@@ -456,8 +489,8 @@ export const DetailedEmailForm = () => {
                     className={`
                       flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all
                       ${!useCustomTone 
-                        ? 'border-brand-blue bg-brand-blue/5' 
-                        : 'border-navy-200 hover:border-navy-300'}
+                        ? 'border-primary-600 bg-primary-600/5' 
+                        : 'border-zinc-200 hover:border-zinc-300'}
                     `}
                   >
                     <List className="w-4 h-4" />
@@ -468,8 +501,8 @@ export const DetailedEmailForm = () => {
                     className={`
                       flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all
                       ${useCustomTone 
-                        ? 'border-brand-blue bg-brand-blue/5' 
-                        : 'border-navy-200 hover:border-navy-300'}
+                        ? 'border-primary-600 bg-primary-600/5' 
+                        : 'border-zinc-200 hover:border-zinc-300'}
                     `}
                   >
                     <Pencil className="w-4 h-4" />
@@ -488,7 +521,7 @@ export const DetailedEmailForm = () => {
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <label className="block text-sm font-medium text-navy-700 mb-3">
+                    <label className="block text-sm font-medium text-zinc-700 mb-3">
                       Choose a tone
                     </label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
@@ -499,12 +532,12 @@ export const DetailedEmailForm = () => {
                           className={`
                             p-3 rounded-xl border-2 transition-all text-left
                             ${formData.tone === tone.value 
-                              ? 'border-brand-blue bg-brand-blue/5' 
-                              : 'border-navy-200 hover:border-navy-300'}
+                              ? 'border-primary-600 bg-primary-600/5' 
+                              : 'border-zinc-200 hover:border-zinc-300'}
                           `}
                         >
                           <span className="text-2xl mb-1 block">{tone.icon}</span>
-                          <span className="text-sm font-medium text-navy-800">{tone.label}</span>
+                          <span className="text-sm font-medium text-zinc-800">{tone.label}</span>
                         </button>
                       ))}
                     </div>
@@ -522,7 +555,7 @@ export const DetailedEmailForm = () => {
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <label className="block text-sm font-medium text-navy-700 mb-3">
+                    <label className="block text-sm font-medium text-zinc-700 mb-3">
                       Describe your desired tone & style
                     </label>
                     <Textarea
@@ -530,7 +563,7 @@ export const DetailedEmailForm = () => {
                       value={customTone}
                       onChange={(e) => setCustomTone(e.target.value)}
                       rows={5}
-                      className="bg-navy-50 border-navy-200 focus:bg-white"
+                      className="bg-zinc-50 border-zinc-200 focus:bg-white"
                     />
                   </motion.div>
                 )}
@@ -549,7 +582,7 @@ export const DetailedEmailForm = () => {
                   >
                     {/* Colors */}
                     <div>
-                      <label className="block text-sm font-medium text-navy-700 mb-3">
+                      <label className="block text-sm font-medium text-zinc-700 mb-3">
                         Color theme
                       </label>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -560,15 +593,15 @@ export const DetailedEmailForm = () => {
                             className={`
                               p-3 rounded-xl border-2 transition-all text-left flex items-center gap-3
                               ${formData.color === color.value 
-                                ? 'border-brand-blue bg-brand-blue/5' 
-                                : 'border-navy-200 hover:border-navy-300'}
+                                ? 'border-primary-600 bg-primary-600/5' 
+                                : 'border-zinc-200 hover:border-zinc-300'}
                             `}
                           >
                             <span 
-                              className="w-6 h-6 rounded-full flex-shrink-0 border border-navy-200" 
+                              className="w-6 h-6 rounded-full flex-shrink-0 border border-zinc-200" 
                               style={{ backgroundColor: color.color }}
                             />
-                            <span className="text-sm font-medium text-navy-800">{color.label}</span>
+                            <span className="text-sm font-medium text-zinc-800">{color.label}</span>
                           </button>
                         ))}
                       </div>
@@ -576,7 +609,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Feel */}
                     <div>
-                      <label className="block text-sm font-medium text-navy-700 mb-3">
+                      <label className="block text-sm font-medium text-zinc-700 mb-3">
                         Overall feel
                       </label>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -587,13 +620,13 @@ export const DetailedEmailForm = () => {
                             className={`
                               p-3 rounded-xl border-2 transition-all text-left
                               ${formData.feel === feel.value 
-                                ? 'border-brand-blue bg-brand-blue/5' 
-                                : 'border-navy-200 hover:border-navy-300'}
+                                ? 'border-primary-600 bg-primary-600/5' 
+                                : 'border-zinc-200 hover:border-zinc-300'}
                             `}
                           >
                             <span className="text-xl mb-1 block">{feel.icon}</span>
-                            <span className="text-sm font-medium text-navy-800 block">{feel.label}</span>
-                            <span className="text-xs text-navy-500">{feel.desc}</span>
+                            <span className="text-sm font-medium text-zinc-800 block">{feel.label}</span>
+                            <span className="text-xs text-zinc-500">{feel.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -601,7 +634,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Email Width */}
                     <div>
-                      <label className="block text-sm font-medium text-navy-700 mb-3">
+                      <label className="block text-sm font-medium text-zinc-700 mb-3">
                         Email width
                       </label>
                       <div className="grid grid-cols-3 gap-3">
@@ -612,12 +645,12 @@ export const DetailedEmailForm = () => {
                             className={`
                               p-3 rounded-xl border-2 transition-all text-left
                               ${formData.emailWidth === width.value 
-                                ? 'border-brand-blue bg-brand-blue/5' 
-                                : 'border-navy-200 hover:border-navy-300'}
+                                ? 'border-primary-600 bg-primary-600/5' 
+                                : 'border-zinc-200 hover:border-zinc-300'}
                             `}
                           >
-                            <span className="text-sm font-medium text-navy-800 block">{width.label}</span>
-                            <span className="text-xs text-navy-500">{width.desc}</span>
+                            <span className="text-sm font-medium text-zinc-800 block">{width.label}</span>
+                            <span className="text-xs text-zinc-500">{width.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -625,7 +658,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Border Radius */}
                     <div>
-                      <label className="block text-sm font-medium text-navy-700 mb-3">
+                      <label className="block text-sm font-medium text-zinc-700 mb-3">
                         Corner style
                       </label>
                       <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
@@ -636,12 +669,12 @@ export const DetailedEmailForm = () => {
                             className={`
                               p-3 rounded-xl border-2 transition-all text-left
                               ${formData.borderRadius === radius.value 
-                                ? 'border-brand-blue bg-brand-blue/5' 
-                                : 'border-navy-200 hover:border-navy-300'}
+                                ? 'border-primary-600 bg-primary-600/5' 
+                                : 'border-zinc-200 hover:border-zinc-300'}
                             `}
                           >
-                            <span className="text-sm font-medium text-navy-800 block">{radius.label}</span>
-                            <span className="text-xs text-navy-500">{radius.desc}</span>
+                            <span className="text-sm font-medium text-zinc-800 block">{radius.label}</span>
+                            <span className="text-xs text-zinc-500">{radius.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -649,7 +682,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Shadow */}
                     <div>
-                      <label className="block text-sm font-medium text-navy-700 mb-3">
+                      <label className="block text-sm font-medium text-zinc-700 mb-3">
                         Shadow depth
                       </label>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -660,12 +693,12 @@ export const DetailedEmailForm = () => {
                             className={`
                               p-3 rounded-xl border-2 transition-all text-left
                               ${formData.shadow === shadow.value 
-                                ? 'border-brand-blue bg-brand-blue/5' 
-                                : 'border-navy-200 hover:border-navy-300'}
+                                ? 'border-primary-600 bg-primary-600/5' 
+                                : 'border-zinc-200 hover:border-zinc-300'}
                             `}
                           >
-                            <span className="text-sm font-medium text-navy-800 block">{shadow.label}</span>
-                            <span className="text-xs text-navy-500">{shadow.desc}</span>
+                            <span className="text-sm font-medium text-zinc-800 block">{shadow.label}</span>
+                            <span className="text-xs text-zinc-500">{shadow.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -673,7 +706,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Spacing */}
                     <div>
-                      <label className="block text-sm font-medium text-navy-700 mb-3">
+                      <label className="block text-sm font-medium text-zinc-700 mb-3">
                         Content spacing
                       </label>
                       <div className="grid grid-cols-3 gap-3">
@@ -684,12 +717,12 @@ export const DetailedEmailForm = () => {
                             className={`
                               p-3 rounded-xl border-2 transition-all text-left
                               ${formData.spacing === spacing.value 
-                                ? 'border-brand-blue bg-brand-blue/5' 
-                                : 'border-navy-200 hover:border-navy-300'}
+                                ? 'border-primary-600 bg-primary-600/5' 
+                                : 'border-zinc-200 hover:border-zinc-300'}
                             `}
                           >
-                            <span className="text-sm font-medium text-navy-800 block">{spacing.label}</span>
-                            <span className="text-xs text-navy-500">{spacing.desc}</span>
+                            <span className="text-sm font-medium text-zinc-800 block">{spacing.label}</span>
+                            <span className="text-xs text-zinc-500">{spacing.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -697,7 +730,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Header Style */}
                     <div>
-                      <label className="block text-sm font-medium text-navy-700 mb-3">
+                      <label className="block text-sm font-medium text-zinc-700 mb-3">
                         Header style
                       </label>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -708,12 +741,12 @@ export const DetailedEmailForm = () => {
                             className={`
                               p-3 rounded-xl border-2 transition-all text-left
                               ${formData.headerStyle === header.value 
-                                ? 'border-brand-blue bg-brand-blue/5' 
-                                : 'border-navy-200 hover:border-navy-300'}
+                                ? 'border-primary-600 bg-primary-600/5' 
+                                : 'border-zinc-200 hover:border-zinc-300'}
                             `}
                           >
-                            <span className="text-sm font-medium text-navy-800 block">{header.label}</span>
-                            <span className="text-xs text-navy-500">{header.desc}</span>
+                            <span className="text-sm font-medium text-zinc-800 block">{header.label}</span>
+                            <span className="text-xs text-zinc-500">{header.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -721,7 +754,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Font */}
                     <div>
-                      <label className="block text-sm font-medium text-navy-700 mb-3">
+                      <label className="block text-sm font-medium text-zinc-700 mb-3">
                         Font style
                       </label>
                       <div className="grid grid-cols-2 gap-3">
@@ -732,12 +765,12 @@ export const DetailedEmailForm = () => {
                             className={`
                               p-3 rounded-xl border-2 transition-all text-left
                               ${formData.font === font.value 
-                                ? 'border-brand-blue bg-brand-blue/5' 
-                                : 'border-navy-200 hover:border-navy-300'}
+                                ? 'border-primary-600 bg-primary-600/5' 
+                                : 'border-zinc-200 hover:border-zinc-300'}
                             `}
                           >
-                            <span className="text-sm font-medium text-navy-800 block">{font.label}</span>
-                            <span className="text-xs text-navy-500">{font.desc}</span>
+                            <span className="text-sm font-medium text-zinc-800 block">{font.label}</span>
+                            <span className="text-xs text-zinc-500">{font.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -745,7 +778,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Style */}
                     <div>
-                      <label className="block text-sm font-medium text-navy-700 mb-3">
+                      <label className="block text-sm font-medium text-zinc-700 mb-3">
                         Overall style
                       </label>
                       <div className="grid grid-cols-2 gap-3">
@@ -756,12 +789,12 @@ export const DetailedEmailForm = () => {
                             className={`
                               p-3 rounded-xl border-2 transition-all text-left
                               ${formData.style === style.value 
-                                ? 'border-brand-blue bg-brand-blue/5' 
-                                : 'border-navy-200 hover:border-navy-300'}
+                                ? 'border-primary-600 bg-primary-600/5' 
+                                : 'border-zinc-200 hover:border-zinc-300'}
                             `}
                           >
-                            <span className="text-sm font-medium text-navy-800 block">{style.label}</span>
-                            <span className="text-xs text-navy-500">{style.desc}</span>
+                            <span className="text-sm font-medium text-zinc-800 block">{style.label}</span>
+                            <span className="text-xs text-zinc-500">{style.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -781,47 +814,47 @@ export const DetailedEmailForm = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
-            <h2 className="text-xl font-serif font-bold text-navy-800 mb-2">
+            <h2 className="text-xl text-zinc-800 mb-2">
               Content Details 📏
             </h2>
-            <p className="text-navy-600 mb-6">
+            <p className="text-zinc-600 mb-6">
               Fine-tune the specifics. Make it perfect.
             </p>
             
             <div className="space-y-6">
               {/* Word Count */}
               <div>
-                <label className="block text-sm font-medium text-navy-700 mb-3">
+                <label className="block text-sm font-medium text-zinc-700 mb-3">
                   Preferred word count
                 </label>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => updateFormData('wordCountMin', Math.max(20, formData.wordCountMin - 25))}
-                      className="p-2 rounded-lg border border-navy-200 hover:bg-navy-50"
+                      className="p-2 rounded-lg border border-zinc-200 hover:bg-zinc-50"
                     >
                       -
                     </button>
                     <span className="w-16 text-center font-medium">{formData.wordCountMin}</span>
                     <button
                       onClick={() => updateFormData('wordCountMin', Math.min(formData.wordCountMax - 25, formData.wordCountMin + 25))}
-                      className="p-2 rounded-lg border border-navy-200 hover:bg-navy-50"
+                      className="p-2 rounded-lg border border-zinc-200 hover:bg-zinc-50"
                     >
                       +
                     </button>
                   </div>
-                  <span className="text-navy-400">to</span>
+                  <span className="text-zinc-400">to</span>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => updateFormData('wordCountMax', Math.max(formData.wordCountMin + 25, formData.wordCountMax - 25))}
-                      className="p-2 rounded-lg border border-navy-200 hover:bg-navy-50"
+                      className="p-2 rounded-lg border border-zinc-200 hover:bg-zinc-50"
                     >
                       -
                     </button>
                     <span className="w-16 text-center font-medium">{formData.wordCountMax}</span>
                     <button
                       onClick={() => updateFormData('wordCountMax', Math.min(500, formData.wordCountMax + 25))}
-                      className="p-2 rounded-lg border border-navy-200 hover:bg-navy-50"
+                      className="p-2 rounded-lg border border-zinc-200 hover:bg-zinc-50"
                     >
                       +
                     </button>
@@ -841,14 +874,14 @@ export const DetailedEmailForm = () => {
               {/* CTA Toggle */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <label className="text-sm font-medium text-navy-700">
+                  <label className="text-sm font-medium text-zinc-700">
                     Include a call-to-action button?
                   </label>
                   <button
                     onClick={() => updateFormData('includeCTA', !formData.includeCTA)}
                     className={`
                       w-12 h-6 rounded-full transition-colors relative
-                      ${formData.includeCTA ? 'bg-brand-blue' : 'bg-navy-200'}
+                      ${formData.includeCTA ? 'bg-primary-600' : 'bg-zinc-200'}
                     `}
                   >
                     <div className={`
@@ -886,60 +919,60 @@ export const DetailedEmailForm = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
-            <h2 className="text-xl font-serif font-bold text-navy-800 mb-2">
+            <h2 className="text-lg sm:text-xl text-zinc-800 mb-2">
               Review Your Email Preview 👀
             </h2>
-            <p className="text-navy-600 mb-6">
+            <p className="text-zinc-600 mb-4 sm:mb-6 text-sm sm:text-base">
               Here's what your email looks like. If it needs changes, regenerate or go back to edit.
             </p>
-            
+
             {/* Preview Section */}
-            <div className="border border-navy-200 rounded-xl overflow-hidden mb-6">
-              <div className="bg-navy-50 px-4 py-2 border-b border-navy-200 flex items-center justify-between">
-                <span className="text-sm font-medium text-navy-600">Email Preview</span>
+            <div className="border border-zinc-200 rounded-xl overflow-hidden mb-4 sm:mb-6">
+              <div className="bg-zinc-50 px-4 py-2 border-b border-zinc-200 flex items-center justify-between">
+                <span className="text-sm font-medium text-zinc-600">Email Preview</span>
                 <button
                   onClick={handleRegeneratePreview}
-                  className="flex items-center gap-1 text-sm text-brand-blue hover:text-brand-blue/80 transition-colors"
+                  className="flex items-center gap-1 text-sm text-primary-600 hover:text-primary-600/80 transition-colors min-h-10 px-2"
                 >
                   <RefreshCw className="w-4 h-4" />
                   Regenerate
                 </button>
               </div>
-              <div 
-                className="p-6 bg-white max-h-96 overflow-auto [&_table]:w-full [&_*]:max-w-full"
-                dangerouslySetInnerHTML={{ __html: generatedHtml || '<p class="text-navy-400">No preview generated</p>' }}
+              <div
+                className="p-4 sm:p-6 bg-white max-h-64 sm:max-h-96 overflow-auto [&_table]:w-full [&_*]:max-w-full"
+                dangerouslySetInnerHTML={{ __html: generatedHtml || '<p class="text-zinc-400">No preview generated</p>' }}
               />
             </div>
-            
+
             {/* Summary */}
-            <div className="space-y-3">
-              <div className="p-3 bg-navy-50 rounded-lg">
-                <p className="text-xs text-navy-500 mb-1">To</p>
-                <p className="text-sm font-medium text-navy-800">{formData.to}</p>
+            <div className="space-y-3 text-sm sm:text-base">
+              <div className="p-3 bg-zinc-50 rounded-lg">
+                <p className="text-xs text-zinc-500 mb-1">To</p>
+                <p className="text-sm font-medium text-zinc-800 truncate">{formData.to}</p>
               </div>
-              
-              <div className="p-3 bg-navy-50 rounded-lg">
-                <p className="text-xs text-navy-500 mb-1">Subject</p>
-                <p className="text-sm font-medium text-navy-800">{formData.subject}</p>
+
+              <div className="p-3 bg-zinc-50 rounded-lg">
+                <p className="text-xs text-zinc-500 mb-1">Subject</p>
+                <p className="text-sm font-medium text-zinc-800 truncate">{formData.subject}</p>
               </div>
-              
-              <div className="p-3 bg-navy-50 rounded-lg">
-                <p className="text-xs text-navy-500 mb-1">Tone & Style</p>
+
+              <div className="p-3 bg-zinc-50 rounded-lg">
+                <p className="text-xs text-zinc-500 mb-1">Tone & Style</p>
                 {useCustomTone && customTone.trim() ? (
-                  <p className="text-sm text-navy-800 italic">Custom: {customTone.substring(0, 100)}{customTone.length > 100 ? '...' : ''}</p>
+                  <p className="text-sm text-zinc-800 italic">Custom: {customTone.substring(0, 100)}{customTone.length > 100 ? '...' : ''}</p>
                 ) : (
-                  <p className="text-sm font-medium text-navy-800 capitalize">
+                  <p className="text-sm font-medium text-zinc-800 capitalize">
                     {formData.tone} • {formData.style}
                   </p>
                 )}
               </div>
 
-              <div className="p-3 bg-navy-50 rounded-lg">
-                <p className="text-xs text-navy-500 mb-1">Design Choices</p>
+              <div className="p-3 bg-zinc-50 rounded-lg">
+                <p className="text-xs text-zinc-500 mb-1">Design Choices</p>
                 <div className="flex flex-wrap gap-2 mt-1">
                   <span className="inline-flex items-center gap-1 px-2 py-1 bg-white rounded-full text-xs">
-                    <span 
-                      className="w-3 h-3 rounded-full border border-navy-200" 
+                    <span
+                      className="w-3 h-3 rounded-full border border-zinc-200"
                       style={{ backgroundColor: colorOptions.find(c => c.value === formData.color)?.color || '#1e3a5f' }}
                     />
                     {colorOptions.find(c => c.value === formData.color)?.label}
@@ -956,29 +989,29 @@ export const DetailedEmailForm = () => {
                 </div>
               </div>
 
-              <div className="p-3 bg-navy-50 rounded-lg">
-                <p className="text-xs text-navy-500 mb-1">Additional Styling</p>
-                <p className="text-sm text-navy-800 capitalize">
+              <div className="p-3 bg-zinc-50 rounded-lg">
+                <p className="text-xs text-zinc-500 mb-1">Additional Styling</p>
+                <p className="text-sm text-zinc-800 capitalize">
                   {formData.feel} feel • {formData.spacing} spacing • {formData.font} font
                 </p>
               </div>
-              
-              <div className="p-3 bg-navy-50 rounded-lg">
-                <p className="text-xs text-navy-500 mb-1">Your message</p>
-                <p className="text-sm text-navy-800">{formData.prompt}</p>
+
+              <div className="p-3 bg-zinc-50 rounded-lg">
+                <p className="text-xs text-zinc-500 mb-1">Your message</p>
+                <p className="text-sm text-zinc-800 line-clamp-2">{formData.prompt}</p>
               </div>
-              
+
               {formData.keyMessage && (
-                <div className="p-3 bg-navy-50 rounded-lg">
-                  <p className="text-xs text-navy-500 mb-1">Key message</p>
+                <div className="p-3 bg-zinc-50 rounded-lg">
+                  <p className="text-xs text-zinc-500 mb-1">Key message</p>
                   <p className="text-sm font-navy-800">{formData.keyMessage}</p>
                 </div>
               )}
               
               {formData.includeCTA && formData.ctaText && (
-                <div className="p-3 bg-brand-blue/10 rounded-lg border border-brand-blue/20">
-                  <p className="text-xs text-brand-blue mb-1">Call to action</p>
-                  <p className="text-sm font-medium text-brand-blue">{formData.ctaText}</p>
+                <div className="p-3 bg-primary-600/10 rounded-lg border border-primary-600/20">
+                  <p className="text-xs text-primary-600 mb-1">Call to action</p>
+                  <p className="text-sm font-medium text-primary-600">{formData.ctaText}</p>
                 </div>
               )}
             </div>
@@ -1006,11 +1039,26 @@ export const DetailedEmailForm = () => {
 
   return (
     <Layout>
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Confetti Overlay */}
+      <AnimatePresence>
+        {showConfetti && (
+          <div className="fixed inset-0 z-50 pointer-events-none overflow-hidden">
+            {[...Array(30)].map((_, i) => (
+              <ConfettiPiece
+                key={i}
+                delay={i * 0.05}
+                x={Math.random() * 100}
+              />
+            ))}
+          </div>
+        )}
+      </AnimatePresence>
+
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Back Button */}
         <Link
           to="/home"
-          className="inline-flex items-center gap-2 text-navy-600 hover:text-navy-800 transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-zinc-600 hover:text-zinc-800 transition-colors mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Home
@@ -1020,67 +1068,73 @@ export const DetailedEmailForm = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-brand-blue to-navy-600 rounded-xl flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-600 to-primary-600 rounded-xl flex items-center justify-center">
+              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-serif font-bold text-navy-900">
+              <h1 className="text-xl sm:text-2xl md:text-3xl text-zinc-900">
                 Craft with Care
               </h1>
-              <p className="text-navy-500">Every detail, perfected</p>
+              <p className="text-zinc-500 text-sm sm:text-base">Every detail, perfected</p>
             </div>
           </div>
         </motion.div>
 
         {/* Progress */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <ProgressSteps steps={steps} currentStep={currentStep} />
         </div>
 
         {/* Form Card */}
-        <Card variant="bordered">
+        <Card variant="bordered" className="p-4 sm:p-6">
           <AnimatePresence mode="wait">
             {renderStep()}
           </AnimatePresence>
 
           {/* Navigation */}
-          <div className="flex justify-between items-center mt-8 pt-6 border-t border-navy-100">
+          <div className={`flex flex-col sm:flex-row justify-between items-center gap-3 mt-6 sm:mt-8 pt-6 border-t border-zinc-100 ${currentStep === 3 ? 'sm:flex-col-reverse sm:gap-4' : ''}`}>
             <Button
               variant="ghost"
               onClick={handleBack}
               disabled={currentStep === 0}
+              className="w-full sm:w-auto min-h-11"
             >
               <ChevronLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
 
             {currentStep === 0 && (
-              <Button onClick={handleNext}>
+              <Button onClick={handleNext} className="w-full sm:w-auto min-h-11">
                 Continue
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             )}
 
             {currentStep === 1 && (
-              <Button onClick={handleNext}>
+              <Button onClick={handleNext} className="w-full sm:w-auto min-h-11">
                 Continue
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             )}
 
             {currentStep === 2 && (
-              <Button onClick={handleGeneratePreview}>
+              <Button onClick={handleGeneratePreview} className="w-full sm:w-auto min-h-11">
                 <Eye className="w-4 h-4 mr-2" />
                 Generate Preview
               </Button>
             )}
 
             {currentStep === 3 && (
-              <Button onClick={handleSendEmail} className="bg-gradient-to-r from-brand-blue to-navy-600 hover:from-brand-blue/90 hover:to-navy-600/90">
-                <Send className="w-4 h-4 mr-2" />
+              <Button
+                variant="glow"
+                size="lg"
+                onClick={handleSendEmail}
+                className="w-full sm:w-auto min-h-12"
+              >
+                <Send className="w-5 h-5 mr-2" />
                 Send Email
               </Button>
             )}

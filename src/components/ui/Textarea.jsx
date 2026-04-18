@@ -17,7 +17,7 @@ export const Textarea = forwardRef(({
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-navy-700 mb-2">
+        <label className="block text-sm font-medium text-zinc-700 mb-2">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
@@ -42,7 +42,7 @@ export const Textarea = forwardRef(({
         {maxLength && (
           <p className={clsx(
             'text-sm ml-auto',
-            charCount > maxLength * 0.9 ? 'text-orange-500' : 'text-navy-400'
+            charCount > maxLength * 0.9 ? 'text-orange-500' : 'text-zinc-400'
           )}>
             {charCount}/{maxLength}
           </p>

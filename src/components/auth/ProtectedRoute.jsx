@@ -9,8 +9,8 @@ export const ProtectedRoute = ({ children }) => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-navy-200 border-t-brand-blue rounded-full animate-spin" />
-          <p className="text-navy-500">Loading...</p>
+          <div className="w-12 h-12 border-4 border-zinc-200 border-t-primary-600 rounded-full animate-spin" />
+          <p className="text-zinc-500">Loading...</p>
         </div>
       </div>
     );
