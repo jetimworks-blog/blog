@@ -163,11 +163,11 @@ export const YoloEmailForm = () => {
       // Build enhanced prompt with recipient name and subject
       const senderName = getSenderName(user, fromName);
       const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.to);
-      let enhancedPrompt = formData.prompt;
+      let enhancedPrompt = `In essence the email should say this: '${formData.prompt}'. Be very creative in delivering the best style, grammar, and beauty of the message.`;
       enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
       enhancedPrompt += `\n\nThe expected subject for this email is '${formData.subject}'. Use it in context for the email.`;
       enhancedPrompt += `\n\nSign the email that it is from ${senderName}.`;
-      
+
       // Step 1: Generate HTML preview using process 'gen'
       const previewPayload = {
         process: 'gen',
@@ -207,11 +207,11 @@ export const YoloEmailForm = () => {
       // Build enhanced prompt with recipient name and subject
       const senderName = getSenderName(user, fromName);
       const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.to);
-      let enhancedPrompt = formData.prompt;
+      let enhancedPrompt = `In essence the email should say this: '${formData.prompt}'. Be very creative in delivering the best style, grammar, and beauty of the message.`;
       enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
       enhancedPrompt += `\n\nThe expected subject for this email is '${formData.subject}'. Use it in context for the email.`;
       enhancedPrompt += `\n\nSign the email that it is from ${senderName}.`;
-      
+
       const previewPayload = {
         process: 'gen',
         prompt: enhancedPrompt,

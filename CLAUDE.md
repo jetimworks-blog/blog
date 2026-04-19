@@ -59,6 +59,8 @@ Flow:
 ### Prompt Enhancement
 
 Both forms inject contextual information into the prompt before generation:
+- **User message**: Phrased as: `In essence the email should say this: 'X'. Be very creative in delivering the best style, grammar, and beauty of the message.`
+- **Key message** (Detailed form only): Phrased similarly: `In essence the key message should say this: 'X'. Be very creative in delivering the best style, grammar, and beauty of the key message.`
 - **Recipient name**: Optional field; if not provided, extracted from email address (e.g., `john.doe@example.com` → `John Doe`). Injected as: `The Recipient name is X.`
 - **Subject**: Injected as: `The expected subject for this email is 'XXX'. Use it in context for the email.`
 - **Sender name**: Appended at the end as: `Sign the email that it is from {senderName}.`

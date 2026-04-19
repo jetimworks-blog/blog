@@ -250,7 +250,7 @@ export const DetailedEmailForm = () => {
   };
 
   const buildEnhancedPrompt = () => {
-    let enhancedPrompt = formData.prompt;
+    let enhancedPrompt = `In essence the email should say this: '${formData.prompt}'. Be very creative in delivering the best style, grammar, and beauty of the message.`;
 
     // Include recipient name and subject
     const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.to);
@@ -278,7 +278,7 @@ export const DetailedEmailForm = () => {
     // Always include word count
     enhancedPrompt += `\nWord count: ${formData.wordCountMin}-${formData.wordCountMax} words`;
     if (formData.keyMessage) {
-      enhancedPrompt += `\nKey message to convey: ${formData.keyMessage}`;
+      enhancedPrompt += `\n\nIn essence the key message should say this: '${formData.keyMessage}'. Be very creative in delivering the best style, grammar, and beauty of the key message.`;
     }
     if (formData.includeCTA && formData.ctaText) {
       enhancedPrompt += `\nCall to action: ${formData.ctaText}`;
