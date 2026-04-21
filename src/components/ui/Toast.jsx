@@ -10,9 +10,12 @@ export const ToastProvider = () => {
       closeButton
       toastOptions={{
         style: {
-          fontFamily: 'Merriweather, Georgia, serif',
+          fontFamily: 'JetBrains Mono, ui-monospace, monospace',
+          background: 'var(--color-surface-card)',
+          border: '1px solid var(--color-border)',
+          color: 'var(--color-text-primary)',
         },
-        className: 'font-body',
+        className: 'font-sans',
       }}
       icons={{
         success: <CheckCircle className="w-5 h-5" />,

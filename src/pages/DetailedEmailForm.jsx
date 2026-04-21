@@ -19,9 +19,7 @@ import { Link } from 'react-router-dom';
 const extractNameFromEmail = (email) => {
   if (!email) return 'User';
   const localPart = email.split('@')[0];
-  // Handle common patterns like john.doe, john_doe, johndoe, john
   const nameParts = localPart.split(/[._-]/);
-  // Capitalize first letter of each part
   return nameParts
     .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
     .join(' ');
@@ -35,20 +33,19 @@ const getSenderName = (user, fromName) => {
   return extractNameFromEmail(user?.email);
 };
 
-
 const steps = ['Basics', 'Tone & Style', 'Content', 'Preview'];
 
 const toneOptions = [
-  { value: 'professional', label: 'Professional', icon: '💼' },
-  { value: 'friendly', label: 'Friendly', icon: '😊' },
-  { value: 'casual', label: 'Casual', icon: '😎' },
-  { value: 'formal', label: 'Formal', icon: '🎩' },
-  { value: 'persuasive', label: 'Persuasive', icon: '🔥' },
+  { value: 'professional', label: 'Professional', icon: ' Formal' },
+  { value: 'friendly', label: 'Friendly', icon: ' Warm' },
+  { value: 'casual', label: 'Casual', icon: ' Relaxed' },
+  { value: 'formal', label: 'Formal', icon: ' Rigid' },
+  { value: 'persuasive', label: 'Persuasive', icon: ' Strong' },
 ];
 
 const customTonePlaceholder = `Describe the tone and style you want for your email...
 
-Example: "Warm and approachable, like a mentor giving feedback over coffee. Professional but not stiff, with a touch of humor. Think of an email from your favorite professor who genuinely cares about your success."`;
+Example: "Warm and approachable, like a mentor giving feedback over coffee. Professional but not stiff, with a touch of humor."`;
 
 const styleOptions = [
   { value: 'minimal', label: 'Minimal', desc: 'Clean and simple' },
@@ -65,31 +62,31 @@ const fontOptions = [
 ];
 
 const colorOptions = [
-  { value: 'navy', label: 'Navy Blue', color: '#1e3a5f', icon: '🔵' },
-  { value: 'ocean', label: 'Ocean Blue', color: '#0077b6', icon: '🌊' },
-  { value: 'forest', label: 'Forest Green', color: '#2d6a4f', icon: '🌲' },
-  { value: 'sunset', label: 'Sunset Orange', color: '#e76f51', icon: '🌅' },
-  { value: 'berry', label: 'Berry Purple', color: '#7b2cbf', icon: '🍇' },
-  { value: 'midnight', label: 'Midnight', color: '#1a1a2e', icon: '🌙' },
-  { value: 'rose', label: 'Rose Gold', color: '#b76e79', icon: '🌹' },
-  { value: 'slate', label: 'Slate Gray', color: '#4a5568', icon: '⬜' },
+  { value: 'navy', label: 'Navy Blue', color: '#1e3a5f' },
+  { value: 'ocean', label: 'Ocean Blue', color: '#0077b6' },
+  { value: 'forest', label: 'Forest Green', color: '#2d6a4f' },
+  { value: 'sunset', label: 'Sunset Orange', color: '#e76f51' },
+  { value: 'berry', label: 'Berry Purple', color: '#7b2cbf' },
+  { value: 'midnight', label: 'Midnight', color: '#1a1a2e' },
+  { value: 'rose', label: 'Rose Gold', color: '#b76e79' },
+  { value: 'slate', label: 'Slate Gray', color: '#4a5568' },
 ];
 
 const feelOptions = [
-  { value: 'professional', label: 'Professional', icon: '💼', desc: 'Business-ready' },
-  { value: 'warm', label: 'Warm & Friendly', icon: '🤗', desc: 'Approachable' },
-  { value: 'bold', label: 'Bold & Confident', icon: '💪', desc: 'Strong presence' },
-  { value: 'elegant', label: 'Elegant', icon: '✨', desc: 'Sophisticated' },
-  { value: 'playful', label: 'Playful', icon: '🎉', desc: 'Fun & energetic' },
-  { value: 'minimal', label: 'Minimal', icon: '◻️', desc: 'Clean & simple' },
-  { value: 'creative', label: 'Creative', icon: '🎨', desc: 'Artistic flair' },
-  { value: 'trustworthy', label: 'Trustworthy', icon: '🛡️', desc: 'Reliable feel' },
+  { value: 'professional', label: 'Professional', desc: 'Business-ready' },
+  { value: 'warm', label: 'Warm & Friendly', desc: 'Approachable' },
+  { value: 'bold', label: 'Bold & Confident', desc: 'Strong presence' },
+  { value: 'elegant', label: 'Elegant', desc: 'Sophisticated' },
+  { value: 'playful', label: 'Playful', desc: 'Fun & energetic' },
+  { value: 'minimal', label: 'Minimal', desc: 'Clean & simple' },
+  { value: 'creative', label: 'Creative', desc: 'Artistic flair' },
+  { value: 'trustworthy', label: 'Trustworthy', desc: 'Reliable feel' },
 ];
 
 const widthOptions = [
-  { value: '50', label: 'Compact', desc: '50% width - narrow email' },
-  { value: '70', label: 'Standard', desc: '70% width - balanced layout' },
-  { value: '100', label: 'Full Width', desc: '100% width - expansive' },
+  { value: '50', label: 'Compact', desc: '50% width' },
+  { value: '70', label: 'Standard', desc: '70% width' },
+  { value: '100', label: 'Full Width', desc: '100% width' },
 ];
 
 const borderRadiusOptions = [
@@ -131,20 +128,6 @@ const incrementEmailsSentCount = () => {
   return newCount;
 };
 
-// Simple confetti effect using CSS animations
-const ConfettiPiece = ({ delay, x }) => (
-  <motion.div
-    initial={{ y: -20, x, opacity: 1, rotate: 0 }}
-    animate={{ y: '100vh', opacity: 0, rotate: 720 }}
-    transition={{ duration: 2, delay, ease: 'easeOut' }}
-    className="absolute w-3 h-3 rounded-full"
-    style={{
-      backgroundColor: ['#4F46E5', '#8B5CF6', '#06B6D4', '#F59E0B', '#10B981'][Math.floor(Math.random() * 5)],
-      left: `${x}%`,
-    }}
-  />
-);
-
 export const DetailedEmailForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -153,12 +136,10 @@ export const DetailedEmailForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [fromName, setFromName] = useState('');
   const [formData, setFormData] = useState({
-    // Step 1: Basics
     to: '',
     recipientName: '',
     subject: '',
     prompt: '',
-    // Step 2: Tone & Style
     tone: 'professional',
     style: 'minimal',
     font: 'serif',
@@ -169,21 +150,19 @@ export const DetailedEmailForm = () => {
     shadow: 'light',
     spacing: 'normal',
     headerStyle: 'none',
-    // Step 3: Content
     wordCountMin: 50,
     wordCountMax: 150,
     keyMessage: '',
     includeCTA: false,
     ctaText: '',
+    noStyle: true,
   });
   const [generatedHtml, setGeneratedHtml] = useState('');
   const [errors, setErrors] = useState({});
   const [useCustomTone, setUseCustomTone] = useState(false);
   const [customTone, setCustomTone] = useState('');
   const [emailsSentCount, setEmailsSentCount] = useState(getEmailsSentCount);
-  const [showConfetti, setShowConfetti] = useState(false);
 
-  // Preload form data from history if available
   useEffect(() => {
     const historyData = location.state?.historyItem;
     if (historyData) {
@@ -194,12 +173,10 @@ export const DetailedEmailForm = () => {
         subject: historyData.subject || prev.subject,
         prompt: historyData.prompt || prev.prompt,
       }));
-      // Clear the state so refreshing doesn't keep preloaded data
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
-  // Fetch config to get from_name
   useEffect(() => {
     const loadConfig = async () => {
       try {
@@ -222,7 +199,7 @@ export const DetailedEmailForm = () => {
 
   const validateStep = (step) => {
     const newErrors = {};
-    
+
     if (step === 0) {
       if (!validateEmail(formData.to)) {
         newErrors.to = 'Please enter a valid email address';
@@ -252,30 +229,29 @@ export const DetailedEmailForm = () => {
   const buildEnhancedPrompt = () => {
     let enhancedPrompt = `In essence the email should say this: '${formData.prompt}'. Be very creative in delivering the best style, grammar, and beauty of the message.`;
 
-    // Include recipient name and subject
     const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.to);
     enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
-    enhancedPrompt += `\n\nThe expected subject for this email is '${formData.subject}'. Use it in context for the email.`;
+    enhancedPrompt += `\n\nCONTEXT ONLY - DO NOT INCLUDE IN EMAIL: The expected subject for this email is '${formData.subject}'. Use this subject line only as guidance for the tone and direction of your message. The actual email body must NOT contain or repeat the subject line. Write only the email body content itself — no subject, no headers indicating the subject.`;
 
-    // Include tone - either from preset or custom description
-    if (useCustomTone && customTone.trim()) {
-      // Only use custom description, skip all preset styles
-      enhancedPrompt += `\n\nTone & Style Description: ${customTone}`;
+    if (formData.noStyle) {
+      enhancedPrompt += `\n\nIMPORTANT - NO STYLE MODE: This is a professional business email. Do NOT use any HTML styling, decorative elements, background colors, gradients, shadows, or fancy layouts. Format the email as plain, clean text content using only the following HTML elements: paragraphs (<p>), line breaks (<br>), bold text (<b> or <strong>), and simple lists (<ul>/<li> if needed). Use only basic inline CSS for font-family (Arial or sans-serif), font-size (14-16px), line-height (1.5), and color (black or #333333 on white background). The email should look like a simple, professional plain-text message. No headers with colored backgrounds, no colored borders, no fancy buttons, no decorative elements whatsoever. Keep it clean, minimal, and highly readable.`;
     } else {
-      // Use preset styles
-      enhancedPrompt += `\n\nTone: ${formData.tone}`;
-      enhancedPrompt += `\nStyle: ${formData.style}`;
-      enhancedPrompt += `\nFont preference: ${formData.font}`;
-      enhancedPrompt += `\nColor theme: ${formData.color}`;
-      enhancedPrompt += `\nOverall feel: ${formData.feel}`;
-      enhancedPrompt += `\nEmail width: ${formData.emailWidth}%`;
-      enhancedPrompt += `\nBorder radius: ${formData.borderRadius}`;
-      enhancedPrompt += `\nShadow depth: ${formData.shadow}`;
-      enhancedPrompt += `\nContent spacing: ${formData.spacing}`;
-      enhancedPrompt += `\nHeader style: ${formData.headerStyle}`;
+      if (useCustomTone && customTone.trim()) {
+        enhancedPrompt += `\n\nTone & Style Description: ${customTone}`;
+      } else {
+        enhancedPrompt += `\n\nTone: ${formData.tone}`;
+        enhancedPrompt += `\nStyle: ${formData.style}`;
+        enhancedPrompt += `\nFont preference: ${formData.font}`;
+        enhancedPrompt += `\nColor theme: ${formData.color}`;
+        enhancedPrompt += `\nOverall feel: ${formData.feel}`;
+        enhancedPrompt += `\nEmail width: ${formData.emailWidth}%`;
+        enhancedPrompt += `\nBorder radius: ${formData.borderRadius}`;
+        enhancedPrompt += `\nShadow depth: ${formData.shadow}`;
+        enhancedPrompt += `\nContent spacing: ${formData.spacing}`;
+        enhancedPrompt += `\nHeader style: ${formData.headerStyle}`;
+      }
     }
 
-    // Always include word count
     enhancedPrompt += `\nWord count: ${formData.wordCountMin}-${formData.wordCountMax} words`;
     if (formData.keyMessage) {
       enhancedPrompt += `\n\nIn essence the key message should say this: '${formData.keyMessage}'. Be very creative in delivering the best style, grammar, and beauty of the key message.`;
@@ -283,7 +259,6 @@ export const DetailedEmailForm = () => {
     if (formData.includeCTA && formData.ctaText) {
       enhancedPrompt += `\nCall to action: ${formData.ctaText}`;
     }
-    // Append sender name instruction
     const senderName = getSenderName(user, fromName);
     enhancedPrompt += `\n\nSign the email that it is from ${senderName}.`;
     return enhancedPrompt;
@@ -293,24 +268,20 @@ export const DetailedEmailForm = () => {
     setIsLoading(true);
 
     try {
-      // Generate HTML preview using process 'gen'
       const enhancedPrompt = buildEnhancedPrompt();
-      
+
       const previewPayload = {
         process: 'gen',
         prompt: enhancedPrompt,
       };
 
       const previewResponse = await emailAPI.execute(previewPayload);
-      
+
       if (previewResponse.data.success) {
         setGeneratedHtml(previewResponse.data.output || '');
-        // Save prompt to sessionStorage for the confirm step
         sessionStorage.setItem('pendingPrompt', enhancedPrompt);
-        setCurrentStep(3); // Go to Preview step
-        toast.success('Preview generated!', {
-          description: 'Review your email below before sending.',
-        });
+        setCurrentStep(3);
+        toast.success('Preview generated!');
       } else {
         const errorMsg = previewResponse.data.error || 'Failed to generate preview.';
         toast.error('Preview failed', {
@@ -332,21 +303,18 @@ export const DetailedEmailForm = () => {
 
     try {
       const enhancedPrompt = buildEnhancedPrompt();
-      
+
       const previewPayload = {
         process: 'gen',
         prompt: enhancedPrompt,
       };
 
       const previewResponse = await emailAPI.execute(previewPayload);
-      
+
       if (previewResponse.data.success) {
         setGeneratedHtml(previewResponse.data.output || '');
-        // Update prompt in sessionStorage for the confirm step
         sessionStorage.setItem('pendingPrompt', enhancedPrompt);
-        toast.success('Preview regenerated!', {
-          description: 'Check out the new version.',
-        });
+        toast.success('Preview regenerated!');
       } else {
         const errorMsg = previewResponse.data.error || 'Failed to regenerate preview.';
         toast.error('Regeneration failed', {
@@ -367,10 +335,8 @@ export const DetailedEmailForm = () => {
     setIsLoading(true);
 
     try {
-      // Get the prompt from sessionStorage
       const savedPrompt = sessionStorage.getItem('pendingPrompt') || '';
 
-      // Confirm and send email with pre-generated HTML
       const confirmPayload = {
         process: 'email',
         to: formData.to,
@@ -382,17 +348,10 @@ export const DetailedEmailForm = () => {
       const sendResponse = await emailAPI.confirm(confirmPayload);
 
       if (sendResponse.data.success) {
-        // Clear the prompt from sessionStorage after successful send
         sessionStorage.removeItem('pendingPrompt');
-        // Update emails sent counter
         const newCount = incrementEmailsSentCount();
         setEmailsSentCount(newCount);
-        // Trigger confetti
-        setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 2500);
-        toast.success('Email sent! ✨', {
-          description: `Your email has been delivered to ${formData.to}.`,
-        });
+        toast.success('Email sent!');
         navigate('/result', {
           state: {
             email: generatedHtml,
@@ -430,13 +389,13 @@ export const DetailedEmailForm = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
-            <h2 className="text-xl text-zinc-800 mb-2">
-              The Basics 📧
+            <h2 className="text-xl text-text-primary mb-2">
+              The Basics
             </h2>
-            <p className="text-zinc-600 mb-6">
-              Let's start with who's receiving this and what it's about.
+            <p className="text-text-secondary mb-6">
+              Start with who's receiving this and what it's about.
             </p>
-            
+
             <div className="space-y-4">
               <Input
                 label="Recipient Email"
@@ -482,29 +441,27 @@ export const DetailedEmailForm = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
-            <h2 className="text-xl text-zinc-800 mb-2">
-              Tone & Style 🎨
+            <h2 className="text-xl text-text-primary mb-2">
+              Tone & Style
             </h2>
-            <p className="text-zinc-600 mb-6">
+            <p className="text-text-secondary mb-6">
               Set the mood. How do you want this email to feel?
             </p>
-            
+
             <div className="space-y-8">
               {/* Tone Toggle */}
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <label className="text-sm font-medium text-zinc-700">
-                    Choose how to define your tone
-                  </label>
-                </div>
+                <label className="text-sm font-medium text-text-secondary mb-3 block">
+                  Choose how to define your tone
+                </label>
                 <div className="flex gap-3 mb-4">
                   <button
                     onClick={() => setUseCustomTone(false)}
                     className={`
-                      flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all
-                      ${!useCustomTone 
-                        ? 'border-primary-600 bg-primary-600/5' 
-                        : 'border-zinc-200 hover:border-zinc-300'}
+                      flex-1 flex items-center justify-center gap-2 p-3 border transition-all
+                      ${!useCustomTone
+                        ? 'border-accent bg-surface-elevated text-text-primary'
+                        : 'border-border text-text-muted hover:border-text-muted'}
                     `}
                   >
                     <List className="w-4 h-4" />
@@ -513,10 +470,10 @@ export const DetailedEmailForm = () => {
                   <button
                     onClick={() => setUseCustomTone(true)}
                     className={`
-                      flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all
-                      ${useCustomTone 
-                        ? 'border-primary-600 bg-primary-600/5' 
-                        : 'border-zinc-200 hover:border-zinc-300'}
+                      flex-1 flex items-center justify-center gap-2 p-3 border transition-all
+                      ${useCustomTone
+                        ? 'border-accent bg-surface-elevated text-text-primary'
+                        : 'border-border text-text-muted hover:border-text-muted'}
                     `}
                   >
                     <Pencil className="w-4 h-4" />
@@ -535,7 +492,7 @@ export const DetailedEmailForm = () => {
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <label className="block text-sm font-medium text-zinc-700 mb-3">
+                    <label className="text-sm font-medium text-text-secondary mb-3 block">
                       Choose a tone
                     </label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
@@ -544,14 +501,14 @@ export const DetailedEmailForm = () => {
                           key={tone.value}
                           onClick={() => updateFormData('tone', tone.value)}
                           className={`
-                            p-3 rounded-xl border-2 transition-all text-left
-                            ${formData.tone === tone.value 
-                              ? 'border-primary-600 bg-primary-600/5' 
-                              : 'border-zinc-200 hover:border-zinc-300'}
+                            p-3 border transition-all text-left
+                            ${formData.tone === tone.value
+                              ? 'border-accent bg-surface-elevated text-text-primary'
+                              : 'border-border text-text-muted hover:border-text-muted'}
                           `}
                         >
-                          <span className="text-2xl mb-1 block">{tone.icon}</span>
-                          <span className="text-sm font-medium text-zinc-800">{tone.label}</span>
+                          <span className="text-sm font-medium text-text-primary block">{tone.label}</span>
+                          <span className="text-xs text-text-muted">{tone.icon}</span>
                         </button>
                       ))}
                     </div>
@@ -569,7 +526,7 @@ export const DetailedEmailForm = () => {
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <label className="block text-sm font-medium text-zinc-700 mb-3">
+                    <label className="text-sm font-medium text-text-secondary mb-3 block">
                       Describe your desired tone & style
                     </label>
                     <Textarea
@@ -577,7 +534,7 @@ export const DetailedEmailForm = () => {
                       value={customTone}
                       onChange={(e) => setCustomTone(e.target.value)}
                       rows={5}
-                      className="bg-zinc-50 border-zinc-200 focus:bg-white"
+                      className="bg-surface-input border-border"
                     />
                   </motion.div>
                 )}
@@ -596,7 +553,7 @@ export const DetailedEmailForm = () => {
                   >
                     {/* Colors */}
                     <div>
-                      <label className="block text-sm font-medium text-zinc-700 mb-3">
+                      <label className="text-sm font-medium text-text-secondary mb-3 block">
                         Color theme
                       </label>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -605,17 +562,17 @@ export const DetailedEmailForm = () => {
                             key={color.value}
                             onClick={() => updateFormData('color', color.value)}
                             className={`
-                              p-3 rounded-xl border-2 transition-all text-left flex items-center gap-3
-                              ${formData.color === color.value 
-                                ? 'border-primary-600 bg-primary-600/5' 
-                                : 'border-zinc-200 hover:border-zinc-300'}
+                              p-3 border transition-all text-left flex items-center gap-3
+                              ${formData.color === color.value
+                                ? 'border-accent bg-surface-elevated'
+                                : 'border-border hover:border-text-muted'}
                             `}
                           >
-                            <span 
-                              className="w-6 h-6 rounded-full flex-shrink-0 border border-zinc-200" 
+                            <span
+                              className="w-6 h-6 border border-border flex-shrink-0"
                               style={{ backgroundColor: color.color }}
                             />
-                            <span className="text-sm font-medium text-zinc-800">{color.label}</span>
+                            <span className="text-sm font-medium text-text-primary">{color.label}</span>
                           </button>
                         ))}
                       </div>
@@ -623,7 +580,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Feel */}
                     <div>
-                      <label className="block text-sm font-medium text-zinc-700 mb-3">
+                      <label className="text-sm font-medium text-text-secondary mb-3 block">
                         Overall feel
                       </label>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -632,15 +589,14 @@ export const DetailedEmailForm = () => {
                             key={feel.value}
                             onClick={() => updateFormData('feel', feel.value)}
                             className={`
-                              p-3 rounded-xl border-2 transition-all text-left
-                              ${formData.feel === feel.value 
-                                ? 'border-primary-600 bg-primary-600/5' 
-                                : 'border-zinc-200 hover:border-zinc-300'}
+                              p-3 border transition-all text-left
+                              ${formData.feel === feel.value
+                                ? 'border-accent bg-surface-elevated'
+                                : 'border-border hover:border-text-muted'}
                             `}
                           >
-                            <span className="text-xl mb-1 block">{feel.icon}</span>
-                            <span className="text-sm font-medium text-zinc-800 block">{feel.label}</span>
-                            <span className="text-xs text-zinc-500">{feel.desc}</span>
+                            <span className="text-sm font-medium text-text-primary block">{feel.label}</span>
+                            <span className="text-xs text-text-muted">{feel.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -648,7 +604,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Email Width */}
                     <div>
-                      <label className="block text-sm font-medium text-zinc-700 mb-3">
+                      <label className="text-sm font-medium text-text-secondary mb-3 block">
                         Email width
                       </label>
                       <div className="grid grid-cols-3 gap-3">
@@ -657,14 +613,14 @@ export const DetailedEmailForm = () => {
                             key={width.value}
                             onClick={() => updateFormData('emailWidth', width.value)}
                             className={`
-                              p-3 rounded-xl border-2 transition-all text-left
-                              ${formData.emailWidth === width.value 
-                                ? 'border-primary-600 bg-primary-600/5' 
-                                : 'border-zinc-200 hover:border-zinc-300'}
+                              p-3 border transition-all text-left
+                              ${formData.emailWidth === width.value
+                                ? 'border-accent bg-surface-elevated'
+                                : 'border-border hover:border-text-muted'}
                             `}
                           >
-                            <span className="text-sm font-medium text-zinc-800 block">{width.label}</span>
-                            <span className="text-xs text-zinc-500">{width.desc}</span>
+                            <span className="text-sm font-medium text-text-primary block">{width.label}</span>
+                            <span className="text-xs text-text-muted">{width.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -672,7 +628,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Border Radius */}
                     <div>
-                      <label className="block text-sm font-medium text-zinc-700 mb-3">
+                      <label className="text-sm font-medium text-text-secondary mb-3 block">
                         Corner style
                       </label>
                       <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
@@ -681,14 +637,14 @@ export const DetailedEmailForm = () => {
                             key={radius.value}
                             onClick={() => updateFormData('borderRadius', radius.value)}
                             className={`
-                              p-3 rounded-xl border-2 transition-all text-left
-                              ${formData.borderRadius === radius.value 
-                                ? 'border-primary-600 bg-primary-600/5' 
-                                : 'border-zinc-200 hover:border-zinc-300'}
+                              p-3 border transition-all text-left
+                              ${formData.borderRadius === radius.value
+                                ? 'border-accent bg-surface-elevated'
+                                : 'border-border hover:border-text-muted'}
                             `}
                           >
-                            <span className="text-sm font-medium text-zinc-800 block">{radius.label}</span>
-                            <span className="text-xs text-zinc-500">{radius.desc}</span>
+                            <span className="text-sm font-medium text-text-primary block">{radius.label}</span>
+                            <span className="text-xs text-text-muted">{radius.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -696,7 +652,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Shadow */}
                     <div>
-                      <label className="block text-sm font-medium text-zinc-700 mb-3">
+                      <label className="text-sm font-medium text-text-secondary mb-3 block">
                         Shadow depth
                       </label>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -705,14 +661,14 @@ export const DetailedEmailForm = () => {
                             key={shadow.value}
                             onClick={() => updateFormData('shadow', shadow.value)}
                             className={`
-                              p-3 rounded-xl border-2 transition-all text-left
-                              ${formData.shadow === shadow.value 
-                                ? 'border-primary-600 bg-primary-600/5' 
-                                : 'border-zinc-200 hover:border-zinc-300'}
+                              p-3 border transition-all text-left
+                              ${formData.shadow === shadow.value
+                                ? 'border-accent bg-surface-elevated'
+                                : 'border-border hover:border-text-muted'}
                             `}
                           >
-                            <span className="text-sm font-medium text-zinc-800 block">{shadow.label}</span>
-                            <span className="text-xs text-zinc-500">{shadow.desc}</span>
+                            <span className="text-sm font-medium text-text-primary block">{shadow.label}</span>
+                            <span className="text-xs text-text-muted">{shadow.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -720,7 +676,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Spacing */}
                     <div>
-                      <label className="block text-sm font-medium text-zinc-700 mb-3">
+                      <label className="text-sm font-medium text-text-secondary mb-3 block">
                         Content spacing
                       </label>
                       <div className="grid grid-cols-3 gap-3">
@@ -729,14 +685,14 @@ export const DetailedEmailForm = () => {
                             key={spacing.value}
                             onClick={() => updateFormData('spacing', spacing.value)}
                             className={`
-                              p-3 rounded-xl border-2 transition-all text-left
-                              ${formData.spacing === spacing.value 
-                                ? 'border-primary-600 bg-primary-600/5' 
-                                : 'border-zinc-200 hover:border-zinc-300'}
+                              p-3 border transition-all text-left
+                              ${formData.spacing === spacing.value
+                                ? 'border-accent bg-surface-elevated'
+                                : 'border-border hover:border-text-muted'}
                             `}
                           >
-                            <span className="text-sm font-medium text-zinc-800 block">{spacing.label}</span>
-                            <span className="text-xs text-zinc-500">{spacing.desc}</span>
+                            <span className="text-sm font-medium text-text-primary block">{spacing.label}</span>
+                            <span className="text-xs text-text-muted">{spacing.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -744,7 +700,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Header Style */}
                     <div>
-                      <label className="block text-sm font-medium text-zinc-700 mb-3">
+                      <label className="text-sm font-medium text-text-secondary mb-3 block">
                         Header style
                       </label>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -753,14 +709,14 @@ export const DetailedEmailForm = () => {
                             key={header.value}
                             onClick={() => updateFormData('headerStyle', header.value)}
                             className={`
-                              p-3 rounded-xl border-2 transition-all text-left
-                              ${formData.headerStyle === header.value 
-                                ? 'border-primary-600 bg-primary-600/5' 
-                                : 'border-zinc-200 hover:border-zinc-300'}
+                              p-3 border transition-all text-left
+                              ${formData.headerStyle === header.value
+                                ? 'border-accent bg-surface-elevated'
+                                : 'border-border hover:border-text-muted'}
                             `}
                           >
-                            <span className="text-sm font-medium text-zinc-800 block">{header.label}</span>
-                            <span className="text-xs text-zinc-500">{header.desc}</span>
+                            <span className="text-sm font-medium text-text-primary block">{header.label}</span>
+                            <span className="text-xs text-text-muted">{header.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -768,7 +724,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Font */}
                     <div>
-                      <label className="block text-sm font-medium text-zinc-700 mb-3">
+                      <label className="text-sm font-medium text-text-secondary mb-3 block">
                         Font style
                       </label>
                       <div className="grid grid-cols-2 gap-3">
@@ -777,14 +733,14 @@ export const DetailedEmailForm = () => {
                             key={font.value}
                             onClick={() => updateFormData('font', font.value)}
                             className={`
-                              p-3 rounded-xl border-2 transition-all text-left
-                              ${formData.font === font.value 
-                                ? 'border-primary-600 bg-primary-600/5' 
-                                : 'border-zinc-200 hover:border-zinc-300'}
+                              p-3 border transition-all text-left
+                              ${formData.font === font.value
+                                ? 'border-accent bg-surface-elevated'
+                                : 'border-border hover:border-text-muted'}
                             `}
                           >
-                            <span className="text-sm font-medium text-zinc-800 block">{font.label}</span>
-                            <span className="text-xs text-zinc-500">{font.desc}</span>
+                            <span className="text-sm font-medium text-text-primary block">{font.label}</span>
+                            <span className="text-xs text-text-muted">{font.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -792,7 +748,7 @@ export const DetailedEmailForm = () => {
 
                     {/* Style */}
                     <div>
-                      <label className="block text-sm font-medium text-zinc-700 mb-3">
+                      <label className="text-sm font-medium text-text-secondary mb-3 block">
                         Overall style
                       </label>
                       <div className="grid grid-cols-2 gap-3">
@@ -801,14 +757,14 @@ export const DetailedEmailForm = () => {
                             key={style.value}
                             onClick={() => updateFormData('style', style.value)}
                             className={`
-                              p-3 rounded-xl border-2 transition-all text-left
-                              ${formData.style === style.value 
-                                ? 'border-primary-600 bg-primary-600/5' 
-                                : 'border-zinc-200 hover:border-zinc-300'}
+                              p-3 border transition-all text-left
+                              ${formData.style === style.value
+                                ? 'border-accent bg-surface-elevated'
+                                : 'border-border hover:border-text-muted'}
                             `}
                           >
-                            <span className="text-sm font-medium text-zinc-800 block">{style.label}</span>
-                            <span className="text-xs text-zinc-500">{style.desc}</span>
+                            <span className="text-sm font-medium text-text-primary block">{style.label}</span>
+                            <span className="text-xs text-text-muted">{style.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -828,47 +784,47 @@ export const DetailedEmailForm = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
-            <h2 className="text-xl text-zinc-800 mb-2">
-              Content Details 📏
+            <h2 className="text-xl text-text-primary mb-2">
+              Content Details
             </h2>
-            <p className="text-zinc-600 mb-6">
-              Fine-tune the specifics. Make it perfect.
+            <p className="text-text-secondary mb-6">
+              Fine-tune the specifics.
             </p>
-            
+
             <div className="space-y-6">
               {/* Word Count */}
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-3">
+                <label className="text-sm font-medium text-text-secondary mb-3 block">
                   Preferred word count
                 </label>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => updateFormData('wordCountMin', Math.max(20, formData.wordCountMin - 25))}
-                      className="p-2 rounded-lg border border-zinc-200 hover:bg-zinc-50"
+                      className="p-2 border border-border hover:border-text-muted transition-colors"
                     >
                       -
                     </button>
-                    <span className="w-16 text-center font-medium">{formData.wordCountMin}</span>
+                    <span className="w-16 text-center font-medium text-text-primary">{formData.wordCountMin}</span>
                     <button
                       onClick={() => updateFormData('wordCountMin', Math.min(formData.wordCountMax - 25, formData.wordCountMin + 25))}
-                      className="p-2 rounded-lg border border-zinc-200 hover:bg-zinc-50"
+                      className="p-2 border border-border hover:border-text-muted transition-colors"
                     >
                       +
                     </button>
                   </div>
-                  <span className="text-zinc-400">to</span>
+                  <span className="text-text-muted">to</span>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => updateFormData('wordCountMax', Math.max(formData.wordCountMin + 25, formData.wordCountMax - 25))}
-                      className="p-2 rounded-lg border border-zinc-200 hover:bg-zinc-50"
+                      className="p-2 border border-border hover:border-text-muted transition-colors"
                     >
                       -
                     </button>
-                    <span className="w-16 text-center font-medium">{formData.wordCountMax}</span>
+                    <span className="w-16 text-center font-medium text-text-primary">{formData.wordCountMax}</span>
                     <button
                       onClick={() => updateFormData('wordCountMax', Math.min(500, formData.wordCountMax + 25))}
-                      className="p-2 rounded-lg border border-zinc-200 hover:bg-zinc-50"
+                      className="p-2 border border-border hover:border-text-muted transition-colors"
                     >
                       +
                     </button>
@@ -888,23 +844,25 @@ export const DetailedEmailForm = () => {
               {/* CTA Toggle */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <label className="text-sm font-medium text-zinc-700">
+                  <label className="text-sm font-medium text-text-secondary">
                     Include a call-to-action button?
                   </label>
                   <button
                     onClick={() => updateFormData('includeCTA', !formData.includeCTA)}
                     className={`
-                      w-12 h-6 rounded-full transition-colors relative
-                      ${formData.includeCTA ? 'bg-primary-600' : 'bg-zinc-200'}
+                      w-12 h-6 border transition-colors relative overflow-hidden
+                      ${formData.includeCTA ? 'border-accent bg-accent' : 'border-border bg-surface-elevated'}
                     `}
                   >
                     <div className={`
-                      w-5 h-5 bg-white rounded-full shadow-md absolute top-0.5 transition-transform
+                      w-5 h-5 bg-surface absolute top-0.5 transition-transform
                       ${formData.includeCTA ? 'translate-x-6' : 'translate-x-0.5'}
-                    `} />
+                    }`}
+                    style={{ left: formData.includeCTA ? 'calc(100% - 20px - 2px)' : '2px' }}
+                    />
                   </button>
                 </div>
-                
+
                 <AnimatePresence>
                   {formData.includeCTA && (
                     <motion.div
@@ -913,7 +871,7 @@ export const DetailedEmailForm = () => {
                       exit={{ opacity: 0, height: 0 }}
                     >
                       <Input
-                        placeholder="Book a call →"
+                        placeholder="Book a call"
                         value={formData.ctaText}
                         onChange={(e) => updateFormData('ctaText', e.target.value)}
                       />
@@ -921,6 +879,43 @@ export const DetailedEmailForm = () => {
                   )}
                 </AnimatePresence>
               </div>
+
+              {/* No Style Option */}
+              <label
+                htmlFor="noStyle"
+                className="flex items-center gap-4 p-4 border cursor-pointer transition-all duration-150
+                  border-border hover:border-text-muted"
+              >
+                {/* Custom checkbox */}
+                <div className="relative w-5 h-5 flex-shrink-0">
+                  <input
+                    type="checkbox"
+                    id="noStyle"
+                    checked={formData.noStyle}
+                    onChange={(e) => updateFormData('noStyle', e.target.checked)}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  />
+                  <div className={`w-5 h-5 border transition-all duration-150 flex items-center justify-center
+                    ${formData.noStyle ? 'bg-accent border-accent' : 'border-text-secondary bg-transparent'}`}>
+                    <svg
+                      className={`w-3 h-3 text-surface transition-opacity duration-150 ${formData.noStyle ? 'opacity-100' : 'opacity-0'}`}
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="2,6 5,9 10,3" />
+                    </svg>
+                  </div>
+                </div>
+                {/* Label text */}
+                <div className="flex-1">
+                  <span className="text-sm font-medium text-text-primary block">No Style</span>
+                  <span className="text-xs text-text-muted">Plain text — no colors, no decorative elements, no HTML styling. Clean and professional.</span>
+                </div>
+              </label>
             </div>
           </motion.div>
         );
@@ -933,101 +928,80 @@ export const DetailedEmailForm = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
-            <h2 className="text-lg sm:text-xl text-zinc-800 mb-2">
-              Review Your Email Preview 👀
+            <h2 className="text-lg sm:text-xl text-text-primary mb-2">
+              Review Your Email Preview
             </h2>
-            <p className="text-zinc-600 mb-4 sm:mb-6 text-sm sm:text-base">
-              Here's what your email looks like. If it needs changes, regenerate or go back to edit.
+            <p className="text-text-secondary mb-4 sm:mb-6 text-sm sm:text-base">
+              Here's what your email looks like.
             </p>
 
             {/* Preview Section */}
-            <div className="border border-zinc-200 rounded-xl overflow-hidden mb-4 sm:mb-6">
-              <div className="bg-zinc-50 px-4 py-2 border-b border-zinc-200 flex items-center justify-between">
-                <span className="text-sm font-medium text-zinc-600">Email Preview</span>
+            <div className="border border-border overflow-hidden mb-4 sm:mb-6">
+              <div className="bg-surface-elevated px-4 py-2 border-b border-border flex items-center justify-between">
+                <span className="text-sm font-medium text-text-secondary">Email Preview</span>
                 <button
                   onClick={handleRegeneratePreview}
-                  className="flex items-center gap-1 text-sm text-primary-600 hover:text-primary-600/80 transition-colors min-h-10 px-2"
+                  className="flex items-center gap-1 text-sm text-accent hover:text-accent-hover transition-colors min-h-10 px-2"
                 >
                   <RefreshCw className="w-4 h-4" />
                   Regenerate
                 </button>
               </div>
               <div
-                className="p-4 sm:p-6 bg-white max-h-64 sm:max-h-96 overflow-auto [&_table]:w-full [&_*]:max-w-full"
-                dangerouslySetInnerHTML={{ __html: generatedHtml || '<p class="text-zinc-400">No preview generated</p>' }}
+                className="p-4 sm:p-6 bg-surface-card max-h-64 sm:max-h-96 overflow-auto [&_table]:w-full [&_*]:max-w-full"
+                dangerouslySetInnerHTML={{ __html: generatedHtml || '<p class="text-text-muted">No preview generated</p>' }}
               />
             </div>
 
             {/* Summary */}
             <div className="space-y-3 text-sm sm:text-base">
-              <div className="p-3 bg-zinc-50 rounded-lg">
-                <p className="text-xs text-zinc-500 mb-1">To</p>
-                <p className="text-sm font-medium text-zinc-800 truncate">{formData.to}</p>
+              <div className="p-3 border border-border">
+                <p className="text-xs text-text-muted mb-1">To</p>
+                <p className="text-sm font-medium text-text-primary truncate">{formData.to}</p>
               </div>
 
-              <div className="p-3 bg-zinc-50 rounded-lg">
-                <p className="text-xs text-zinc-500 mb-1">Subject</p>
-                <p className="text-sm font-medium text-zinc-800 truncate">{formData.subject}</p>
+              <div className="p-3 border border-border">
+                <p className="text-xs text-text-muted mb-1">Subject</p>
+                <p className="text-sm font-medium text-text-primary truncate">{formData.subject}</p>
               </div>
 
-              <div className="p-3 bg-zinc-50 rounded-lg">
-                <p className="text-xs text-zinc-500 mb-1">Tone & Style</p>
+              <div className="p-3 border border-border">
+                <p className="text-xs text-text-muted mb-1">Tone & Style</p>
                 {useCustomTone && customTone.trim() ? (
-                  <p className="text-sm text-zinc-800 italic">Custom: {customTone.substring(0, 100)}{customTone.length > 100 ? '...' : ''}</p>
+                  <p className="text-sm text-text-secondary italic">Custom: {customTone.substring(0, 100)}{customTone.length > 100 ? '...' : ''}</p>
                 ) : (
-                  <p className="text-sm font-medium text-zinc-800 capitalize">
-                    {formData.tone} • {formData.style}
+                  <p className="text-sm font-medium text-text-primary capitalize">
+                    {formData.tone} - {formData.style}
                   </p>
                 )}
               </div>
 
-              <div className="p-3 bg-zinc-50 rounded-lg">
-                <p className="text-xs text-zinc-500 mb-1">Design Choices</p>
+              <div className="p-3 border border-border">
+                <p className="text-xs text-text-muted mb-1">Design Choices</p>
                 <div className="flex flex-wrap gap-2 mt-1">
-                  <span className="inline-flex items-center gap-1 px-2 py-1 bg-white rounded-full text-xs">
+                  <span className="inline-flex items-center gap-1 px-2 py-1 border border-border text-xs">
                     <span
-                      className="w-3 h-3 rounded-full border border-zinc-200"
+                      className="w-3 h-3 border border-border"
                       style={{ backgroundColor: colorOptions.find(c => c.value === formData.color)?.color || '#1e3a5f' }}
                     />
                     {colorOptions.find(c => c.value === formData.color)?.label}
                   </span>
-                  <span className="inline-flex items-center px-2 py-1 bg-white rounded-full text-xs">
+                  <span className="inline-flex items-center px-2 py-1 border border-border text-xs">
                     {formData.emailWidth}% width
                   </span>
-                  <span className="inline-flex items-center px-2 py-1 bg-white rounded-full text-xs capitalize">
+                  <span className="inline-flex items-center px-2 py-1 border border-border text-xs capitalize">
                     {formData.borderRadius} corners
                   </span>
-                  <span className="inline-flex items-center px-2 py-1 bg-white rounded-full text-xs capitalize">
+                  <span className="inline-flex items-center px-2 py-1 border border-border text-xs capitalize">
                     {formData.shadow} shadow
                   </span>
                 </div>
               </div>
 
-              <div className="p-3 bg-zinc-50 rounded-lg">
-                <p className="text-xs text-zinc-500 mb-1">Additional Styling</p>
-                <p className="text-sm text-zinc-800 capitalize">
-                  {formData.feel} feel • {formData.spacing} spacing • {formData.font} font
-                </p>
+              <div className="p-3 border border-border">
+                <p className="text-xs text-text-muted mb-1">Your message</p>
+                <p className="text-sm text-text-secondary line-clamp-2">{formData.prompt}</p>
               </div>
-
-              <div className="p-3 bg-zinc-50 rounded-lg">
-                <p className="text-xs text-zinc-500 mb-1">Your message</p>
-                <p className="text-sm text-zinc-800 line-clamp-2">{formData.prompt}</p>
-              </div>
-
-              {formData.keyMessage && (
-                <div className="p-3 bg-zinc-50 rounded-lg">
-                  <p className="text-xs text-zinc-500 mb-1">Key message</p>
-                  <p className="text-sm font-navy-800">{formData.keyMessage}</p>
-                </div>
-              )}
-              
-              {formData.includeCTA && formData.ctaText && (
-                <div className="p-3 bg-primary-600/10 rounded-lg border border-primary-600/20">
-                  <p className="text-xs text-primary-600 mb-1">Call to action</p>
-                  <p className="text-sm font-medium text-primary-600">{formData.ctaText}</p>
-                </div>
-              )}
             </div>
           </motion.div>
         );
@@ -1041,7 +1015,7 @@ export const DetailedEmailForm = () => {
     return (
       <Layout>
         <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
-          <MagicLoader 
+          <MagicLoader
             title={currentStep === 3 ? 'Generating preview...' : 'Crafting your masterpiece...'}
             subtitle={currentStep === 3 ? 'Creating HTML email' : 'Every detail matters'}
             variant="generating"
@@ -1053,26 +1027,11 @@ export const DetailedEmailForm = () => {
 
   return (
     <Layout>
-      {/* Confetti Overlay */}
-      <AnimatePresence>
-        {showConfetti && (
-          <div className="fixed inset-0 z-50 pointer-events-none overflow-hidden">
-            {[...Array(30)].map((_, i) => (
-              <ConfettiPiece
-                key={i}
-                delay={i * 0.05}
-                x={Math.random() * 100}
-              />
-            ))}
-          </div>
-        )}
-      </AnimatePresence>
-
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Back Button */}
         <Link
           to="/home"
-          className="inline-flex items-center gap-2 text-zinc-600 hover:text-zinc-800 transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Home
@@ -1085,14 +1044,14 @@ export const DetailedEmailForm = () => {
           className="mb-6 sm:mb-8"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-600 to-primary-600 rounded-xl flex items-center justify-center">
-              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-accent flex items-center justify-center">
+              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-surface" />
             </div>
             <div>
-              <h1 className="text-xl sm:text-2xl md:text-3xl text-zinc-900">
+              <h1 className="text-xl sm:text-2xl md:text-3xl text-text-primary">
                 Craft with Care
               </h1>
-              <p className="text-zinc-500 text-sm sm:text-base">Every detail, perfected</p>
+              <p className="text-text-muted text-sm sm:text-base">Every detail, perfected</p>
             </div>
           </div>
         </motion.div>
@@ -1109,33 +1068,33 @@ export const DetailedEmailForm = () => {
           </AnimatePresence>
 
           {/* Navigation */}
-          <div className={`flex flex-col sm:flex-row justify-between items-center gap-3 mt-6 sm:mt-8 pt-6 border-t border-zinc-100 ${currentStep === 3 ? 'sm:flex-col-reverse sm:gap-4' : ''}`}>
+          <div className={`flex flex-col sm:flex-row justify-between items-center gap-3 mt-6 sm:mt-8 pt-6 border-t border-border ${currentStep === 3 ? 'sm:flex-col-reverse sm:gap-4' : ''}`}>
             <Button
               variant="ghost"
               onClick={handleBack}
               disabled={currentStep === 0}
-              className="w-full sm:w-auto min-h-11"
+              className="w-full sm:w-auto"
             >
               <ChevronLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
 
             {currentStep === 0 && (
-              <Button onClick={handleNext} className="w-full sm:w-auto min-h-11">
+              <Button onClick={handleNext} className="w-full sm:w-auto">
                 Continue
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             )}
 
             {currentStep === 1 && (
-              <Button onClick={handleNext} className="w-full sm:w-auto min-h-11">
+              <Button onClick={handleNext} className="w-full sm:w-auto">
                 Continue
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             )}
 
             {currentStep === 2 && (
-              <Button onClick={handleGeneratePreview} className="w-full sm:w-auto min-h-11">
+              <Button onClick={handleGeneratePreview} className="w-full sm:w-auto">
                 <Eye className="w-4 h-4 mr-2" />
                 Generate Preview
               </Button>
@@ -1143,10 +1102,10 @@ export const DetailedEmailForm = () => {
 
             {currentStep === 3 && (
               <Button
-                variant="glow"
+                variant="primary"
                 size="lg"
                 onClick={handleSendEmail}
-                className="w-full sm:w-auto min-h-12"
+                className="w-full sm:w-auto"
               >
                 <Send className="w-5 h-5 mr-2" />
                 Send Email

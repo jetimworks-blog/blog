@@ -7,13 +7,12 @@ const variants = {
   secondary: 'btn-secondary',
   ghost: 'btn-ghost',
   danger: 'btn-danger',
-  glow: 'btn-glow',
 };
 
 const sizes = {
-  sm: 'py-2 px-4 text-sm min-h-10 sm:min-h-0',
-  md: 'py-3 px-6 min-h-11 sm:min-h-0',
-  lg: 'py-4 px-8 text-lg min-h-12 sm:min-h-0',
+  sm: 'py-2 px-4 text-sm',
+  md: 'py-3 px-6 text-base',
+  lg: 'py-4 px-8 text-lg',
 };
 
 export const Button = ({
@@ -29,7 +28,6 @@ export const Button = ({
 }) => {
   return (
     <motion.button
-      whileHover={{ scale: disabled || loading ? 1 : 1.02 }}
       whileTap={{ scale: disabled || loading ? 1 : 0.98 }}
       type={type}
       className={clsx(

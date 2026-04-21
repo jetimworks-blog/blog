@@ -17,9 +17,9 @@ export const Textarea = forwardRef(({
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-zinc-700 mb-2">
+        <label className="block text-sm font-medium text-text-secondary mb-2">
           {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+          {required && <span className="text-error ml-1">*</span>}
         </label>
       )}
       <textarea
@@ -37,12 +37,12 @@ export const Textarea = forwardRef(({
       />
       <div className="flex justify-between mt-2">
         {error && (
-          <p className="text-sm text-red-500">{error}</p>
+          <p className="text-sm text-error">{error}</p>
         )}
         {maxLength && (
           <p className={clsx(
             'text-sm ml-auto',
-            charCount > maxLength * 0.9 ? 'text-orange-500' : 'text-zinc-400'
+            charCount > maxLength * 0.9 ? 'text-warning' : 'text-text-muted'
           )}>
             {charCount}/{maxLength}
           </p>

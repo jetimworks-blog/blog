@@ -19,9 +19,7 @@ import { Link } from 'react-router-dom';
 const extractNameFromEmail = (email) => {
   if (!email) return 'User';
   const localPart = email.split('@')[0];
-  // Handle common patterns like john.doe, john_doe, johndoe, john
   const nameParts = localPart.split(/[._-]/);
-  // Capitalize first letter of each part
   return nameParts
     .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
     .join(' ');
@@ -48,20 +46,6 @@ const incrementEmailsSentCount = () => {
   return newCount;
 };
 
-// Simple confetti effect using CSS animations
-const ConfettiPiece = ({ delay, x }) => (
-  <motion.div
-    initial={{ y: -20, x, opacity: 1, rotate: 0 }}
-    animate={{ y: '100vh', opacity: 0, rotate: 720 }}
-    transition={{ duration: 2, delay, ease: 'easeOut' }}
-    className="absolute w-3 h-3 rounded-full"
-    style={{
-      backgroundColor: ['#4F46E5', '#8B5CF6', '#06B6D4', '#F59E0B', '#10B981'][Math.floor(Math.random() * 5)],
-      left: `${x}%`,
-    }}
-  />
-);
-
 export const YoloEmailForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -74,11 +58,11 @@ export const YoloEmailForm = () => {
     recipientName: '',
     subject: '',
     prompt: '',
+    noStyle: true,
   });
   const [generatedHtml, setGeneratedHtml] = useState('');
   const [errors, setErrors] = useState({});
   const [emailsSentCount, setEmailsSentCount] = useState(getEmailsSentCount);
-  const [showConfetti, setShowConfetti] = useState(false);
 
   // Preload form data from history if available
   useEffect(() => {
@@ -90,7 +74,6 @@ export const YoloEmailForm = () => {
         subject: historyData.subject || '',
         prompt: historyData.prompt || '',
       });
-      // Clear the state so refreshing doesn't keep preloaded data
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
@@ -119,19 +102,19 @@ export const YoloEmailForm = () => {
 
   const validateStep = (step) => {
     const newErrors = {};
-    
+
     if (step === 0) {
       if (!validateEmail(formData.to)) {
         newErrors.to = 'Please enter a valid email address';
       }
     }
-    
+
     if (step === 1) {
       const subjectValidation = validateRequired(formData.subject, 'Subject');
       if (!subjectValidation.valid) {
         newErrors.subject = subjectValidation.message;
       }
-      
+
       const promptValidation = validateRequired(formData.prompt, 'Prompt');
       if (!promptValidation.valid) {
         newErrors.prompt = promptValidation.message;
@@ -160,30 +143,30 @@ export const YoloEmailForm = () => {
     setIsLoading(true);
 
     try {
-      // Build enhanced prompt with recipient name and subject
       const senderName = getSenderName(user, fromName);
       const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.to);
       let enhancedPrompt = `In essence the email should say this: '${formData.prompt}'. Be very creative in delivering the best style, grammar, and beauty of the message.`;
       enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
-      enhancedPrompt += `\n\nThe expected subject for this email is '${formData.subject}'. Use it in context for the email.`;
+      enhancedPrompt += `\n\nCONTEXT ONLY - DO NOT INCLUDE IN EMAIL: The expected subject for this email is '${formData.subject}'. Use this subject line only as guidance for the tone and direction of your message. The actual email body must NOT contain or repeat the subject line. Write only the email body content itself — no subject, no headers indicating the subject.`;
+
+      if (formData.noStyle) {
+        enhancedPrompt += `\n\nIMPORTANT - NO STYLE MODE: This is a professional business email. Do NOT use any HTML styling, decorative elements, background colors, gradients, shadows, or fancy layouts. Format the email as plain, clean text content using only the following HTML elements: paragraphs (<p>), line breaks (<br>), bold text (<b> or <strong>), and simple lists (<ul>/<li> if needed). Use only basic inline CSS for font-family (Arial or sans-serif), font-size (14-16px), line-height (1.5), and color (black or #333333 on white background). The email should look like a simple, professional plain-text message. No headers with colored backgrounds, no colored borders, no fancy buttons, no decorative elements whatsoever. Keep it clean, minimal, and highly readable.`;
+      }
+
       enhancedPrompt += `\n\nSign the email that it is from ${senderName}.`;
 
-      // Step 1: Generate HTML preview using process 'gen'
       const previewPayload = {
         process: 'gen',
         prompt: enhancedPrompt,
       };
 
       const previewResponse = await emailAPI.execute(previewPayload);
-      
+
       if (previewResponse.data.success) {
         setGeneratedHtml(previewResponse.data.output || '');
-        // Save prompt to sessionStorage for the confirm step
         sessionStorage.setItem('pendingPrompt', enhancedPrompt);
-        setCurrentStep(2); // Go to Preview step
-        toast.success('Preview generated!', {
-          description: 'Review your email below before sending.',
-        });
+        setCurrentStep(2);
+        toast.success('Preview generated!');
       } else {
         const errorMsg = previewResponse.data.error || 'Failed to generate preview.';
         toast.error('Preview failed', {
@@ -204,12 +187,16 @@ export const YoloEmailForm = () => {
     setIsLoading(true);
 
     try {
-      // Build enhanced prompt with recipient name and subject
       const senderName = getSenderName(user, fromName);
       const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.to);
       let enhancedPrompt = `In essence the email should say this: '${formData.prompt}'. Be very creative in delivering the best style, grammar, and beauty of the message.`;
       enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
-      enhancedPrompt += `\n\nThe expected subject for this email is '${formData.subject}'. Use it in context for the email.`;
+      enhancedPrompt += `\n\nCONTEXT ONLY - DO NOT INCLUDE IN EMAIL: The expected subject for this email is '${formData.subject}'. Use this subject line only as guidance for the tone and direction of your message. The actual email body must NOT contain or repeat the subject line. Write only the email body content itself — no subject, no headers indicating the subject.`;
+
+      if (formData.noStyle) {
+        enhancedPrompt += `\n\nIMPORTANT - NO STYLE MODE: This is a professional business email. Do NOT use any HTML styling, decorative elements, background colors, gradients, shadows, or fancy layouts. Format the email as plain, clean text content using only the following HTML elements: paragraphs (<p>), line breaks (<br>), bold text (<b> or <strong>), and simple lists (<ul>/<li> if needed). Use only basic inline CSS for font-family (Arial or sans-serif), font-size (14-16px), line-height (1.5), and color (black or #333333 on white background). The email should look like a simple, professional plain-text message. No headers with colored backgrounds, no colored borders, no fancy buttons, no decorative elements whatsoever. Keep it clean, minimal, and highly readable.`;
+      }
+
       enhancedPrompt += `\n\nSign the email that it is from ${senderName}.`;
 
       const previewPayload = {
@@ -218,14 +205,11 @@ export const YoloEmailForm = () => {
       };
 
       const previewResponse = await emailAPI.execute(previewPayload);
-      
+
       if (previewResponse.data.success) {
         setGeneratedHtml(previewResponse.data.output || '');
-        // Update prompt in sessionStorage for the confirm step
         sessionStorage.setItem('pendingPrompt', enhancedPrompt);
-        toast.success('Preview regenerated!', {
-          description: 'Check out the new version.',
-        });
+        toast.success('Preview regenerated!');
       } else {
         const errorMsg = previewResponse.data.error || 'Failed to regenerate preview.';
         toast.error('Regeneration failed', {
@@ -246,10 +230,8 @@ export const YoloEmailForm = () => {
     setIsLoading(true);
 
     try {
-      // Get the prompt from sessionStorage
       const savedPrompt = sessionStorage.getItem('pendingPrompt') || '';
 
-      // Step 3: Confirm and send email with pre-generated HTML
       const confirmPayload = {
         process: 'email',
         to: formData.to,
@@ -261,17 +243,10 @@ export const YoloEmailForm = () => {
       const sendResponse = await emailAPI.confirm(confirmPayload);
 
       if (sendResponse.data.success) {
-        // Clear the prompt from sessionStorage after successful send
         sessionStorage.removeItem('pendingPrompt');
-        // Update emails sent counter
         const newCount = incrementEmailsSentCount();
         setEmailsSentCount(newCount);
-        // Trigger confetti
-        setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 2500);
-        toast.success('Email sent! 🎉', {
-          description: `Your email has been delivered to ${formData.to}.`,
-        });
+        toast.success('Email sent!');
         navigate('/result', {
           state: {
             email: generatedHtml,
@@ -302,7 +277,7 @@ export const YoloEmailForm = () => {
     return (
       <Layout>
         <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
-          <MagicLoader 
+          <MagicLoader
             title={currentStep === 2 ? 'Generating preview...' : 'Crafting your email...'}
             subtitle={currentStep === 2 ? 'Creating HTML email' : 'This is the fun part!'}
             variant="generating"
@@ -314,26 +289,11 @@ export const YoloEmailForm = () => {
 
   return (
     <Layout>
-      {/* Confetti Overlay */}
-      <AnimatePresence>
-        {showConfetti && (
-          <div className="fixed inset-0 z-50 pointer-events-none overflow-hidden">
-            {[...Array(30)].map((_, i) => (
-              <ConfettiPiece
-                key={i}
-                delay={i * 0.05}
-                x={Math.random() * 100}
-              />
-            ))}
-          </div>
-        )}
-      </AnimatePresence>
-
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Back Button */}
         <Link
           to="/home"
-          className="inline-flex items-center gap-2 text-zinc-600 hover:text-zinc-800 transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Home
@@ -346,14 +306,14 @@ export const YoloEmailForm = () => {
           className="mb-6 sm:mb-8"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
-              <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-accent flex items-center justify-center">
+              <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-surface" />
             </div>
             <div>
-              <h1 className="text-xl sm:text-2xl md:text-3xl text-zinc-900">
+              <h1 className="text-xl sm:text-2xl md:text-3xl text-text-primary">
                 YOLO Quick Send
               </h1>
-              <p className="text-zinc-500 text-sm sm:text-base">Just tell us what you need</p>
+              <p className="text-text-muted text-sm sm:text-base">Just tell us what you need</p>
             </div>
           </div>
         </motion.div>
@@ -372,16 +332,16 @@ export const YoloEmailForm = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
             >
-              <h2 className="text-lg sm:text-xl text-zinc-800 mb-3 sm:mb-4">
-                Who's getting this email? 📧
+              <h2 className="text-lg sm:text-xl text-text-primary mb-3 sm:mb-4">
+                Who's getting this email?
               </h2>
-              <p className="text-zinc-600 mb-4 sm:mb-6 text-sm sm:text-base">
-                Enter the recipient's email address. We'll make sure they receive something worth opening.
+              <p className="text-text-secondary mb-4 sm:mb-6 text-sm sm:text-base">
+                Enter the recipient's email address.
               </p>
 
               <div className="mb-4 sm:mb-6 space-y-4">
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
                   <Input
                     name="to"
                     type="email"
@@ -413,11 +373,11 @@ export const YoloEmailForm = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
             >
-              <h2 className="text-lg sm:text-xl text-zinc-800 mb-3 sm:mb-4">
-                What's this about? 📝
+              <h2 className="text-lg sm:text-xl text-text-primary mb-3 sm:mb-4">
+                What's this about?
               </h2>
-              <p className="text-zinc-600 mb-4 sm:mb-6 text-sm sm:text-base">
-                Give us the subject line and a rough idea of what you want to say. Don't worry about perfect words — that's our job!
+              <p className="text-text-secondary mb-4 sm:mb-6 text-sm sm:text-base">
+                Give us the subject and your idea.
               </p>
 
               <div className="space-y-4">
@@ -440,6 +400,43 @@ export const YoloEmailForm = () => {
                   rows={5}
                   maxLength={1000}
                 />
+
+                {/* No Style Checkbox */}
+                <label
+                  htmlFor="noStyle"
+                  className="flex items-center gap-4 p-4 border cursor-pointer transition-all duration-150
+                    border-border hover:border-text-muted"
+                >
+                  {/* Custom checkbox */}
+                  <div className="relative w-5 h-5 flex-shrink-0">
+                    <input
+                      type="checkbox"
+                      id="noStyle"
+                      checked={formData.noStyle}
+                      onChange={(e) => setFormData(prev => ({ ...prev, noStyle: e.target.checked }))}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                    />
+                    <div className={`w-5 h-5 border transition-all duration-150 flex items-center justify-center
+                      ${formData.noStyle ? 'bg-accent border-accent' : 'border-text-secondary bg-transparent'}`}>
+                      <svg
+                        className={`w-3 h-3 text-surface transition-opacity duration-150 ${formData.noStyle ? 'opacity-100' : 'opacity-0'}`}
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="2,6 5,9 10,3" />
+                      </svg>
+                    </div>
+                  </div>
+                  {/* Label text */}
+                  <div className="flex-1">
+                    <span className="text-sm font-medium text-text-primary block">No Style</span>
+                    <span className="text-xs text-text-muted">Plain text — no colors, no decorative elements, no HTML styling. Clean and professional.</span>
+                  </div>
+                </label>
               </div>
             </motion.div>
           )}
@@ -451,66 +448,66 @@ export const YoloEmailForm = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
             >
-              <h2 className="text-lg sm:text-xl text-zinc-800 mb-3 sm:mb-4">
-                Review Your Email Preview 👀
+              <h2 className="text-lg sm:text-xl text-text-primary mb-3 sm:mb-4">
+                Review Your Email Preview
               </h2>
-              <p className="text-zinc-600 mb-4 sm:mb-6 text-sm sm:text-base">
-                Here's what your email looks like. If it needs changes, regenerate or go back to edit.
+              <p className="text-text-secondary mb-4 sm:mb-6 text-sm sm:text-base">
+                Here's what your email looks like.
               </p>
 
               {/* Preview Section */}
-              <div className="border border-zinc-200 rounded-xl overflow-hidden mb-4 sm:mb-6">
-                <div className="bg-zinc-50 px-4 py-2 border-b border-zinc-200 flex items-center justify-between">
-                  <span className="text-sm font-medium text-zinc-600">Email Preview</span>
+              <div className="border border-border overflow-hidden mb-4 sm:mb-6">
+                <div className="bg-surface-elevated px-4 py-2 border-b border-border flex items-center justify-between">
+                  <span className="text-sm font-medium text-text-secondary">Email Preview</span>
                   <button
                     onClick={handleRegeneratePreview}
-                    className="flex items-center gap-1 text-sm text-primary-600 hover:text-primary-600/80 transition-colors min-h-10 px-2"
+                    className="flex items-center gap-1 text-sm text-accent hover:text-accent-hover transition-colors min-h-10 px-2"
                   >
                     <RefreshCw className="w-4 h-4" />
                     Regenerate
                   </button>
                 </div>
                 <div
-                  className="p-4 sm:p-6 bg-white max-h-64 sm:max-h-96 overflow-auto [&_table]:w-full [&_*]:max-w-full"
-                  dangerouslySetInnerHTML={{ __html: generatedHtml || '<p class="text-zinc-400">No preview generated</p>' }}
+                  className="p-4 sm:p-6 bg-surface-card max-h-64 sm:max-h-96 overflow-auto [&_table]:w-full [&_*]:max-w-full"
+                  dangerouslySetInnerHTML={{ __html: generatedHtml || '<p class="text-text-muted">No preview generated</p>' }}
                 />
               </div>
 
               {/* Summary */}
-              <div className="space-y-2 p-3 sm:p-4 bg-zinc-50 rounded-xl text-sm sm:text-base">
+              <div className="space-y-2 p-3 sm:p-4 border border-border">
                 <div className="flex items-center justify-between">
-                  <span className="text-zinc-500">To:</span>
-                  <span className="font-medium text-zinc-800 truncate ml-2">{formData.to}</span>
+                  <span className="text-text-muted">To:</span>
+                  <span className="font-medium text-text-primary truncate ml-2">{formData.to}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-zinc-500">Subject:</span>
-                  <span className="font-medium text-zinc-800 truncate ml-2">{formData.subject}</span>
+                  <span className="text-text-muted">Subject:</span>
+                  <span className="font-medium text-text-primary truncate ml-2">{formData.subject}</span>
                 </div>
               </div>
             </motion.div>
           )}
 
           {/* Navigation Buttons */}
-          <div className={`flex flex-col sm:flex-row justify-between items-center gap-3 mt-6 sm:mt-8 pt-6 border-t border-zinc-100 ${currentStep === 2 ? 'sm:flex-col-reverse sm:gap-4' : ''}`}>
+          <div className={`flex flex-col sm:flex-row justify-between items-center gap-3 mt-6 sm:mt-8 pt-6 border-t border-border ${currentStep === 2 ? 'sm:flex-col-reverse sm:gap-4' : ''}`}>
             <Button
               variant="ghost"
               onClick={handleBack}
               disabled={currentStep === 0}
-              className="w-full sm:w-auto min-h-11"
+              className="w-full sm:w-auto"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
 
             {currentStep === 0 && (
-              <Button onClick={handleNext} className="w-full sm:w-auto min-h-11">
+              <Button onClick={handleNext} className="w-full sm:w-auto">
                 Next
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             )}
 
             {currentStep === 1 && (
-              <Button onClick={handleGeneratePreview} className="w-full sm:w-auto min-h-11">
+              <Button onClick={handleGeneratePreview} className="w-full sm:w-auto">
                 <Eye className="w-4 h-4 mr-2" />
                 Generate Preview
               </Button>
@@ -518,10 +515,10 @@ export const YoloEmailForm = () => {
 
             {currentStep === 2 && (
               <Button
-                variant="glow"
+                variant="primary"
                 size="lg"
                 onClick={handleSendEmail}
-                className="w-full sm:w-auto min-h-12"
+                className="w-full sm:w-auto"
               >
                 <Send className="w-5 h-5 mr-2" />
                 Send Email

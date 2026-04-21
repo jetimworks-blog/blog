@@ -17,8 +17,8 @@ export const ProgressSteps = ({
               {/* Background ring */}
               <div
                 className={clsx(
-                  'w-10 h-10 rounded-full flex items-center justify-center',
-                  isCurrent ? 'bg-primary-100' : isCompleted ? 'bg-primary-100' : 'bg-zinc-100'
+                  'w-10 h-10 rounded-none flex items-center justify-center border',
+                  isCurrent ? 'border-accent bg-surface' : isCompleted ? 'border-accent bg-surface' : 'border-border bg-surface'
                 )}
               >
                 {/* Progress ring SVG */}
@@ -30,7 +30,7 @@ export const ProgressSteps = ({
                     strokeWidth="2"
                     className={clsx(
                       'transition-all duration-500',
-                      isCurrent ? 'text-primary-200' : isCompleted ? 'text-primary-200' : 'text-zinc-200'
+                      isCurrent ? 'text-border' : isCompleted ? 'text-border' : 'text-border'
                     )}
                   />
                   <circle
@@ -41,15 +41,15 @@ export const ProgressSteps = ({
                     strokeDasharray={isCompleted ? '113.1 0' : isCurrent ? '56.5 113.1' : '0 113.1'}
                     className={clsx(
                       'transition-all duration-500',
-                      isCompleted ? 'text-primary-600' : isCurrent ? 'text-primary-500' : 'text-transparent'
+                      isCompleted ? 'text-accent' : isCurrent ? 'text-accent-muted' : 'text-transparent'
                     )}
                   />
                 </svg>
                 <span className={clsx(
                   'relative z-10 text-sm font-semibold',
-                  isCompleted && 'text-primary-600',
-                  isCurrent && 'text-primary-500',
-                  !isCompleted && !isCurrent && 'text-zinc-400'
+                  isCompleted && 'text-accent',
+                  isCurrent && 'text-text-primary',
+                  !isCompleted && !isCurrent && 'text-text-muted'
                 )}>
                   {isCompleted ? (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,8 +63,8 @@ export const ProgressSteps = ({
             {index < steps.length - 1 && (
               <div
                 className={clsx(
-                  'w-8 md:w-12 h-0.5 transition-all duration-500',
-                  isCompleted ? 'bg-primary-600' : 'bg-zinc-200'
+                  'w-8 md:w-12 h-px transition-all duration-500',
+                  isCompleted ? 'bg-accent' : 'bg-border'
                 )}
               />
             )}
