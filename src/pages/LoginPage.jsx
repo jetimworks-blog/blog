@@ -13,7 +13,7 @@ import { Mail, Lock, ArrowRight, Sparkles } from 'lucide-react';
 export const LoginPage = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -31,7 +31,7 @@ export const LoginPage = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!validateEmail(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
@@ -46,20 +46,18 @@ export const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
       const result = await login(formData.email, formData.password);
 
       if (result.success) {
-        toast.success('Welcome back! 👋', {
-          description: 'Ready to craft some emails?',
-        });
+        toast.success('Welcome back!');
         navigate('/home', { replace: true });
       } else {
         toast.error('Login failed', {
@@ -81,7 +79,7 @@ export const LoginPage = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4 }}
           className="w-full max-w-md"
         >
           {/* Header */}
@@ -90,14 +88,14 @@ export const LoginPage = () => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: 'spring' }}
-              className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
+              className="w-16 h-16 bg-accent flex items-center justify-center mx-auto mb-4"
             >
-              <Sparkles className="w-8 h-8 text-white" />
+              <Sparkles className="w-8 h-8 text-surface" />
             </motion.div>
-            <h1 className="text-3xl text-zinc-900 mb-2">
+            <h1 className="text-3xl text-text-primary mb-2">
               Welcome Back
             </h1>
-            <p className="text-zinc-600">
+            <p className="text-text-secondary">
               Sign in to continue crafting
             </p>
           </div>
@@ -107,7 +105,7 @@ export const LoginPage = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-4">
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
                   <Input
                     name="email"
                     type="email"
@@ -121,7 +119,7 @@ export const LoginPage = () => {
                 </div>
 
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
                   <Input
                     name="password"
                     type="password"
@@ -149,19 +147,19 @@ export const LoginPage = () => {
             {/* Divider */}
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-zinc-200" />
+                <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-zinc-400">or</span>
+                <span className="px-4 bg-surface-card text-text-muted">or</span>
               </div>
             </div>
 
             {/* Register Link */}
-            <p className="text-center text-zinc-600 text-sm">
+            <p className="text-center text-text-secondary text-sm">
               Don't have an account?{' '}
               <Link
                 to="/register"
-                className="font-medium text-primary-600 hover:text-zinc-700 transition-colors"
+                className="text-accent hover:text-accent-hover transition-colors"
               >
                 Create one
               </Link>
@@ -172,9 +170,9 @@ export const LoginPage = () => {
           <div className="text-center mt-6">
             <Link
               to="/features"
-              className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors"
+              className="text-sm text-text-muted hover:text-text-secondary transition-colors"
             >
-              ← Back to home
+              Back to home
             </Link>
           </div>
         </motion.div>

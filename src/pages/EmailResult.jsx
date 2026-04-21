@@ -13,7 +13,6 @@ export const EmailResult = () => {
   const { email, subject, to, mode, error } = location.state || {};
   const [copied, setCopied] = useState(false);
 
-  // Handle missing state or error - show error page
   if (!email || error) {
     return (
       <Layout>
@@ -23,13 +22,13 @@ export const EmailResult = () => {
             animate={{ opacity: 1, y: 0 }}
           >
             <Card variant="bordered" className="max-w-md text-center">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <AlertCircle className="w-8 h-8 text-red-600" />
+              <div className="w-16 h-16 border border-error flex items-center justify-center mx-auto mb-4">
+                <AlertCircle className="w-8 h-8 text-error" />
               </div>
-              <h2 className="text-xl text-zinc-900 mb-2">
+              <h2 className="text-xl text-text-primary mb-2">
                 Something went wrong
               </h2>
-              <p className="text-zinc-600 mb-6">
+              <p className="text-text-secondary mb-6">
                 {error || "We couldn't craft your email. Please try again."}
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -52,20 +51,16 @@ export const EmailResult = () => {
         </div>
       </Layout>
     );
-  }
+  };
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(email);
       setCopied(true);
-      toast.success('Copied to clipboard!', {
-        description: 'Paste it anywhere you like.',
-      });
+      toast.success('Copied to clipboard!');
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.error('Failed to copy', {
-        description: 'Please try selecting and copying manually.',
-      });
+      toast.error('Failed to copy');
     }
   };
 
@@ -86,17 +81,17 @@ export const EmailResult = () => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: 'spring' }}
-            className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4"
+            className="w-20 h-20 bg-accent flex items-center justify-center mx-auto mb-4"
           >
-            <Check className="w-10 h-10 text-white" />
+            <Check className="w-10 h-10 text-surface" />
           </motion.div>
-          
-          <h1 className="text-3xl md:text-4xl text-zinc-900 mb-2">
-            {mode === 'detailed' ? 'Your Masterpiece is Ready! ✨' : 'Email Crafted! 🎉'}
+
+          <h1 className="text-3xl md:text-4xl text-text-primary mb-2">
+            {mode === 'detailed' ? 'Your Masterpiece is Ready' : 'Email Crafted'}
           </h1>
-          <p className="text-lg text-zinc-600">
-            {mode === 'detailed' 
-              ? 'Every detail has been perfected. Review your creation below.' 
+          <p className="text-lg text-text-secondary">
+            {mode === 'detailed'
+              ? 'Every detail has been perfected. Review your creation below.'
               : 'Quick and painless. Your email is ready to send.'
             }
           </p>
@@ -110,33 +105,32 @@ export const EmailResult = () => {
         >
           <Card variant="elevated" className="overflow-hidden">
             {/* Email Header Info */}
-            <div className="bg-zinc-50 border-b border-zinc-100 p-4">
+            <div className="bg-surface-elevated border-b border-border p-4">
               <div className="flex items-center gap-3 mb-3">
-                <Mail className="w-5 h-5 text-zinc-400" />
-                <span className="text-sm font-medium text-zinc-700">Email Preview</span>
+                <Mail className="w-5 h-5 text-text-muted" />
+                <span className="text-sm font-medium text-text-secondary">Email Preview</span>
                 {mode === 'detailed' && (
-                  <span className="px-2 py-0.5 bg-primary-600/10 text-primary-600 text-xs rounded-full flex items-center gap-1">
+                  <span className="px-2 py-0.5 border border-accent text-accent text-xs">
                     <Sparkles size={12} />
-                    Crafted with Care
                   </span>
                 )}
               </div>
-              
+
               <div className="space-y-2 text-sm">
                 <div className="flex items-start gap-3">
-                  <span className="text-zinc-500 w-16 flex-shrink-0">To:</span>
-                  <span className="text-zinc-800 font-medium">{to}</span>
+                  <span className="text-text-muted w-16 flex-shrink-0">To:</span>
+                  <span className="text-text-primary font-medium">{to}</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="text-zinc-500 w-16 flex-shrink-0">Subject:</span>
-                  <span className="text-zinc-800 font-medium">{subject}</span>
+                  <span className="text-text-muted w-16 flex-shrink-0">Subject:</span>
+                  <span className="text-text-primary font-medium">{subject}</span>
                 </div>
               </div>
             </div>
 
             {/* Email Content */}
             <div className="p-6 md:p-8">
-              <div 
+              <div
                 className="prose prose-navy max-w-none"
                 dangerouslySetInnerHTML={{ __html: email }}
               />
@@ -159,7 +153,7 @@ export const EmailResult = () => {
             {copied ? (
               <>
                 <Check className="w-5 h-5 mr-2" />
-                Copied!
+                Copied
               </>
             ) : (
               <>
@@ -186,8 +180,8 @@ export const EmailResult = () => {
           className="mt-12 text-center"
         >
           <Card className="inline-block">
-            <p className="text-zinc-500 text-sm">
-              <span className="font-medium text-zinc-700">Tip:</span> You can copy the HTML directly and paste it into your email platform for best results. Most email clients render HTML beautifully! 📧
+            <p className="text-text-muted text-sm">
+              <span className="font-medium text-text-secondary">Tip:</span> Copy the HTML directly and paste it into your email platform.
             </p>
           </Card>
         </motion.div>

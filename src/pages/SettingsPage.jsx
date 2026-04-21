@@ -22,7 +22,6 @@ export const SettingsPage = () => {
   const [deletePassword, setDeletePassword] = useState('');
   const [showDeletePassword, setShowDeletePassword] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
-  // Sender information
   const [fromEmail, setFromEmail] = useState('');
   const [fromName, setFromName] = useState('');
   const [senderError, setSenderError] = useState('');
@@ -35,7 +34,6 @@ export const SettingsPage = () => {
     try {
       const response = await configAPI.get();
       setHasApiKey(response.data.has_resend_key || false);
-      // Load sender information with defaults
       setFromEmail(response.data.from_email || 'free-email@jetimworks.com');
       setFromName(response.data.from_name || 'Anonymous');
     } catch (error) {
@@ -51,7 +49,6 @@ export const SettingsPage = () => {
       return;
     }
 
-    // Validate sender email if provided
     if (fromEmail.trim()) {
       const emailValidation = validateSenderEmail(fromEmail);
       if (!emailValidation.valid) {
@@ -63,7 +60,6 @@ export const SettingsPage = () => {
     setIsSaving(true);
     try {
       const payload = { resend_api_key: apiKey.trim() };
-      // Include sender info only if provided
       if (fromEmail.trim()) {
         payload.from_email = fromEmail.trim();
       }
@@ -74,22 +70,18 @@ export const SettingsPage = () => {
       setHasApiKey(true);
       setApiKey('');
       setSenderError('');
-      // Mark settings as updated to hide dashboard warning
       localStorage.setItem('settingsUpdated', 'true');
-      toast.success('Settings saved!', {
-        description: 'Your configuration has been updated.',
-      });
+      toast.success('Settings saved!');
     } catch (error) {
-      // Handle nested error structure: { error: { code, message } }
       const errorData = error.response?.data;
       let errorMessage = 'Something went wrong.';
-      
+
       if (errorData?.error?.message) {
         errorMessage = errorData.error.message;
       } else if (errorData?.error && typeof errorData.error === 'string') {
         errorMessage = errorData.error;
       }
-      
+
       toast.error('Failed to save settings', {
         description: errorMessage,
       });
@@ -99,7 +91,6 @@ export const SettingsPage = () => {
   };
 
   const handleSaveSender = async () => {
-    // Validate sender email if provided
     if (fromEmail.trim()) {
       const emailValidation = validateSenderEmail(fromEmail);
       if (!emailValidation.valid) {
@@ -111,7 +102,6 @@ export const SettingsPage = () => {
     setIsSaving(true);
     try {
       const payload = {};
-      // Include sender info only if provided
       if (fromEmail.trim()) {
         payload.from_email = fromEmail.trim();
       }
@@ -120,22 +110,18 @@ export const SettingsPage = () => {
       }
       await configAPI.set(payload);
       setSenderError('');
-      // Mark settings as updated to hide dashboard warning
       localStorage.setItem('settingsUpdated', 'true');
-      toast.success('Sender information saved!', {
-        description: 'Your sender details have been updated.',
-      });
+      toast.success('Sender information saved!');
     } catch (error) {
-      // Handle nested error structure: { error: { code, message } }
       const errorData = error.response?.data;
       let errorMessage = 'Something went wrong.';
-      
+
       if (errorData?.error?.message) {
         errorMessage = errorData.error.message;
       } else if (errorData?.error && typeof errorData.error === 'string') {
         errorMessage = errorData.error;
       }
-      
+
       toast.error('Failed to save sender information', {
         description: errorMessage,
       });
@@ -150,20 +136,17 @@ export const SettingsPage = () => {
       await configAPI.delete();
       setHasApiKey(false);
       setShowDeleteConfigModal(false);
-      toast.success('API key deleted', {
-        description: 'Your Resend API key has been removed.',
-      });
+      toast.success('API key deleted');
     } catch (error) {
-      // Handle nested error structure: { error: { code, message } }
       const errorData = error.response?.data;
       let errorMessage = 'Something went wrong.';
-      
+
       if (errorData?.error?.message) {
         errorMessage = errorData.error.message;
       } else if (errorData?.error && typeof errorData.error === 'string') {
         errorMessage = errorData.error;
       }
-      
+
       toast.error('Failed to delete API key', {
         description: errorMessage,
       });
@@ -181,23 +164,19 @@ export const SettingsPage = () => {
     setIsDeletingAccount(true);
     try {
       await authAPI.deleteAccount(deletePassword);
-      // Clear local storage and redirect
       localStorage.clear();
-      toast.success('Account deleted', {
-        description: 'Your account has been permanently deleted.',
-      });
+      toast.success('Account deleted');
       window.location.href = '/features';
     } catch (error) {
-      // Handle nested error structure: { error: { code, message } }
       const errorData = error.response?.data;
       let errorMessage = 'Something went wrong.';
-      
+
       if (errorData?.error?.message) {
         errorMessage = errorData.error.message;
       } else if (errorData?.error && typeof errorData.error === 'string') {
         errorMessage = errorData.error;
       }
-      
+
       toast.error('Failed to delete account', {
         description: errorMessage,
       });
@@ -213,7 +192,7 @@ export const SettingsPage = () => {
         <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
           <div className="flex flex-col items-center gap-4">
             <LoadingSpinner size={32} />
-            <p className="text-zinc-500">Loading settings...</p>
+            <p className="text-text-muted">Loading settings...</p>
           </div>
         </div>
       </Layout>
@@ -230,14 +209,14 @@ export const SettingsPage = () => {
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-800 rounded-xl flex items-center justify-center">
-              <Settings className="w-6 h-6 text-white" />
+            <div className="w-12 h-12 bg-accent flex items-center justify-center">
+              <Settings className="w-6 h-6 text-surface" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl text-zinc-900">
+              <h1 className="text-2xl md:text-3xl text-text-primary">
                 Settings
               </h1>
-              <p className="text-zinc-500">Configure your email sending setup</p>
+              <p className="text-text-muted">Configure your email sending setup</p>
             </div>
           </div>
         </motion.div>
@@ -250,39 +229,39 @@ export const SettingsPage = () => {
         >
           <Card variant="bordered">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-primary-600/10 rounded-lg flex items-center justify-center">
-                <Key className="w-5 h-5 text-primary-600" />
+              <div className="w-10 h-10 border border-border flex items-center justify-center">
+                <Key className="w-5 h-5 text-accent" />
               </div>
               <div>
-                <h2 className="text-lg text-zinc-800">
+                <h2 className="text-lg text-text-primary">
                   Resend API Key
                 </h2>
-                <p className="text-sm text-zinc-500">
+                <p className="text-sm text-text-muted">
                   Required for sending emails through Resend
                 </p>
               </div>
             </div>
 
             {/* Status Badge */}
-            <div className={`mb-6 p-3 rounded-lg flex items-center gap-3 ${
-              hasApiKey 
-                ? 'bg-green-50 border border-green-200' 
-                : 'bg-yellow-50 border border-yellow-200'
+            <div className={`mb-6 p-3 border flex items-center gap-3 ${
+              hasApiKey
+                ? 'border-success-muted'
+                : 'border-warning-muted'
             }`}>
               {hasApiKey ? (
                 <>
-                  <CheckCircle className="w-5 h-5 text-green-600" />
+                  <CheckCircle className="w-5 h-5 text-success" />
                   <div>
-                    <p className="text-sm font-medium text-green-800">API Key Configured</p>
-                    <p className="text-xs text-green-600">You're ready to send emails!</p>
+                    <p className="text-sm font-medium text-text-primary">API Key Configured</p>
+                    <p className="text-xs text-text-muted">Ready to send emails</p>
                   </div>
                 </>
               ) : (
                 <>
-                  <AlertTriangle className="w-5 h-5 text-yellow-600" />
+                  <AlertTriangle className="w-5 h-5 text-warning" />
                   <div>
-                    <p className="text-sm font-medium text-yellow-800">API Key Required</p>
-                    <p className="text-xs text-yellow-600">Add your Resend API key to send emails</p>
+                    <p className="text-sm font-medium text-text-primary">API Key Required</p>
+                    <p className="text-xs text-text-muted">Add your Resend API key to send emails</p>
                   </div>
                 </>
               )}
@@ -301,7 +280,7 @@ export const SettingsPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowKey(!showKey)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary"
                 >
                   {showKey ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -319,7 +298,7 @@ export const SettingsPage = () => {
               {hasApiKey && (
                 <Button
                   variant="ghost"
-                  className="w-full text-red-600 hover:bg-red-50"
+                  className="w-full text-error hover:bg-error-muted"
                   onClick={() => setShowDeleteConfigModal(true)}
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
@@ -339,32 +318,32 @@ export const SettingsPage = () => {
         >
           <Card variant="bordered">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-primary-600/10 rounded-lg flex items-center justify-center">
-                <User className="w-5 h-5 text-primary-600" />
+              <div className="w-10 h-10 border border-border flex items-center justify-center">
+                <User className="w-5 h-5 text-accent" />
               </div>
               <div>
-                <h2 className="text-lg text-zinc-800">
+                <h2 className="text-lg text-text-primary">
                   Sender Information
                 </h2>
-                <p className="text-sm text-zinc-500">
+                <p className="text-sm text-text-muted">
                   Customize how your emails appear to recipients
                 </p>
               </div>
             </div>
 
-            <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-3 mb-4">
+            <div className="p-3 border border-border mb-4">
               <div className="flex items-start gap-2">
-                <Mail className="w-4 h-4 text-zinc-500 mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-zinc-600">
-                  If not set, emails will come from <strong>free-email@jetimworks.com</strong> with the sender name <strong>Anonymous</strong>.
+                <Mail className="w-4 h-4 text-text-muted mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-text-muted">
+                  If not set, emails will come from <strong className="text-text-secondary">free-email@jetimworks.com</strong> as <strong className="text-text-secondary">Anonymous</strong>.
                 </p>
               </div>
             </div>
 
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+            <div className="p-3 border border-warning-muted mb-4">
               <div className="flex items-start gap-2">
-                <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-amber-700">
+                <AlertTriangle className="w-4 h-4 text-warning mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-text-secondary">
                   <strong>Important:</strong> You can only change the Sender Email if your Resend API Key is registered with that email domain.
                 </p>
               </div>
@@ -410,26 +389,26 @@ export const SettingsPage = () => {
           transition={{ delay: 0.2 }}
           className="mt-6"
         >
-          <Card className="bg-zinc-50 border-zinc-200">
-            <h3 className="text-zinc-800 mb-3">
+          <Card className="border border-border">
+            <h3 className="text-text-primary mb-3">
               How to get your Resend API key
             </h3>
-            <ol className="space-y-3 text-sm text-zinc-600">
+            <ol className="space-y-3 text-sm text-text-secondary">
               <li className="flex items-start gap-3">
-                <span className="w-6 h-6 bg-zinc-200 rounded-full flex items-center justify-center text-xs font-medium text-zinc-700 flex-shrink-0">1</span>
-                <span>Sign up for a free account at <a href="https://resend.com" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline flex items-center gap-1">Resend <ExternalLink size={12} /></a></span>
+                <span className="w-6 h-6 border border-border rounded-none flex items-center justify-center text-xs font-medium text-text-secondary flex-shrink-0">1</span>
+                <span>Sign up at <a href="https://resend.com" target="_blank" rel="noopener noreferrer" className="text-accent hover:text-accent-hover">Resend <ExternalLink size={12} /></a></span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="w-6 h-6 bg-zinc-200 rounded-full flex items-center justify-center text-xs font-medium text-zinc-700 flex-shrink-0">2</span>
-                <span>Navigate to the API Keys section in your dashboard</span>
+                <span className="w-6 h-6 border border-border rounded-none flex items-center justify-center text-xs font-medium text-text-secondary flex-shrink-0">2</span>
+                <span>Navigate to API Keys in your dashboard</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="w-6 h-6 bg-zinc-200 rounded-full flex items-center justify-center text-xs font-medium text-zinc-700 flex-shrink-0">3</span>
-                <span>Create a new API key and copy the key starting with <code className="bg-zinc-100 px-1 rounded">re_</code></span>
+                <span className="w-6 h-6 border border-border rounded-none flex items-center justify-center text-xs font-medium text-text-secondary flex-shrink-0">3</span>
+                <span>Create a key and copy the one starting with <code className="bg-surface-elevated px-1">re_</code></span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="w-6 h-6 bg-zinc-200 rounded-full flex items-center justify-center text-xs font-medium text-zinc-700 flex-shrink-0">4</span>
-                <span>Paste it above and save. You're all set!</span>
+                <span className="w-6 h-6 border border-border rounded-none flex items-center justify-center text-xs font-medium text-text-secondary flex-shrink-0">4</span>
+                <span>Paste it above and save.</span>
               </li>
             </ol>
           </Card>
@@ -442,13 +421,13 @@ export const SettingsPage = () => {
           transition={{ delay: 0.3 }}
           className="mt-6"
         >
-          <Card className="border-green-200 bg-green-50">
+          <Card className="border border-success-muted">
             <div className="flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
+              <CheckCircle className="w-5 h-5 text-success mt-0.5" />
               <div>
-                <p className="text-sm font-medium text-green-800">Your API key is secure</p>
-                <p className="text-xs text-green-600 mt-1">
-                  Your Resend API key is encrypted before being stored. We never share your credentials with third parties.
+                <p className="text-sm font-medium text-text-primary">Your API key is secure</p>
+                <p className="text-xs text-text-muted mt-1">
+                  Your Resend API key is encrypted. We never share your credentials.
                 </p>
               </div>
             </div>
@@ -462,12 +441,12 @@ export const SettingsPage = () => {
           transition={{ delay: 0.4 }}
           className="mt-6"
         >
-          <Card className="border-red-200 bg-red-50">
-            <h3 className="text-red-800 mb-2">
+          <Card className="border border-error-muted">
+            <h3 className="text-text-primary mb-2">
               Danger Zone
             </h3>
-            <p className="text-sm text-red-600 mb-4">
-              Once you delete your account, there is no going back. All your data will be permanently deleted.
+            <p className="text-sm text-text-muted mb-4">
+              Once you delete your account, there is no going back.
             </p>
             <Button
               variant="danger"
@@ -482,17 +461,17 @@ export const SettingsPage = () => {
 
       {/* Delete Config Modal */}
       {showDeleteConfigModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-surface/80 flex items-center justify-center z-50">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl"
+            className="bg-surface-card border border-border rounded-none p-6 max-w-md w-full mx-4"
           >
-            <h3 className="text-lg text-zinc-900 mb-2">
+            <h3 className="text-lg text-text-primary mb-2">
               Delete API Key?
             </h3>
-            <p className="text-zinc-600 mb-6">
-              This will remove your Resend API key from our system. You can add it again later.
+            <p className="text-text-secondary mb-6">
+              This will remove your Resend API key. You can add it again later.
             </p>
             <div className="flex gap-3 justify-end">
               <Button
@@ -516,19 +495,19 @@ export const SettingsPage = () => {
 
       {/* Delete Account Modal */}
       {showDeleteAccountModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-surface/80 flex items-center justify-center z-50">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl"
+            className="bg-surface-card border border-border rounded-none p-6 max-w-md w-full mx-4"
           >
-            <h3 className="text-lg text-red-900 mb-2">
+            <h3 className="text-lg text-text-primary mb-2">
               Delete Account?
             </h3>
-            <p className="text-zinc-600 mb-4">
-              This action cannot be undone. All your data, including your API key and email history, will be permanently deleted.
+            <p className="text-text-secondary mb-4">
+              This action cannot be undone. All your data will be permanently deleted.
             </p>
-            <p className="text-sm text-zinc-500 mb-4">
+            <p className="text-sm text-text-muted mb-4">
               Please enter your password to confirm.
             </p>
             <div className="relative mb-6">
@@ -542,7 +521,7 @@ export const SettingsPage = () => {
               <button
                 type="button"
                 onClick={() => setShowDeletePassword(!showDeletePassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary"
               >
                 {showDeletePassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>

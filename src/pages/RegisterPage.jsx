@@ -21,7 +21,7 @@ const passwordRequirements = [
 export const RegisterPage = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -46,7 +46,7 @@ export const RegisterPage = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     const emailValidation = validateEmail(formData.email);
     if (!emailValidation) {
       newErrors.email = 'Please enter a valid email address';
@@ -67,21 +67,18 @@ export const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
       const result = await register(formData.email, formData.password);
-      
+
       if (result.success) {
-        toast.success('Account created! 🎉', {
-          description: "Welcome to Email Crafter. Let's get started!",
-        });
-        // Flag that user just signed up - show sender details warning on home
+        toast.success('Account created!');
         localStorage.setItem('justSignedUp', 'true');
         navigate('/home', { replace: true });
       } else {
@@ -99,11 +96,11 @@ export const RegisterPage = () => {
   };
 
   const strengthColors = {
-    red: 'bg-red-500',
-    orange: 'bg-orange-500',
-    yellow: 'bg-yellow-500',
-    lime: 'bg-lime-500',
-    green: 'bg-green-500',
+    red: 'bg-error',
+    orange: 'bg-warning',
+    yellow: 'bg-warning',
+    lime: 'bg-success',
+    green: 'bg-success',
   };
 
   return (
@@ -112,7 +109,7 @@ export const RegisterPage = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4 }}
           className="w-full max-w-md"
         >
           {/* Header */}
@@ -121,14 +118,14 @@ export const RegisterPage = () => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: 'spring' }}
-              className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
+              className="w-16 h-16 bg-accent flex items-center justify-center mx-auto mb-4"
             >
-              <Sparkles className="w-8 h-8 text-white" />
+              <Sparkles className="w-8 h-8 text-surface" />
             </motion.div>
-            <h1 className="text-3xl text-zinc-900 mb-2">
+            <h1 className="text-3xl text-text-primary mb-2">
               Create Your Account
             </h1>
-            <p className="text-zinc-600">
+            <p className="text-text-secondary">
               Join the email crafting revolution
             </p>
           </div>
@@ -138,7 +135,7 @@ export const RegisterPage = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-4">
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
                   <Input
                     name="email"
                     type="email"
@@ -152,7 +149,7 @@ export const RegisterPage = () => {
                 </div>
 
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
                   <Input
                     name="password"
                     type="password"
@@ -178,20 +175,20 @@ export const RegisterPage = () => {
                         {[1, 2, 3, 4, 5].map((i) => (
                           <div
                             key={i}
-                            className={`h-1 flex-1 rounded-full transition-colors ${
+                            className={`h-1 flex-1 rounded-none transition-colors ${
                               i <= passwordStrength.strength
                                 ? strengthColors[passwordStrength.color]
-                                : 'bg-zinc-100'
+                                : 'bg-surface-elevated'
                             }`}
                           />
                         ))}
                       </div>
                       <p className={`text-xs ${
-                        passwordStrength.color === 'green' ? 'text-green-600' :
-                        passwordStrength.color === 'lime' ? 'text-lime-600' :
-                        passwordStrength.color === 'yellow' ? 'text-yellow-600' :
-                        passwordStrength.color === 'orange' ? 'text-orange-600' :
-                        'text-red-600'
+                        passwordStrength.color === 'green' ? 'text-success' :
+                        passwordStrength.color === 'lime' ? 'text-success' :
+                        passwordStrength.color === 'yellow' ? 'text-warning' :
+                        passwordStrength.color === 'orange' ? 'text-warning' :
+                        'text-error'
                       }`}>
                         {passwordStrength.label} ({passwordStrength.strength}/5)
                       </p>
@@ -200,7 +197,7 @@ export const RegisterPage = () => {
                 </AnimatePresence>
 
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
                   <Input
                     name="confirmPassword"
                     type="password"
@@ -226,20 +223,20 @@ export const RegisterPage = () => {
             </form>
 
             {/* Password Requirements */}
-            <div className="mt-4 p-4 bg-zinc-50 rounded-lg">
-              <p className="text-xs font-medium text-zinc-500 mb-2">Password requirements:</p>
+            <div className="mt-4 p-4 border border-border">
+              <p className="text-xs font-medium text-text-muted mb-2">Password requirements:</p>
               <ul className="space-y-1">
                 {passwordRequirements.map((req) => (
-                  <li 
-                    key={req.key} 
+                  <li
+                    key={req.key}
                     className={`text-xs flex items-center gap-2 ${
-                      passwordStrength.checks?.[req.key] ? 'text-green-600' : 'text-zinc-400'
+                      passwordStrength.checks?.[req.key] ? 'text-success' : 'text-text-muted'
                     }`}
                   >
                     {passwordStrength.checks?.[req.key] ? (
                       <Check size={12} />
                     ) : (
-                      <X size={12} className="text-red-400" />
+                      <X size={12} className="text-error" />
                     )}
                     {req.label}
                   </li>
@@ -250,19 +247,19 @@ export const RegisterPage = () => {
             {/* Divider */}
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-zinc-200" />
+                <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-zinc-400">or</span>
+                <span className="px-4 bg-surface-card text-text-muted">or</span>
               </div>
             </div>
 
             {/* Login Link */}
-            <p className="text-center text-zinc-600 text-sm">
+            <p className="text-center text-text-secondary text-sm">
               Already have an account?{' '}
               <Link
                 to="/login"
-                className="font-medium text-primary-600 hover:text-zinc-700 transition-colors"
+                className="text-accent hover:text-accent-hover transition-colors"
               >
                 Sign in
               </Link>
@@ -273,9 +270,9 @@ export const RegisterPage = () => {
           <div className="text-center mt-6">
             <Link
               to="/features"
-              className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors"
+              className="text-sm text-text-muted hover:text-text-secondary transition-colors"
             >
-              ← Back to home
+              Back to home
             </Link>
           </div>
         </motion.div>

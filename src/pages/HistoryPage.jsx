@@ -7,15 +7,14 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { historyAPI } from '../lib/api';
-import { 
-  History, 
-  Mail, 
-  Calendar, 
-  ChevronDown, 
-  ChevronUp, 
-  RefreshCw, 
-  Trash2, 
-  Sparkles, 
+import {
+  History,
+  Mail,
+  Calendar,
+  ChevronDown,
+  ChevronUp,
+  RefreshCw,
+  Sparkles,
   Zap,
   Clock,
   CheckCircle,
@@ -37,7 +36,7 @@ export const HistoryPage = () => {
 
   const loadHistory = async (resetOffset = true) => {
     const currentOffset = resetOffset ? 0 : offset;
-    
+
     if (resetOffset) {
       setIsLoading(true);
     } else {
@@ -47,13 +46,13 @@ export const HistoryPage = () => {
     try {
       const response = await historyAPI.getAll(limit, currentOffset);
       const newData = response.data.data || [];
-      
+
       if (resetOffset) {
         setHistory(newData);
       } else {
         setHistory(prev => [...prev, ...newData]);
       }
-      
+
       setTotal(response.data.total || 0);
       setOffset(currentOffset + newData.length);
     } catch (error) {
@@ -145,7 +144,7 @@ export const HistoryPage = () => {
         <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
           <div className="flex flex-col items-center gap-4">
             <LoadingSpinner size={32} />
-            <p className="text-zinc-500">Loading your email history...</p>
+            <p className="text-text-muted">Loading your email history...</p>
           </div>
         </div>
       </Layout>
@@ -162,14 +161,14 @@ export const HistoryPage = () => {
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-accent-500 rounded-xl flex items-center justify-center">
-              <History className="w-6 h-6 text-white" />
+            <div className="w-12 h-12 bg-accent flex items-center justify-center">
+              <History className="w-6 h-6 text-surface" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl text-zinc-900">
+              <h1 className="text-2xl md:text-3xl text-text-primary">
                 Email History
               </h1>
-              <p className="text-zinc-500">Your past creations, all in one place</p>
+              <p className="text-text-muted">Your past creations, all in one place</p>
             </div>
           </div>
         </motion.div>
@@ -181,7 +180,7 @@ export const HistoryPage = () => {
           transition={{ delay: 0.1 }}
           className="mb-6"
         >
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-text-muted">
             {total} total records
           </p>
         </motion.div>
@@ -193,15 +192,15 @@ export const HistoryPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <Card className="text-center py-12">
-              <div className="w-16 h-16 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Mail className="w-8 h-8 text-zinc-400" />
+            <Card className="text-center py-12 border border-border">
+              <div className="w-16 h-16 border border-border flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-8 h-8 text-text-muted" />
               </div>
-              <h3 className="text-lg text-zinc-800 mb-2">
+              <h3 className="text-lg text-text-primary mb-2">
                 No emails crafted yet
               </h3>
-              <p className="text-zinc-500 mb-6">
-                Your email masterpieces will appear here once you create some.
+              <p className="text-text-muted mb-6">
+                Your email masterpieces will appear here.
               </p>
               <Button onClick={() => navigate('/home')}>
                 <Sparkles className="w-4 h-4 mr-2" />
@@ -218,8 +217,8 @@ export const HistoryPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Card 
-                  className={`transition-all ${expandedId === item.id ? 'ring-2 ring-primary-600/30' : ''} cursor-pointer`}
+                <Card
+                  className={`cursor-pointer border ${expandedId === item.id ? 'border-accent' : 'border-border'}`}
                   onClick={() => handleCardClick(item)}
                 >
                   {/* Item Header */}
@@ -228,11 +227,7 @@ export const HistoryPage = () => {
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
                         {/* Process Type Badge */}
                         <span className={`
-                          inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium
-                          ${item.process === 'email' 
-                            ? 'bg-yellow-100 text-yellow-700' 
-                            : 'bg-primary-600/10 text-primary-600'
-                          }
+                          inline-flex items-center gap-1 px-2 py-0.5 border border-accent text-accent text-xs font-medium
                         `}>
                           {getProcessIcon(item.process)}
                           {getProcessLabel(item.process)}
@@ -240,43 +235,43 @@ export const HistoryPage = () => {
 
                         {/* Success/Failure Badge */}
                         {item.success ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 border border-success-muted text-success text-xs font-medium">
                             <CheckCircle size={12} />
                             Sent
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 border border-error-muted text-error text-xs font-medium">
                             <XCircle size={12} />
                             Failed
                           </span>
                         )}
 
                         {/* Duration */}
-                        <span className="inline-flex items-center gap-1 text-xs text-zinc-400">
+                        <span className="inline-flex items-center gap-1 text-xs text-text-muted">
                           <Clock size={12} />
                           {formatDuration(item.duration_ms)}
                         </span>
 
                         {/* Date */}
-                        <span className="text-xs text-zinc-400 flex items-center gap-1">
+                        <span className="text-xs text-text-muted flex items-center gap-1">
                           <Calendar size={12} />
                           {formatDate(item.created_at)}
                         </span>
                       </div>
-                      
+
                       {/* Subject */}
-                      <h3 className="font-medium text-zinc-800 truncate">
+                      <h3 className="font-medium text-text-primary truncate">
                         {item.subject || 'No subject'}
                       </h3>
 
                       {/* Recipient */}
-                      <p className="text-sm text-zinc-500 truncate">
+                      <p className="text-sm text-text-muted truncate">
                         To: {item.to}
                       </p>
 
                       {/* Prompt (always visible) */}
-                      <p className="text-sm text-zinc-400 mt-2 line-clamp-2">
-                        <span className="font-medium">Prompt:</span> {item.prompt || 'No prompt recorded'}
+                      <p className="text-sm text-text-muted mt-2 line-clamp-2">
+                        <span className="font-medium text-text-secondary">Prompt:</span> {item.prompt || 'No prompt recorded'}
                       </p>
                     </div>
 
@@ -301,20 +296,20 @@ export const HistoryPage = () => {
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="mt-4 pt-4 border-t border-zinc-100"
+                      className="mt-4 pt-4 border-t border-border"
                     >
                       {/* Error Message (if failed) */}
                       {!item.success && item.error_message && (
-                        <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200">
-                          <p className="text-xs text-red-600 font-medium mb-1">Error:</p>
-                          <p className="text-sm text-red-700">{item.error_message}</p>
+                        <div className="mb-4 p-3 border border-error-muted">
+                          <p className="text-xs text-error font-medium mb-1">Error:</p>
+                          <p className="text-sm text-text-secondary">{item.error_message}</p>
                         </div>
                       )}
 
                       {/* Prompt */}
                       <div className="mb-4">
-                        <p className="text-xs text-zinc-400 mb-1">Prompt:</p>
-                        <p className="text-sm text-zinc-700 bg-zinc-50 p-3 rounded-lg">
+                        <p className="text-xs text-text-muted mb-1">Prompt:</p>
+                        <p className="text-sm text-text-secondary bg-surface-elevated p-3 border border-border">
                           {item.prompt || 'No prompt recorded'}
                         </p>
                       </div>
