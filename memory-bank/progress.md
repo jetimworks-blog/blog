@@ -28,6 +28,7 @@
 ✅ **Backend fix**: Prompts now saved in email history
 ✅ **New User Onboarding**: Sender details warning on dashboard after signup
 ✅ **Settings Advisory**: "Only change Sender Name if no valid Resend API Key" notice
+✅ **Password Reset Flow**: ForgotPasswordPage + ResetPasswordPage with OTP-based reset
 
 ## What's Left
 

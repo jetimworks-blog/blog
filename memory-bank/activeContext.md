@@ -149,3 +149,11 @@
 - SettingsPage saves `localStorage.setItem('settingsUpdated', 'true')` on successful save
 - SettingsPage has advisory: "Only change Sender Name if no valid Resend API Key"
 - Warning cleared after first settings save
+
+## Password Reset Flow (April 22, 2026)
+- Added ForgotPasswordPage and ResetPasswordPage routes in App.jsx
+- Added `forgotPassword()` and `resetPassword()` functions to AuthContext
+- API endpoints: `POST /auth/forgot-password`, `POST /auth/reset-password`
+- Forgot Password link added to LoginPage
+- OTP-based reset with rate limiting
+- Always returns success to prevent email enumeration
