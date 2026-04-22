@@ -1,8 +1,16 @@
-# Email User Frontend - Project Brief
+# KraftMail - Project Brief
+
+**AI-Powered Email Crafting by Jetimworks**
 
 ## Core Requirements
 
 A React frontend application that connects to a Go backend for composing and sending emails via the Resend API. Features two email composition modes: "YOLO" quick send and "Detailed" multi-step wizard.
+
+## App Identity
+
+- **App Name**: KraftMail
+- **Creator**: Jetimworks
+- **Tagline**: AI-Powered Email Crafting
 
 ## Key Features
 

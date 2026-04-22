@@ -1,5 +1,11 @@
 # System Patterns
 
+## Project Identity
+
+- **App Name**: KraftMail
+- **Creator**: Jetimworks
+- **Tagline**: AI-Powered Email Crafting
+
 ## Architecture
 
 ```

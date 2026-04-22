@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project: KraftMail
+
+KraftMail is an AI-powered email crafting application by Jetimworks. It helps professionals compose beautiful, professional emails using AI.
+
 ## Tech Stack
 
 - **React 19** with Vite (SPA)

@@ -131,7 +131,7 @@ export const LandingPage = () => {
                   <div className="w-10 h-10 bg-accent flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-surface" />
                   </div>
-                  <span className="font-semibold text-lg text-text-primary">Email Crafter</span>
+                  <span className="font-semibold text-lg text-text-primary">KraftMail</span>
                 </div>
 
                 <div className="space-y-4 mb-6">
@@ -170,7 +170,7 @@ export const LandingPage = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-              Why Choose Email Crafter?
+              Why Choose KraftMail?
             </h2>
             <p className="text-lg text-text-secondary max-w-2xl mx-auto">
               Built for professionals who send polished B2B outreach at scale.
@@ -235,9 +235,9 @@ export const LandingPage = () => {
       {/* Footer */}
       <section className="py-8 bg-surface-elevated border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-text-muted text-sm">
-            2026 Email Crafter. Reliable. Futuristic. Automated.
-          </p>
+            <p className="text-center text-text-muted text-sm">
+            © 2026 KraftMail by Jetimworks. Reliable. Futuristic. Automated.
+            </p>
         </div>
       </section>
     </Layout>

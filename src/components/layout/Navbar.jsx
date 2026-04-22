@@ -29,7 +29,7 @@ export const Navbar = () => {
               <Mail className="w-5 h-5 text-surface" />
             </div>
             <span className="font-semibold text-xl text-text-primary">
-              Email Crafter
+              KraftMail
             </span>
           </Link>
 

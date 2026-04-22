@@ -2,7 +2,7 @@
 
 ## Why This Project Exists
 
-Email-user-frontend provides a user-friendly interface for composing professional emails through an AI-powered backend. It simplifies email creation by offering two modes:
+KraftMail provides a user-friendly interface for composing professional emails through an AI-powered backend. It simplifies email creation by offering two modes:
 
 1. **YOLO Mode**: For users who want quick, straightforward email composition
 2. **Detailed Mode**: For users who want fine-grained control over tone, style, and formatting
@@ -20,6 +20,12 @@ Email-user-frontend provides a user-friendly interface for composing professiona
 - Intuitive step-by-step email forms
 - Real-time feedback during email generation
 - Beautiful, professional interface
+
+## Branding
+
+- **App Name**: KraftMail
+- **Creator**: Jetimworks
+- **Personality**: Professional yet approachable
 
 ## Architecture
 

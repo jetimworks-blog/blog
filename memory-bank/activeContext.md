@@ -1,5 +1,19 @@
 # Active Context
 
+## Branding Update (April 22, 2026)
+
+The app has been rebranded from "Email Crafter" to **KraftMail** by **Jetimworks**.
+
+Updated files:
+- src/components/layout/Navbar.jsx - Changed app name to KraftMail
+- src/components/layout/Footer.jsx - Changed app name and copyright
+- src/pages/LandingPage.jsx - Changed app name, heading, and footer
+- index.html - Updated title to "KraftMail - AI-Powered Email Crafting by Jetimworks"
+- README.md - Completely rewritten with KraftMail branding
+- CLAUDE.md - Updated project name
+- public/favicon.svg - New "K" letter icon
+- memory-bank/ - All documentation updated
+
 ## Current Status
 
 ✅ **Build passing** - All critical issues resolved as of April 2026
@@ -110,6 +124,10 @@
     - Preset styles (Style, Font, Color, Feel, Width, Border, Shadow, Spacing, Header) are skipped
     - Word count, key message, CTA, and sender name are always included
 
+20. Branding Update (April 22, 2026):
+    - Rebranded from "Email Crafter" to "KraftMail"
+    - Updated all UI components, documentation, and favicon
+
 ## Current Focus
 
 - Application is built and ready for testing
@@ -142,6 +160,7 @@
 - **Network development**: Vite server accessible at `http://0.0.0.0:5173`, API at `http://172.20.10.3:8080`
 - **Default sender**: emails come from `free-email@jetimworks.com` with name `Anonymous`
 - **History page**: no filter tabs, all items shown together, prompt always visible
+- **Branding**: App name is "KraftMail", created by "Jetimworks"
 
 ## New User Onboarding Flow (April 17, 2026)
 - Registration sets `localStorage.setItem('justSignedUp', 'true')`

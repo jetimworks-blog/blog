@@ -1,5 +1,11 @@
 # Tech Context
 
+## Project Identity
+
+- **App Name**: KraftMail
+- **Creator**: Jetimworks
+- **Tagline**: AI-Powered Email Crafting
+
 ## Technologies
 
 - **React**: 19.x with Vite

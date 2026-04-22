@@ -12,7 +12,7 @@ export const Footer = () => {
               <div className="w-10 h-10 bg-accent flex items-center justify-center">
                 <Mail className="w-5 h-5 text-surface" />
               </div>
-              <span className="text-xl font-semibold text-text-primary">Email Crafter</span>
+              <span className="text-xl font-semibold text-text-primary">KraftMail</span>
             </div>
             <p className="text-text-muted text-sm max-w-md">
               Professional email crafting for B2B outreach. Reliable, fast, automated.
@@ -67,7 +67,7 @@ export const Footer = () => {
         {/* Bottom bar */}
         <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-text-muted text-sm">
-            2026 Email Crafter. By Jetimworks.
+            © 2026 KraftMail. By Jetimworks.
           </p>
           <p className="text-text-muted text-sm">
             Reliable. Futuristic. Automated.

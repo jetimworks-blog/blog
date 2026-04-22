@@ -26,7 +26,7 @@ Added specific status code handling (401 for invalid credentials, 409 for existi
 
 **Solution**: Combined copyright text in `src/components/layout/Footer.jsx`:
 ```
-© 2026 Email Crafter. By Jetimworks. Crafted with care for email lovers everywhere.
+© 2026 KraftMail. By Jetimworks. Crafted with care for email lovers everywhere.
 ```
 
 ### 3. Landing Page CTA Cleanup

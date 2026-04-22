@@ -1,5 +1,13 @@
 # Progress
 
+## Branding Status (April 22, 2026)
+
+✅ **KraftMail Rebranding Complete**
+- App name changed from "Email Crafter" to "KraftMail"
+- Creator attribution to "Jetimworks" added consistently
+- New favicon with "K" letter icon
+- All documentation updated
+
 ## What Works
 
 ✅ Project setup with Vite + React 19
@@ -29,6 +37,7 @@
 ✅ **New User Onboarding**: Sender details warning on dashboard after signup
 ✅ **Settings Advisory**: "Only change Sender Name if no valid Resend API Key" notice
 ✅ **Password Reset Flow**: ForgotPasswordPage + ResetPasswordPage with OTP-based reset
+✅ **KraftMail Branding**: Rebranded from Email Crafter to KraftMail
 
 ## What's Left
 
@@ -66,3 +75,16 @@
 | src/pages/HistoryPage.jsx | Email history with clickable cards, no filter tabs, prompt visible |
 | src/pages/SettingsPage.jsx | API key + sender configuration |
 | src/lib/validation.js | Validation utils |
+
+## Branding Files
+
+| File | Status |
+|------|--------|
+| src/components/layout/Navbar.jsx | ✅ Updated to KraftMail |
+| src/components/layout/Footer.jsx | ✅ Updated to KraftMail + Jetimworks |
+| src/pages/LandingPage.jsx | ✅ Updated to KraftMail |
+| index.html | ✅ Updated title |
+| README.md | ✅ Rewritten with KraftMail branding |
+| CLAUDE.md | ✅ Updated project name |
+| public/favicon.svg | ✅ New "K" icon |
+| memory-bank/*.md | ✅ All documentation updated |
