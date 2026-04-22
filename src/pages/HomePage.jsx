@@ -64,7 +64,7 @@ export const HomePage = () => {
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-text-primary mb-4">
             Welcome back, {user?.email?.split('@')[0] || 'there'}
           </h1>
-          <p className="text-base sm:text-lg text-text-secondary max-w-2xl mx-auto px-4">
+          <p className="text-base sm:text-lg text-text-secondary max-w-2xl text-left">
             Choose your approach below. YOLO when you're in a rush, detailed when you want precision.
           </p>
         </motion.div>
