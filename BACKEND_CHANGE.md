@@ -1,78 +1,48 @@
-# Backend Changes Summary
+# Backend Changes Summary (Last 3 Commits)
 
-## Change 1: Prompts Now Saved in Email History
+## New Endpoints
 
-### File: `internal/rest/app_handler.go`
+### POST /api/v1/auth/forgot-password
+- **Payload**: `{ "email": "string" }`
+- **Behavior**:
+  - Checks rate limit for email
+  - Generates OTP and sends email
+  - Always returns: `{ "message": "If that email exists, an OTP has been sent" }`
+- **Errors**: `rate_limit_exceeded` (429)
 
-**Before (ExecutePreview handler - history creation):**
-```go
-history := &domain.EmailHistory{
-    UserID:        execCtx.UserID,
-    Process:       execCtx.Payload.Process,
-    GeneratedHtml: output,
-    Duration:      duration,
+### POST /api/v1/auth/reset-password
+- **Payload**:
+```json
+{
+  "email": "string",
+  "otp": "string (6 digits)",
+  "new_password": "string (min 8 chars)"
 }
 ```
+- **Behavior**:
+  - Checks attempt rate limit
+  - Validates OTP
+  - Validates password strength (min 8 chars)
+  - Updates user password
+  - Deletes OTP after successful validation
+- **Errors**:
+  - `too_many_attempts` (429)
+  - `invalid_otp` (400)
+  - `password_too_short` (400)
 
-**After (ExecutePreview handler - history creation):**
-```go
-history := &domain.EmailHistory{
-    UserID:        execCtx.UserID,
-    Process:       execCtx.Payload.Process,
-    Prompt:        execCtx.Payload.Prompt,  // NEW: Now saves the prompt
-    GeneratedHtml: output,
-    Duration:      duration,
-}
-```
+## New Error Types
+- `ErrRateLimitExceeded` (429)
+- `ErrTooManyAttempts` (429)
+- `ErrInvalidOTP` (400)
+- `ErrOTPExpired` (400)
 
----
+## Services Required
+- `OTPService` - methods: `CheckRateLimit`, `Generate`, `Validate`, `Delete`, `IncrementAttempt`, `ClearAttempts`
+- `EmailService` - methods: `SendOTP`
 
-## Change 2: Only Email Process Saves to History
-
-The `ExecutePreview` endpoint (gen process) no longer saves to email history. Only `ExecuteConfirm` (email process) saves to history.
-
-This means:
-- `POST /v1/execute/preview` (gen process) - No history saved
-- `POST /v1/execute/confirm` (email process) - History saved
-
----
-
-## Change 3: Database Cascade Delete
-
-### File: `domain/user.go`
-
-Added cascade delete relationships:
-
-```go
-type User struct {
-    // ... existing fields ...
-    
-    // Cascade delete relationships
-    Configs        []Config        `gorm:"foreignKey:UserID;constraint:OnDelete:Cascade"`
-    EmailHistories []EmailHistory  `gorm:"foreignKey:UserID;constraint:OnDelete:Cascade"`
-}
-```
-
-When a user is deleted, all their configs and email histories are automatically deleted by PostgreSQL.
-
----
-
-## Endpoint Impact
-
-| Endpoint | Process | Saves History |
-|----------|---------|---------------|
-| POST /v1/execute/preview | gen | ❌ No |
-| POST /v1/execute/confirm | email | ✅ Yes |
-| POST /v1/execute | email/gen/chat/gen-email | ✅ Yes (for all) |
-
-## Email History Response Fields
-- `id` - UUID
-- `process` - "email", "chat", "gen", "gen-email"
-- `prompt` - The AI prompt used (now properly saved)
-- `generated_html` - The HTML output from gen process
-- `to` - Recipient email
-- `subject` - Email subject
-- `success` - Boolean
-- `error_message` - Error if failed
-- `duration_ms` - Execution time
-- `created_at` - Timestamp
+## File Changes
+- `cmd/main.go` - wire up integrations
+- `domain/errors.go` - new error types
+- `internal/rest/auth.go` - forgot-password and reset-password handlers
+- `internal/rest/handler.go` - Utils struct updated with OTPService and EmailService
+- `pkg/auth/password.go` - new `ValidatePasswordStrength` function

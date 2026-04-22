@@ -8,15 +8,14 @@ import { Input } from '../components/ui/Input';
 import { Card } from '../components/ui/Card';
 import { useAuth } from '../hooks/useAuth';
 import { validateEmail } from '../lib/validation';
-import { Mail, Lock, ArrowRight, Sparkles } from 'lucide-react';
+import { Mail, ArrowRight, Sparkles, ArrowLeft } from 'lucide-react';
 
-export const LoginPage = () => {
+export const ForgotPasswordPage = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { forgotPassword } = useAuth();
 
   const [formData, setFormData] = useState({
     email: '',
-    password: '',
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -36,10 +35,6 @@ export const LoginPage = () => {
       newErrors.email = 'Please enter a valid email address';
     }
 
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -54,14 +49,16 @@ export const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      const result = await login(formData.email, formData.password);
+      const result = await forgotPassword(formData.email);
 
       if (result.success) {
-        toast.success('Welcome back!');
-        navigate('/home', { replace: true });
+        // Save email to sessionStorage for the reset password page
+        sessionStorage.setItem('reset_password_email', formData.email);
+        toast.success('Check your email for the OTP');
+        navigate('/reset-password', { replace: true });
       } else {
-        toast.error('Login failed', {
-          description: result.error || 'Invalid email or password.',
+        toast.error('Request failed', {
+          description: result.error || 'Something went wrong. Please try again.',
         });
       }
     } catch (error) {
@@ -93,54 +90,28 @@ export const LoginPage = () => {
               <Sparkles className="w-8 h-8 text-surface" />
             </motion.div>
             <h1 className="text-3xl text-text-primary mb-2">
-              Welcome Back
+              Forgot Password?
             </h1>
             <p className="text-text-secondary">
-              Sign in to continue crafting
+              Enter your email and we'll send you an OTP to reset your password
             </p>
           </div>
 
           {/* Form */}
           <Card variant="bordered">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-4">
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
-                  <Input
-                    name="email"
-                    type="email"
-                    placeholder="your@email.com"
-                    value={formData.email}
-                    onChange={handleChange}
-                    error={errors.email}
-                    className="pl-12"
-                    autoComplete="email"
-                  />
-                </div>
-
-                <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
-                  <Input
-                    name="password"
-                    type="password"
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    error={errors.password}
-                    className="pl-12"
-                    autoComplete="current-password"
-                  />
-                </div>
-
-                {/* Forgot Password Link */}
-                <div className="text-right">
-                  <Link
-                    to="/forgot-password"
-                    className="text-sm text-accent hover:text-accent-hover transition-colors"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
+                <Input
+                  name="email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  error={errors.email}
+                  className="pl-12"
+                  autoComplete="email"
+                />
               </div>
 
               <div className="flex justify-center">
@@ -148,13 +119,13 @@ export const LoginPage = () => {
                   type="submit"
                   loading={isLoading}
                 >
-                  <span>Sign in</span>
+                  <span>Send OTP</span>
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </div>
             </form>
 
-            {/* Divider */}
+            {/* Back to Login */}
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-border" />
@@ -164,14 +135,13 @@ export const LoginPage = () => {
               </div>
             </div>
 
-            {/* Register Link */}
             <p className="text-center text-text-secondary text-sm">
-              Don't have an account?{' '}
+              Remember your password?{' '}
               <Link
-                to="/register"
+                to="/login"
                 className="text-accent hover:text-accent-hover transition-colors"
               >
-                Create one
+                Sign in
               </Link>
             </p>
           </Card>
@@ -180,8 +150,9 @@ export const LoginPage = () => {
           <div className="text-center mt-6">
             <Link
               to="/features"
-              className="text-sm text-text-muted hover:text-text-secondary transition-colors"
+              className="text-sm text-text-muted hover:text-text-secondary transition-colors flex items-center justify-center gap-2"
             >
+              <ArrowLeft className="w-4 h-4" />
               Back to home
             </Link>
           </div>
@@ -191,4 +162,4 @@ export const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ForgotPasswordPage;

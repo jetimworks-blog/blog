@@ -121,6 +121,44 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  const forgotPassword = useCallback(async (email) => {
+    try {
+      await authAPI.forgotPassword(email);
+      return { success: true };
+    } catch (error) {
+      // Always return success to prevent email enumeration
+      // The backend always returns success if email exists
+      return { success: true };
+    }
+  }, []);
+
+  const resetPassword = useCallback(async (email, otp, newPassword) => {
+    try {
+      await authAPI.resetPassword({ email, otp, new_password: newPassword });
+      return { success: true };
+    } catch (error) {
+      let message = 'Password reset failed. Please try again.';
+
+      if (error.response) {
+        const errorData = error.response.data;
+
+        if (errorData?.error?.message && errorData.error.message.trim()) {
+          message = errorData.error.message;
+        } else if (errorData?.error && typeof errorData.error === 'string' && errorData.error.trim()) {
+          message = errorData.error;
+        } else if (error.response.status === 429) {
+          message = 'Too many attempts. Please try again later.';
+        } else if (error.response.status === 400) {
+          message = 'Invalid or expired OTP. Please request a new one.';
+        }
+      } else if (error.request) {
+        message = 'Unable to connect to server. Please check your internet connection.';
+      }
+
+      return { success: false, error: message };
+    }
+  }, []);
+
   const value = {
     user,
     isAuthenticated,
@@ -129,6 +167,8 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     fetchUser,
+    forgotPassword,
+    resetPassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

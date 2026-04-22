@@ -72,6 +72,8 @@ export const authAPI = {
   me: () => apiClient.get('/auth/me'),
   refresh: (refreshToken) => apiClient.post('/auth/refresh', { refresh_token: refreshToken }),
   deleteAccount: (password) => apiClient.delete('/auth/account', { data: { password } }),
+  forgotPassword: (email) => apiClient.post('/auth/forgot-password', { email }),
+  resetPassword: (data) => apiClient.post('/auth/reset-password', data),
 };
 
 // Config API
