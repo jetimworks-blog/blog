@@ -9,10 +9,11 @@ import { Textarea } from '../components/ui/Textarea';
 import { Card } from '../components/ui/Card';
 import { MagicLoader } from '../components/ui/MagicLoader';
 import { ProgressSteps } from '../components/ui/ProgressSteps';
+import { HtmlEditorModal } from '../components/ui/HtmlEditorModal';
 import { emailAPI, configAPI } from '../lib/api';
 import { validateEmail, validateRequired } from '../lib/validation';
 import { useAuth } from '../context/AuthContext';
-import { ArrowLeft, Send, Mail, Zap, ChevronRight, Eye, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Send, Mail, Zap, ChevronRight, Eye, RefreshCw, Code } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Helper function to extract name from email address
@@ -63,6 +64,20 @@ export const YoloEmailForm = () => {
   const [generatedHtml, setGeneratedHtml] = useState('');
   const [errors, setErrors] = useState({});
   const [emailsSentCount, setEmailsSentCount] = useState(getEmailsSentCount);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
+
+  const handleOpenEditor = () => {
+    setIsEditorOpen(true);
+  };
+
+  const handleSaveHtml = (editedHtml) => {
+    setGeneratedHtml(editedHtml);
+    toast.success('HTML updated!');
+  };
+
+  const handleCloseEditor = () => {
+    setIsEditorOpen(false);
+  };
 
   // Preload form data from history if available
   useEffect(() => {
@@ -459,13 +474,22 @@ export const YoloEmailForm = () => {
               <div className="border border-border overflow-hidden mb-4 sm:mb-6">
                 <div className="bg-surface-elevated px-4 py-2 border-b border-border flex items-center justify-between">
                   <span className="text-sm font-medium text-text-secondary">Email Preview</span>
-                  <button
-                    onClick={handleRegeneratePreview}
-                    className="flex items-center gap-1 text-sm text-accent hover:text-accent-hover transition-colors min-h-10 px-2"
-                  >
-                    <RefreshCw className="w-4 h-4" />
-                    Regenerate
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={handleOpenEditor}
+                      className="flex items-center gap-1 text-sm text-text-secondary hover:text-accent transition-colors min-h-10 px-2"
+                    >
+                      <Code className="w-4 h-4" />
+                      Edit HTML
+                    </button>
+                    <button
+                      onClick={handleRegeneratePreview}
+                      className="flex items-center gap-1 text-sm text-accent hover:text-accent-hover transition-colors min-h-10 px-2"
+                    >
+                      <RefreshCw className="w-4 h-4" />
+                      Regenerate
+                    </button>
+                  </div>
                 </div>
                 <div
                   className="p-4 sm:p-6 bg-surface-card max-h-64 sm:max-h-96 overflow-auto [&_table]:w-full email-preview"
@@ -527,6 +551,14 @@ export const YoloEmailForm = () => {
           </div>
         </Card>
       </div>
+
+      {/* HTML Editor Modal */}
+      <HtmlEditorModal
+        isOpen={isEditorOpen}
+        html={generatedHtml}
+        onSave={handleSaveHtml}
+        onClose={handleCloseEditor}
+      />
     </Layout>
   );
 };

@@ -1,59 +1,53 @@
 # Implementation Plan
 
 [Overview]
-Add sender name instruction to the AI-generated prompt in both DetailedEmailForm and YoloEmailForm pages. The instruction will tell the AI to sign emails from the user's configured sender name, extracting a name from the email address if the configured name is "Anonymous".
+Enable users to edit the AI-generated HTML preview before sending, using a modal-based code editor approach. Users will see the preview, click an "Edit HTML" button to open a modal, modify the HTML, and have their edits sent to the confirm endpoint.
+
+This feature improves user control over the final email content while maintaining the existing AI generation workflow. The modal approach keeps the UI clean and only shows complexity when needed.
 
 [Types]
-No new type definitions needed.
+No new types or interfaces required beyond what's already in the codebase. State management uses existing `generatedHtml` state variable.
 
 [Files]
-1. **src/pages/DetailedEmailForm.jsx**
-   - Modify `buildEnhancedPrompt()` function (lines 186-213) to append sender name instruction
-   - Import `useAuth` hook from `../context/AuthContext` and `configAPI` from `../lib/api`
-   - Add state for sender name and loading state for config
-   - Fetch config on component mount to get `from_name`
+Single sentence describing file modifications.
 
-2. **src/pages/YoloEmailForm.jsx**
-   - Add new state for sender name
-   - Import `useAuth` hook and `configAPI`
-   - Fetch config on component mount
-   - Modify `handleGeneratePreview()` and `handleRegeneratePreview()` to append sender instruction to prompt
+Detailed breakdown:
+- **src/components/ui/HtmlEditorModal.jsx** (NEW) - Reusable modal component with code editor for HTML editing
+- **src/pages/DetailedEmailForm.jsx** (MODIFY) - Add Edit button to preview header, integrate HtmlEditorModal, update handleSendEmail to use edited HTML
+- **src/pages/YoloEmailForm.jsx** (MODIFY) - Same changes as DetailedEmailForm
+- **package.json** (MODIFY) - Add `@monaco-editor/react` dependency for the code editor
 
 [Functions]
-1. **Modified: DetailedEmailForm.buildEnhancedPrompt()**
-   - File: `src/pages/DetailedEmailForm.jsx`
-   - Location: lines 186-213
-   - Change: Append sender name instruction at the end of enhancedPrompt before returning
+Single sentence describing function modifications.
 
-2. **Modified: YoloEmailForm.handleGeneratePreview()**
-   - File: `src/pages/YoloEmailForm.jsx`
-   - Location: lines 91-125
-   - Change: Append sender instruction to `formData.prompt` before sending to API
-
-3. **Modified: YoloEmailForm.handleRegeneratePreview()**
-   - File: `src/pages/YoloEmailForm.jsx`
-   - Location: lines 127-157
-   - Change: Append sender instruction to `formData.prompt` before sending to API
-
-4. **New: getSenderName(user, fromName)**
-   - Purpose: Determine the sender name to use in the instruction
-   - Logic: If `fromName` is not "Anonymous" and not empty, use it; otherwise extract name from user.email
-   - This helper function can be added to both components or as a shared utility
+Detailed breakdown:
+- **HtmlEditorModal** (NEW) - Component accepting `isOpen`, `html`, `onSave`, `onClose` props
+- **handleEditHtml** (NEW in both forms) - Opens the modal for editing
+- **handleSaveHtml** (NEW in both forms) - Saves edited HTML and updates state
+- **handleSendEmail** (MODIFY in both forms) - Already uses `generatedHtml`, no changes needed as long as state is updated
 
 [Classes]
-No class modifications needed.
+Single sentence describing class modifications.
+
+Detailed breakdown:
+- No class modifications required. All changes are function/component-based.
 
 [Dependencies]
-No new package dependencies required.
+Single sentence describing dependency modifications.
+
+Details:
+- Add `@monaco-editor/react` (^4.6.0 or latest) - Industry-standard React wrapper for Monaco Editor with HTML syntax highlighting
 
 [Testing]
-1. Test detailed form: Verify prompt includes sender instruction
-2. Test yolo form: Verify prompt includes sender instruction
-3. Test with "Anonymous" sender name: Verify name is extracted from email
-4. Test with custom sender name: Verify custom name is used
+Single sentence describing testing approach.
+
+Test the edit flow: generate preview → click Edit → modify HTML → save → verify preview updates → send and confirm the edited HTML is received by backend.
 
 [Implementation Order]
-1. Read config to get `from_name` on mount in both forms
-2. Create helper function to determine sender name (from config or extract from email)
-3. Modify DetailedEmailForm to append instruction to prompt
-4. Modify YoloEmailForm to append instruction to prompt in both generate and regenerate functions
+Numbered steps showing the logical order of changes to minimize conflicts and ensure successful integration.
+
+1. Install `@monaco-editor/react` dependency
+2. Create `HtmlEditorModal.jsx` component with code editor
+3. Integrate modal into `DetailedEmailForm.jsx`
+4. Integrate modal into `YoloEmailForm.jsx`
+5. Test the full flow end-to-end
