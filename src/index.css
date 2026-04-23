@@ -96,4 +96,40 @@
   .link {
     @apply text-accent hover:text-accent-hover transition-colors duration-200;
   }
+
+  /* Email preview container - ensures text is always visible */
+  .email-preview {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    color: #ffffff !important;
+    background-color: transparent !important;
+  }
+
+  .email-preview * {
+    font-size: inherit !important;
+    line-height: inherit !important;
+    color: inherit !important;
+    background-color: transparent !important;
+  }
+
+  /* Ensure headings and body text are readable */
+  .email-preview h1,
+  .email-preview h2,
+  .email-preview h3,
+  .email-preview h4,
+  .email-preview h5,
+  .email-preview h6,
+  .email-preview p,
+  .email-preview span,
+  .email-preview div,
+  .email-preview li,
+  .email-preview td,
+  .email-preview th {
+    font-size: 16px !important;
+    color: #ffffff !important;
+  }
+
+  .email-preview a {
+    color: #87ceeb !important;
+  }
 }

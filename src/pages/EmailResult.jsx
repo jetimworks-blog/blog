@@ -131,7 +131,7 @@ export const EmailResult = () => {
             {/* Email Content */}
             <div className="p-6 md:p-8">
               <div
-                className="prose prose-navy max-w-none"
+                className="prose prose-navy max-w-none email-preview"
                 dangerouslySetInnerHTML={{ __html: email }}
               />
             </div>
