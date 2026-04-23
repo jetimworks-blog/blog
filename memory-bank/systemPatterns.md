@@ -67,6 +67,7 @@ emailAPI.confirm(data)     // Step 2: Send email
 ## GitHub Pages Deployment
 
 - **Repository**: `jetimworks-blog/jetimworks-blog.github.io`
+- **Custom Domain**: `kraftmail.jetimworks.com`
 - **Vite config**: Uses `command === 'serve'` check for base path
   - Development (`npm run dev`): base = `/`
   - Production (`npm run build`): base = `/`
@@ -75,3 +76,4 @@ emailAPI.confirm(data)     // Step 2: Send email
   - Uses `actions/deploy-pages@v4`
 - **Build output**: `dist/` folder
 - **Environment vars**: Set via GitHub Actions Variables (`API_BASE_URL`)
+- **CNAME file**: `public/CNAME` - automatically included in builds

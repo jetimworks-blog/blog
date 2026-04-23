@@ -48,9 +48,9 @@
 
 ✅ **GitHub Pages Deployment** (completed 2024-04-15)
 - Repository: `jetimworks-blog/jetimworks-blog.github.io`
-- URL: https://jetimworks-blog.github.io/
+- **Custom Domain**: `kraftmail.jetimworks.com`
 - GitHub Actions workflow for automated deployment
-- Base path: `/` (root, not `/blog/`)
+- CNAME file in `public/CNAME` for custom domain support
 - Build config: `npm run build` → `dist/`
 
 ## Known Issues
