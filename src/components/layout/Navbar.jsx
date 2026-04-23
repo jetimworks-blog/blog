@@ -103,57 +103,56 @@ export const Navbar = () => {
       </div>
 
       {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <motion.div
-          initial={{ opacity: 0, maxHeight: 0 }}
-          animate={{ opacity: 1, maxHeight: 500 }}
-          exit={{ opacity: 0, maxHeight: 0 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
-          className="md:hidden overflow-hidden bg-surface-elevated border-t border-border"
-        >
-          <div className="px-4 py-4 space-y-2">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              return (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`
-                    flex items-center gap-3 px-4 py-3 transition-all
-                    ${isActive(link.to)
-                      ? 'bg-surface text-accent font-medium'
-                      : 'text-text-secondary hover:text-text-primary'
-                    }
-                  `}
-                >
-                  <Icon size={20} />
-                  <span>{link.label}</span>
-                </Link>
-              );
-            })}
+      <motion.div
+        initial={false}
+        animate={mobileMenuOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
+        transition={{ duration: 0.2 }}
+        className={`md:hidden bg-surface-elevated border-t border-border pb-safe ${
+          mobileMenuOpen ? 'block' : 'hidden'
+        }`}
+      >
+        <div className="px-4 py-4 space-y-2 pb-6">
+          {navLinks.map((link) => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.to}
+                to={link.to}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`
+                  flex items-center gap-3 px-4 py-3 transition-all
+                  ${isActive(link.to)
+                    ? 'bg-surface text-accent font-medium'
+                    : 'text-text-secondary hover:text-text-primary'
+                  }
+                `}
+              >
+                <Icon size={20} />
+                <span>{link.label}</span>
+              </Link>
+            );
+          })}
 
-            {isAuthenticated && (
-              <>
-                <div className="flex items-center gap-2 px-4 py-3 text-text-secondary">
-                  <User size={20} className="flex-shrink-0" />
-                  <span className="text-sm truncate">{user?.email}</span>
-                </div>
-                <button
-                  onClick={() => {
-                    logout();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="flex items-center gap-3 w-full px-4 py-3 text-error hover:bg-error-muted transition-all"
-                >
-                  <LogOut size={20} />
-                  <span>Logout</span>
-                </button>
-              </>
-            )}
-          </div>
-        </motion.div>
-      )}
+          {isAuthenticated && (
+            <>
+              <div className="flex items-center gap-2 px-4 py-3 text-text-secondary">
+                <User size={20} className="flex-shrink-0" />
+                <span className="text-sm truncate">{user?.email}</span>
+              </div>
+              <button
+                onClick={() => {
+                  logout();
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center gap-3 w-full px-4 py-3 text-error hover:bg-error-muted transition-all"
+              >
+                <LogOut size={20} />
+                <span>Logout</span>
+              </button>
+            </>
+          )}
+        </div>
+      </motion.div>
     </nav>
   );
 };
