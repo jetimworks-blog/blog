@@ -236,7 +236,7 @@ export const LandingPage = () => {
       <section className="py-8 bg-surface-elevated border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <p className="text-center text-text-muted text-sm">
-            © 2026 KraftMail by Jetimworks. Reliable. Futuristic. Automated.
+            © 2026 KraftMail by <a href="https://jetimworks.com/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Jetimworks</a>. Reliable. Futuristic. Automated.
             </p>
         </div>
       </section>

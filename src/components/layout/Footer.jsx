@@ -29,14 +29,9 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/pricing" className="text-text-secondary hover:text-accent transition-colors">
-                  Pricing
-                </Link>
-              </li>
-              <li>
-                <Link to="/docs" className="text-text-secondary hover:text-accent transition-colors">
+                <a href="/settings" className="text-text-secondary hover:text-accent transition-colors">
                   Documentation
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -46,19 +41,14 @@ export const Footer = () => {
             <h4 className="font-semibold text-text-primary mb-4">Company</h4>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link to="/about" className="text-text-secondary hover:text-accent transition-colors">
+                <a href="https://jetimworks.com/" target="_blank" rel="noopener noreferrer" className="text-text-secondary hover:text-accent transition-colors">
                   About
-                </Link>
+                </a>
               </li>
               <li>
-                <Link to="/blog" className="text-text-secondary hover:text-accent transition-colors">
+                <a href="https://profile.jetimworks.com/" target="_blank" rel="noopener noreferrer" className="text-text-secondary hover:text-accent transition-colors">
                   Blog
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-text-secondary hover:text-accent transition-colors">
-                  Contact
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
