@@ -10,7 +10,7 @@ import { useState } from 'react';
 export const EmailResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { email, subject, to, mode, error } = location.state || {};
+  const { email, subject, to, to_list, cc, bcc, mode, error } = location.state || {};
   const [copied, setCopied] = useState(false);
 
   if (!email || error) {
@@ -119,8 +119,20 @@ export const EmailResult = () => {
               <div className="space-y-2 text-sm">
                 <div className="flex items-start gap-3">
                   <span className="text-text-muted w-16 flex-shrink-0">To:</span>
-                  <span className="text-text-primary font-medium">{to}</span>
+                  <span className="text-text-primary font-medium">{to}{to_list && to_list.length > 0 && `, ${to_list.join(', ')}`}</span>
                 </div>
+                {cc && cc.length > 0 && (
+                  <div className="flex items-start gap-3">
+                    <span className="text-text-muted w-16 flex-shrink-0">CC:</span>
+                    <span className="text-text-primary font-medium">{cc.join(', ')}</span>
+                  </div>
+                )}
+                {bcc && bcc.length > 0 && (
+                  <div className="flex items-start gap-3">
+                    <span className="text-text-muted w-16 flex-shrink-0">BCC:</span>
+                    <span className="text-text-primary font-medium">{bcc.join(', ')}</span>
+                  </div>
+                )}
                 <div className="flex items-start gap-3">
                   <span className="text-text-muted w-16 flex-shrink-0">Subject:</span>
                   <span className="text-text-primary font-medium">{subject}</span>

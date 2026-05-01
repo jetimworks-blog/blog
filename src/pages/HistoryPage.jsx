@@ -266,8 +266,22 @@ export const HistoryPage = () => {
 
                       {/* Recipient */}
                       <p className="text-sm text-text-muted truncate">
-                        To: {item.to}
+                        To: {item.to}{item.to_list && item.to_list.length > 0 && `, ${item.to_list.join(', ')}`}
                       </p>
+
+                      {/* CC */}
+                      {item.cc && item.cc.length > 0 && (
+                        <p className="text-sm text-text-muted truncate">
+                          CC: {item.cc.join(', ')}
+                        </p>
+                      )}
+
+                      {/* BCC */}
+                      {item.bcc && item.bcc.length > 0 && (
+                        <p className="text-sm text-text-muted truncate">
+                          BCC: {item.bcc.join(', ')}
+                        </p>
+                      )}
 
                       {/* Prompt (always visible) */}
                       <p className="text-sm text-text-muted mt-2 line-clamp-2">
@@ -312,6 +326,20 @@ export const HistoryPage = () => {
                         <p className="text-sm text-text-secondary bg-surface-elevated p-3 border border-border">
                           {item.prompt || 'No prompt recorded'}
                         </p>
+                      </div>
+
+                      {/* Recipients */}
+                      <div className="mb-4">
+                        <p className="text-xs text-text-muted mb-1">Recipients:</p>
+                        <div className="text-sm text-text-secondary bg-surface-elevated p-3 border border-border space-y-1">
+                          <p><span className="font-medium">To:</span> {item.to}{item.to_list && item.to_list.length > 0 && `, ${item.to_list.join(', ')}`}</p>
+                          {item.cc && item.cc.length > 0 && (
+                            <p><span className="font-medium">CC:</span> {item.cc.join(', ')}</p>
+                          )}
+                          {item.bcc && item.bcc.length > 0 && (
+                            <p><span className="font-medium">BCC:</span> {item.bcc.join(', ')}</p>
+                          )}
+                        </div>
                       </div>
 
                       {/* Actions */}

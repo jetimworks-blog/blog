@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { Layout } from '../components/layout/Layout';
@@ -10,11 +10,11 @@ import { Card } from '../components/ui/Card';
 import { MagicLoader } from '../components/ui/MagicLoader';
 import { ProgressSteps } from '../components/ui/ProgressSteps';
 import { HtmlEditorModal } from '../components/ui/HtmlEditorModal';
+import { ChipInput } from '../components/ui/ChipInput';
 import { emailAPI, configAPI } from '../lib/api';
 import { validateEmail, validateRequired } from '../lib/validation';
 import { useAuth } from '../context/AuthContext';
 import { ArrowLeft, Send, Mail, Zap, ChevronRight, Eye, RefreshCw, Code } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 // Helper function to extract name from email address
 const extractNameFromEmail = (email) => {
@@ -47,6 +47,15 @@ const incrementEmailsSentCount = () => {
   return newCount;
 };
 
+// Count total recipients (to + toList + cc + bcc)
+const countRecipients = (data) => {
+  const toArray = data.to ? 1 : 0;
+  const toListCount = Array.isArray(data.toList) ? data.toList.length : 0;
+  const ccCount = Array.isArray(data.cc) ? data.cc.length : 0;
+  const bccCount = Array.isArray(data.bcc) ? data.bcc.length : 0;
+  return toArray + toListCount + ccCount + bccCount;
+};
+
 export const YoloEmailForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,6 +65,9 @@ export const YoloEmailForm = () => {
   const [fromName, setFromName] = useState('');
   const [formData, setFormData] = useState({
     to: '',
+    toList: [],
+    cc: [],
+    bcc: [],
     recipientName: '',
     subject: '',
     prompt: '',
@@ -85,6 +97,9 @@ export const YoloEmailForm = () => {
     if (historyData) {
       setFormData({
         to: historyData.to || '',
+        toList: Array.isArray(historyData.to_list) ? historyData.to_list : [],
+        cc: Array.isArray(historyData.cc) ? historyData.cc : [],
+        bcc: Array.isArray(historyData.bcc) ? historyData.bcc : [],
         recipientName: historyData.recipientName || '',
         subject: historyData.subject || '',
         prompt: historyData.prompt || '',
@@ -121,6 +136,31 @@ export const YoloEmailForm = () => {
     if (step === 0) {
       if (!validateEmail(formData.to)) {
         newErrors.to = 'Please enter a valid email address';
+      }
+
+      // Validate each email in arrays
+      const validateArrayEmails = (arr, fieldName) => {
+        if (!Array.isArray(arr)) return '';
+        for (const email of arr) {
+          if (!validateEmail(email)) {
+            return `Invalid email in ${fieldName}: ${email}`;
+          }
+        }
+        return '';
+      };
+
+      const toListError = validateArrayEmails(formData.toList, 'To List');
+      if (toListError) newErrors.toList = toListError;
+
+      const ccError = validateArrayEmails(formData.cc, 'CC');
+      if (ccError) newErrors.cc = ccError;
+
+      const bccError = validateArrayEmails(formData.bcc, 'BCC');
+      if (bccError) newErrors.bcc = bccError;
+
+      const totalRecipients = countRecipients(formData);
+      if (totalRecipients > 50) {
+        newErrors.to = `Too many recipients (${totalRecipients}). Maximum is 50.`;
       }
     }
 
@@ -250,6 +290,9 @@ export const YoloEmailForm = () => {
       const confirmPayload = {
         process: 'email',
         to: formData.to,
+        to_list: formData.toList,
+        cc: formData.cc,
+        bcc: formData.bcc,
         subject: formData.subject,
         html: generatedHtml,
         prompt: savedPrompt,
@@ -267,6 +310,9 @@ export const YoloEmailForm = () => {
             email: generatedHtml,
             subject: formData.subject,
             to: formData.to,
+            to_list: formData.toList,
+            cc: formData.cc,
+            bcc: formData.bcc,
           }
         });
       } else {
@@ -370,6 +416,27 @@ export const YoloEmailForm = () => {
                     autoFocus
                   />
                 </div>
+                <ChipInput
+                  label="To List (optional)"
+                  placeholder="Add more recipients..."
+                  value={formData.toList}
+                  onChange={(emails) => setFormData(prev => ({ ...prev, toList: emails }))}
+                  error={errors.toList}
+                />
+                <ChipInput
+                  label="CC (optional)"
+                  placeholder="Add CC..."
+                  value={formData.cc}
+                  onChange={(emails) => setFormData(prev => ({ ...prev, cc: emails }))}
+                  error={errors.cc}
+                />
+                <ChipInput
+                  label="BCC (optional)"
+                  placeholder="Add BCC..."
+                  value={formData.bcc}
+                  onChange={(emails) => setFormData(prev => ({ ...prev, bcc: emails }))}
+                  error={errors.bcc}
+                />
                 <Input
                   name="recipientName"
                   label="Recipient Name (optional)"
@@ -501,8 +568,20 @@ export const YoloEmailForm = () => {
               <div className="space-y-2 p-3 sm:p-4 border border-border">
                 <div className="flex items-center justify-between">
                   <span className="text-text-muted">To:</span>
-                  <span className="font-medium text-text-primary truncate ml-2">{formData.to}</span>
+                  <span className="font-medium text-text-primary truncate ml-2">{formData.to}{formData.toList.length > 0 ? `, ${formData.toList.join(', ')}` : ''}</span>
                 </div>
+                {formData.cc.length > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-text-muted">CC:</span>
+                    <span className="font-medium text-text-primary truncate ml-2">{formData.cc.join(', ')}</span>
+                  </div>
+                )}
+                {formData.bcc.length > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-text-muted">BCC:</span>
+                    <span className="font-medium text-text-primary truncate ml-2">{formData.bcc.join(', ')}</span>
+                  </div>
+                )}
                 <div className="flex items-center justify-between">
                   <span className="text-text-muted">Subject:</span>
                   <span className="font-medium text-text-primary truncate ml-2">{formData.subject}</span>

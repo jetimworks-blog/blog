@@ -3,6 +3,18 @@ export const validateEmail = (email) => {
   return emailRegex.test(email);
 };
 
+export const validateEmailList = (emailString) => {
+  if (!emailString || emailString.trim() === '') {
+    return { valid: true, message: '' };
+  }
+  const emails = emailString.split(',').map(e => e.trim()).filter(e => e);
+  const invalidEmails = emails.filter(email => !validateEmail(email));
+  if (invalidEmails.length > 0) {
+    return { valid: false, message: `Invalid email(s): ${invalidEmails.join(', ')}` };
+  }
+  return { valid: true, message: '' };
+};
+
 export const validateSenderEmail = (email) => {
   // Optional field - if empty, it's valid
   if (!email || email.trim() === '') {

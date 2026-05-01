@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { Layout } from '../components/layout/Layout';
@@ -10,11 +10,11 @@ import { Card } from '../components/ui/Card';
 import { MagicLoader } from '../components/ui/MagicLoader';
 import { ProgressSteps } from '../components/ui/ProgressSteps';
 import { HtmlEditorModal } from '../components/ui/HtmlEditorModal';
+import { ChipInput } from '../components/ui/ChipInput';
 import { emailAPI, configAPI } from '../lib/api';
 import { validateEmail, validateRequired } from '../lib/validation';
 import { useAuth } from '../context/AuthContext';
 import { ArrowLeft, Send, Sparkles, ChevronRight, ChevronLeft, Eye, RefreshCw, Pencil, List, Code } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 // Helper function to extract name from email address
 const extractNameFromEmail = (email) => {
@@ -129,6 +129,15 @@ const incrementEmailsSentCount = () => {
   return newCount;
 };
 
+// Count total recipients (to + toList + cc + bcc)
+const countRecipients = (data) => {
+  const toArray = data.to ? 1 : 0;
+  const toListCount = Array.isArray(data.toList) ? data.toList.length : 0;
+  const ccCount = Array.isArray(data.cc) ? data.cc.length : 0;
+  const bccCount = Array.isArray(data.bcc) ? data.bcc.length : 0;
+  return toArray + toListCount + ccCount + bccCount;
+};
+
 export const DetailedEmailForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -138,6 +147,9 @@ export const DetailedEmailForm = () => {
   const [fromName, setFromName] = useState('');
   const [formData, setFormData] = useState({
     to: '',
+    toList: [],
+    cc: [],
+    bcc: [],
     recipientName: '',
     subject: '',
     prompt: '',
@@ -184,6 +196,9 @@ export const DetailedEmailForm = () => {
       setFormData(prev => ({
         ...prev,
         to: historyData.to || prev.to,
+        toList: Array.isArray(historyData.to_list) ? historyData.to_list : [],
+        cc: Array.isArray(historyData.cc) ? historyData.cc : [],
+        bcc: Array.isArray(historyData.bcc) ? historyData.bcc : [],
         recipientName: historyData.recipientName || prev.recipientName,
         subject: historyData.subject || prev.subject,
         prompt: historyData.prompt || prev.prompt,
@@ -219,6 +234,32 @@ export const DetailedEmailForm = () => {
       if (!validateEmail(formData.to)) {
         newErrors.to = 'Please enter a valid email address';
       }
+
+      // Validate each email in arrays
+      const validateArrayEmails = (arr, fieldName) => {
+        if (!Array.isArray(arr)) return '';
+        for (const email of arr) {
+          if (!validateEmail(email)) {
+            return `Invalid email in ${fieldName}: ${email}`;
+          }
+        }
+        return '';
+      };
+
+      const toListError = validateArrayEmails(formData.toList, 'To List');
+      if (toListError) newErrors.toList = toListError;
+
+      const ccError = validateArrayEmails(formData.cc, 'CC');
+      if (ccError) newErrors.cc = ccError;
+
+      const bccError = validateArrayEmails(formData.bcc, 'BCC');
+      if (bccError) newErrors.bcc = bccError;
+
+      const totalRecipients = countRecipients(formData);
+      if (totalRecipients > 50) {
+        newErrors.to = `Too many recipients (${totalRecipients}). Maximum is 50.`;
+      }
+
       if (!validateRequired(formData.subject, 'Subject')) {
         newErrors.subject = 'Subject is required';
       }
@@ -355,6 +396,9 @@ export const DetailedEmailForm = () => {
       const confirmPayload = {
         process: 'email',
         to: formData.to,
+        to_list: formData.toList,
+        cc: formData.cc,
+        bcc: formData.bcc,
         subject: formData.subject,
         html: generatedHtml,
         prompt: savedPrompt,
@@ -372,6 +416,9 @@ export const DetailedEmailForm = () => {
             email: generatedHtml,
             subject: formData.subject,
             to: formData.to,
+            to_list: formData.toList,
+            cc: formData.cc,
+            bcc: formData.bcc,
             mode: 'detailed',
           }
         });
@@ -419,6 +466,30 @@ export const DetailedEmailForm = () => {
                 value={formData.to}
                 onChange={(e) => updateFormData('to', e.target.value)}
                 error={errors.to}
+              />
+
+              <ChipInput
+                label="To List (optional)"
+                placeholder="Add more recipients..."
+                value={formData.toList}
+                onChange={(emails) => updateFormData('toList', emails)}
+                error={errors.toList}
+              />
+
+              <ChipInput
+                label="CC (optional)"
+                placeholder="Add CC..."
+                value={formData.cc}
+                onChange={(emails) => updateFormData('cc', emails)}
+                error={errors.cc}
+              />
+
+              <ChipInput
+                label="BCC (optional)"
+                placeholder="Add BCC..."
+                value={formData.bcc}
+                onChange={(emails) => updateFormData('bcc', emails)}
+                error={errors.bcc}
               />
 
               <Input
@@ -981,8 +1052,22 @@ export const DetailedEmailForm = () => {
             <div className="space-y-3 text-sm sm:text-base">
               <div className="p-3 border border-border">
                 <p className="text-xs text-text-muted mb-1">To</p>
-                <p className="text-sm font-medium text-text-primary truncate">{formData.to}</p>
+                <p className="text-sm font-medium text-text-primary truncate">{formData.to}{formData.toList.length > 0 ? `, ${formData.toList.join(', ')}` : ''}</p>
               </div>
+
+              {formData.cc.length > 0 && (
+                <div className="p-3 border border-border">
+                  <p className="text-xs text-text-muted mb-1">CC</p>
+                  <p className="text-sm font-medium text-text-primary truncate">{formData.cc.join(', ')}</p>
+                </div>
+              )}
+
+              {formData.bcc.length > 0 && (
+                <div className="p-3 border border-border">
+                  <p className="text-xs text-text-muted mb-1">BCC</p>
+                  <p className="text-sm font-medium text-text-primary truncate">{formData.bcc.join(', ')}</p>
+                </div>
+              )}
 
               <div className="p-3 border border-border">
                 <p className="text-xs text-text-muted mb-1">Subject</p>
