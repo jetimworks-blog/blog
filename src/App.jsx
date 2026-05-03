@@ -14,6 +14,10 @@ import DetailedEmailForm from './pages/DetailedEmailForm';
 import EmailResult from './pages/EmailResult';
 import HistoryPage from './pages/HistoryPage';
 import SettingsPage from './pages/SettingsPage';
+import CampaignsPage from './pages/campaigns/CampaignsPage';
+import CampaignNewPage from './pages/campaigns/CampaignNewPage';
+import CampaignDetailPage from './pages/campaigns/CampaignDetailPage';
+import CampaignEditPage from './pages/campaigns/CampaignEditPage';
 
 function RedirectHandler() {
   const navigate = useNavigate();
@@ -94,6 +98,38 @@ function App() {
             element={
               <ProtectedRoute>
                 <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/campaigns"
+            element={
+              <ProtectedRoute>
+                <CampaignsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/campaigns/new"
+            element={
+              <ProtectedRoute>
+                <CampaignNewPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/campaigns/:id"
+            element={
+              <ProtectedRoute>
+                <CampaignDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/campaigns/:id/edit"
+            element={
+              <ProtectedRoute>
+                <CampaignEditPage />
               </ProtectedRoute>
             }
           />

@@ -95,9 +95,37 @@ export const healthAPI = {
   check: () => apiClient.get('/health'),
 };
 
+// Campaign API
+export const campaignAPI = {
+  // CRUD
+  create: (data) => apiClient.post('/campaigns', data),
+  list: (limit = 20, offset = 0) =>
+    apiClient.get('/campaigns', { params: { limit, offset } }),
+  get: (id) => apiClient.get(`/campaigns/${id}`),
+  update: (id, data) => apiClient.put(`/campaigns/${id}`, data),
+  delete: (id) => apiClient.delete(`/campaigns/${id}`),
+
+  // Actions
+  upload: (id, file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return apiClient.post(`/campaigns/${id}/upload`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+  schedule: (id, data) => apiClient.post(`/campaigns/${id}/schedule`, data),
+  send: (id) => apiClient.post(`/campaigns/${id}/send`),
+  cancel: (id) => apiClient.post(`/campaigns/${id}/cancel`),
+
+  // Data
+  recipients: (id, limit = 100, offset = 0) =>
+    apiClient.get(`/campaigns/${id}/recipients`, { params: { limit, offset } }),
+  stats: (id) => apiClient.get(`/campaigns/${id}/stats`),
+};
+
 // Email History API
 export const historyAPI = {
-  getAll: (limit = 20, offset = 0) => 
+  getAll: (limit = 20, offset = 0) =>
     apiClient.get('/email-history', { params: { limit, offset } }),
 };
 
