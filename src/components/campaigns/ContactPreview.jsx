@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { clsx } from 'clsx';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { Button } from '../ui/Button';
 
@@ -26,17 +25,33 @@ export const ContactPreview = ({
     }
   };
 
-  const sortedContacts = [...contacts].sort((a, b) => {
+  // Expand merge_data fields and flatten contact for table display
+  const flattenContacts = (contacts) => {
+    return contacts.map(contact => {
+      const flat = { ...contact };
+      if (flat.merge_data && typeof flat.merge_data === 'object') {
+        Object.entries(flat.merge_data).forEach(([key, value]) => {
+          flat[key] = value;
+        });
+      }
+      delete flat.merge_data;
+      return flat;
+    });
+  };
+
+  const flattenedContacts = flattenContacts(contacts);
+
+  const headers = flattenedContacts.length > 0
+    ? Object.keys(flattenedContacts[0]).filter(k => k !== 'row' && k !== 'id' && k !== 'campaign_id')
+    : ['email'];
+
+  const sortedContacts = [...flattenedContacts].sort((a, b) => {
     const aVal = a[sortField] || '';
     const bVal = b[sortField] || '';
     return sortDir === 'asc'
       ? aVal.localeCompare(bVal)
       : bVal.localeCompare(aVal);
   });
-
-  const headers = contacts.length > 0
-    ? Object.keys(contacts[0]).filter(k => k !== 'row' && k !== 'id' && k !== 'campaign_id')
-    : ['email'];
 
   return (
     <div className="border border-border rounded-lg overflow-hidden">
