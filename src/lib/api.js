@@ -98,29 +98,29 @@ export const healthAPI = {
 // Campaign API
 export const campaignAPI = {
   // CRUD
-  create: (data) => apiClient.post('/campaigns', data),
+  create: (data) => apiClient.post('/campaigns/campaigns', data),
   list: (limit = 20, offset = 0) =>
-    apiClient.get('/campaigns', { params: { limit, offset } }),
-  get: (id) => apiClient.get(`/campaigns/${id}`),
-  update: (id, data) => apiClient.put(`/campaigns/${id}`, data),
-  delete: (id) => apiClient.delete(`/campaigns/${id}`),
+    apiClient.get('/campaigns/campaigns', { params: { limit, offset } }),
+  get: (id) => apiClient.get(`/campaigns/campaigns/${id}`),
+  update: (id, data) => apiClient.put(`/campaigns/campaigns/${id}`, data),
+  delete: (id) => apiClient.delete(`/campaigns/campaigns/${id}`),
 
   // Actions
   upload: (id, file) => {
     const formData = new FormData();
     formData.append('file', file);
-    return apiClient.post(`/campaigns/${id}/upload`, formData, {
+    return apiClient.post(`/campaigns/campaigns/${id}/upload`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
-  schedule: (id, data) => apiClient.post(`/campaigns/${id}/schedule`, data),
-  send: (id) => apiClient.post(`/campaigns/${id}/send`),
-  cancel: (id) => apiClient.post(`/campaigns/${id}/cancel`),
+  schedule: (id, data) => apiClient.post(`/campaigns/campaigns/${id}/schedule`, data),
+  send: (id) => apiClient.post(`/campaigns/campaigns/${id}/send`),
+  cancel: (id) => apiClient.post(`/campaigns/campaigns/${id}/cancel`),
 
   // Data
   recipients: (id, limit = 100, offset = 0) =>
-    apiClient.get(`/campaigns/${id}/recipients`, { params: { limit, offset } }),
-  stats: (id) => apiClient.get(`/campaigns/${id}/stats`),
+    apiClient.get(`/campaigns/campaigns/${id}/recipients`, { params: { limit, offset } }),
+  stats: (id) => apiClient.get(`/campaigns/campaigns/${id}/stats`),
 };
 
 // Email History API
