@@ -283,8 +283,10 @@ export const DetailedEmailForm = () => {
   const buildEnhancedPrompt = () => {
     let enhancedPrompt = `In essence the email should say this: '${formData.prompt}'. Be very creative in delivering the best style, grammar, and beauty of the message.`;
 
-    const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.toList[0] || '');
-    enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
+    const recipientName = formData.recipientName.trim();
+    if (recipientName) {
+      enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
+    }
     enhancedPrompt += `\n\nCONTEXT ONLY - DO NOT INCLUDE IN EMAIL: The expected subject for this email is '${formData.subject}'. Use this subject line only as guidance for the tone and direction of your message. The actual email body must NOT contain or repeat the subject line. Write only the email body content itself — no subject, no headers indicating the subject.`;
 
     if (formData.noStyle) {

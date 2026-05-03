@@ -119,7 +119,7 @@ export const EmailResult = () => {
               <div className="space-y-2 text-sm">
                 <div className="flex items-start gap-3">
                   <span className="text-text-muted w-16 flex-shrink-0">To:</span>
-                  <span className="text-text-primary font-medium">{to}{to_list && to_list.length > 0 && `, ${to_list.join(', ')}`}</span>
+                  <span className="text-text-primary font-medium">{to_list ? to_list.join(', ') : ''}</span>
                 </div>
                 {cc && cc.length > 0 && (
                   <div className="flex items-start gap-3">
