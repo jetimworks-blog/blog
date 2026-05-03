@@ -33,8 +33,9 @@ export const CampaignDetailPage = () => {
         campaignAPI.get(id),
         campaignAPI.stats(id),
       ]);
-      setCampaign(campaignRes.data);
-      setStats(statsRes.data);
+      // Handle both wrapped { data: {...} } and direct {...} responses
+      setCampaign(campaignRes.data.data || campaignRes.data);
+      setStats(statsRes.data.data || statsRes.data);
     } catch (error) {
       console.error('Failed to load campaign:', error);
       toast.error('Failed to load campaign');
@@ -45,10 +46,15 @@ export const CampaignDetailPage = () => {
   const loadRecipients = async (offset = 0) => {
     try {
       const response = await campaignAPI.recipients(id, 20, offset);
-      setRecipients(response.data.data || []);
+      // Handle both wrapped { data: [...] } and direct [...] responses
+      const data = Array.isArray(response.data)
+        ? response.data
+        : (response.data.data || []);
+      setRecipients(data);
       setRecipientOffset(offset);
     } catch (error) {
       console.error('Failed to load recipients:', error);
+      toast.error('Failed to load recipients');
     }
   };
 
@@ -151,10 +157,10 @@ export const CampaignDetailPage = () => {
   ];
 
   const openRate = stats && stats.total > 0
-    ? Math.round((stats.opened / stats.total) * 100)
+    ? Math.round(((stats.opened ?? 0) / stats.total) * 100)
     : 0;
   const clickRate = stats && stats.total > 0
-    ? Math.round((stats.clicked / stats.total) * 100)
+    ? Math.round(((stats.clicked ?? 0) / stats.total) * 100)
     : 0;
 
   return (
