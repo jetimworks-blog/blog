@@ -14,7 +14,7 @@ import { ChipInput } from '../components/ui/ChipInput';
 import { emailAPI, configAPI } from '../lib/api';
 import { validateEmail, validateRequired } from '../lib/validation';
 import { useAuth } from '../context/AuthContext';
-import { ArrowLeft, Send, Mail, Zap, ChevronRight, Eye, RefreshCw, Code } from 'lucide-react';
+import { ArrowLeft, Send, Zap, ChevronRight, Eye, RefreshCw, Code } from 'lucide-react';
 
 // Helper function to extract name from email address
 const extractNameFromEmail = (email) => {
@@ -47,13 +47,12 @@ const incrementEmailsSentCount = () => {
   return newCount;
 };
 
-// Count total recipients (to + toList + cc + bcc)
+// Count total recipients (toList + cc + bcc)
 const countRecipients = (data) => {
-  const toArray = data.to ? 1 : 0;
   const toListCount = Array.isArray(data.toList) ? data.toList.length : 0;
   const ccCount = Array.isArray(data.cc) ? data.cc.length : 0;
   const bccCount = Array.isArray(data.bcc) ? data.bcc.length : 0;
-  return toArray + toListCount + ccCount + bccCount;
+  return toListCount + ccCount + bccCount;
 };
 
 export const YoloEmailForm = () => {
@@ -64,7 +63,6 @@ export const YoloEmailForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [fromName, setFromName] = useState('');
   const [formData, setFormData] = useState({
-    to: '',
     toList: [],
     cc: [],
     bcc: [],
@@ -96,7 +94,6 @@ export const YoloEmailForm = () => {
     const historyData = location.state?.historyItem;
     if (historyData) {
       setFormData({
-        to: historyData.to || '',
         toList: Array.isArray(historyData.to_list) ? historyData.to_list : [],
         cc: Array.isArray(historyData.cc) ? historyData.cc : [],
         bcc: Array.isArray(historyData.bcc) ? historyData.bcc : [],
@@ -134,33 +131,34 @@ export const YoloEmailForm = () => {
     const newErrors = {};
 
     if (step === 0) {
-      if (!validateEmail(formData.to)) {
-        newErrors.to = 'Please enter a valid email address';
-      }
-
-      // Validate each email in arrays
-      const validateArrayEmails = (arr, fieldName) => {
-        if (!Array.isArray(arr)) return '';
-        for (const email of arr) {
-          if (!validateEmail(email)) {
-            return `Invalid email in ${fieldName}: ${email}`;
+      // Validate toList as primary recipient field
+      if (!Array.isArray(formData.toList) || formData.toList.length === 0) {
+        newErrors.toList = 'Please add at least one recipient';
+      } else {
+        // Validate each email in toList
+        const validateArrayEmails = (arr, fieldName) => {
+          if (!Array.isArray(arr)) return '';
+          for (const email of arr) {
+            if (!validateEmail(email)) {
+              return `Invalid email in ${fieldName}: ${email}`;
+            }
           }
+          return '';
+        };
+
+        const toListError = validateArrayEmails(formData.toList, 'To List');
+        if (toListError) newErrors.toList = toListError;
+
+        const ccError = validateArrayEmails(formData.cc, 'CC');
+        if (ccError) newErrors.cc = ccError;
+
+        const bccError = validateArrayEmails(formData.bcc, 'BCC');
+        if (bccError) newErrors.bcc = bccError;
+
+        const totalRecipients = countRecipients(formData);
+        if (totalRecipients > 50) {
+          newErrors.toList = `Too many recipients (${totalRecipients}). Maximum is 50.`;
         }
-        return '';
-      };
-
-      const toListError = validateArrayEmails(formData.toList, 'To List');
-      if (toListError) newErrors.toList = toListError;
-
-      const ccError = validateArrayEmails(formData.cc, 'CC');
-      if (ccError) newErrors.cc = ccError;
-
-      const bccError = validateArrayEmails(formData.bcc, 'BCC');
-      if (bccError) newErrors.bcc = bccError;
-
-      const totalRecipients = countRecipients(formData);
-      if (totalRecipients > 50) {
-        newErrors.to = `Too many recipients (${totalRecipients}). Maximum is 50.`;
       }
     }
 
@@ -199,7 +197,7 @@ export const YoloEmailForm = () => {
 
     try {
       const senderName = getSenderName(user, fromName);
-      const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.to);
+      const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.toList[0] || '');
       let enhancedPrompt = `In essence the email should say this: '${formData.prompt}'. Be very creative in delivering the best style, grammar, and beauty of the message.`;
       enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
       enhancedPrompt += `\n\nCONTEXT ONLY - DO NOT INCLUDE IN EMAIL: The expected subject for this email is '${formData.subject}'. Use this subject line only as guidance for the tone and direction of your message. The actual email body must NOT contain or repeat the subject line. Write only the email body content itself — no subject, no headers indicating the subject.`;
@@ -243,7 +241,7 @@ export const YoloEmailForm = () => {
 
     try {
       const senderName = getSenderName(user, fromName);
-      const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.to);
+      const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.toList[0] || '');
       let enhancedPrompt = `In essence the email should say this: '${formData.prompt}'. Be very creative in delivering the best style, grammar, and beauty of the message.`;
       enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
       enhancedPrompt += `\n\nCONTEXT ONLY - DO NOT INCLUDE IN EMAIL: The expected subject for this email is '${formData.subject}'. Use this subject line only as guidance for the tone and direction of your message. The actual email body must NOT contain or repeat the subject line. Write only the email body content itself — no subject, no headers indicating the subject.`;
@@ -289,7 +287,6 @@ export const YoloEmailForm = () => {
 
       const confirmPayload = {
         process: 'email',
-        to: formData.to,
         to_list: formData.toList,
         cc: formData.cc,
         bcc: formData.bcc,
@@ -309,7 +306,6 @@ export const YoloEmailForm = () => {
           state: {
             email: generatedHtml,
             subject: formData.subject,
-            to: formData.to,
             to_list: formData.toList,
             cc: formData.cc,
             bcc: formData.bcc,
@@ -397,28 +393,13 @@ export const YoloEmailForm = () => {
                 Who's getting this email?
               </h2>
               <p className="text-text-secondary mb-4 sm:mb-6 text-sm sm:text-base">
-                Enter the recipient's email address.
+                Add recipient email addresses.
               </p>
 
               <div className="mb-4 sm:mb-6 space-y-4">
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
-                  <Input
-                    name="to"
-                    type="email"
-                    inputMode="email"
-                    autoComplete="email"
-                    placeholder="friend@amazing.com"
-                    value={formData.to}
-                    onChange={handleChange}
-                    error={errors.to}
-                    className="pl-12 min-h-12 sm:min-h-0"
-                    autoFocus
-                  />
-                </div>
                 <ChipInput
-                  label="To List (optional)"
-                  placeholder="Add more recipients..."
+                  label="To"
+                  placeholder="Add recipient email..."
                   value={formData.toList}
                   onChange={(emails) => setFormData(prev => ({ ...prev, toList: emails }))}
                   error={errors.toList}
@@ -568,7 +549,7 @@ export const YoloEmailForm = () => {
               <div className="space-y-2 p-3 sm:p-4 border border-border">
                 <div className="flex items-center justify-between">
                   <span className="text-text-muted">To:</span>
-                  <span className="font-medium text-text-primary truncate ml-2">{formData.to}{formData.toList.length > 0 ? `, ${formData.toList.join(', ')}` : ''}</span>
+                  <span className="font-medium text-text-primary truncate ml-2">{formData.toList.join(', ')}</span>
                 </div>
                 {formData.cc.length > 0 && (
                   <div className="flex items-center justify-between">

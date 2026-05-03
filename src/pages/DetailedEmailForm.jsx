@@ -129,13 +129,12 @@ const incrementEmailsSentCount = () => {
   return newCount;
 };
 
-// Count total recipients (to + toList + cc + bcc)
+// Count total recipients (toList + cc + bcc)
 const countRecipients = (data) => {
-  const toArray = data.to ? 1 : 0;
   const toListCount = Array.isArray(data.toList) ? data.toList.length : 0;
   const ccCount = Array.isArray(data.cc) ? data.cc.length : 0;
   const bccCount = Array.isArray(data.bcc) ? data.bcc.length : 0;
-  return toArray + toListCount + ccCount + bccCount;
+  return toListCount + ccCount + bccCount;
 };
 
 export const DetailedEmailForm = () => {
@@ -146,7 +145,6 @@ export const DetailedEmailForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [fromName, setFromName] = useState('');
   const [formData, setFormData] = useState({
-    to: '',
     toList: [],
     cc: [],
     bcc: [],
@@ -195,7 +193,6 @@ export const DetailedEmailForm = () => {
     if (historyData) {
       setFormData(prev => ({
         ...prev,
-        to: historyData.to || prev.to,
         toList: Array.isArray(historyData.to_list) ? historyData.to_list : [],
         cc: Array.isArray(historyData.cc) ? historyData.cc : [],
         bcc: Array.isArray(historyData.bcc) ? historyData.bcc : [],
@@ -231,33 +228,34 @@ export const DetailedEmailForm = () => {
     const newErrors = {};
 
     if (step === 0) {
-      if (!validateEmail(formData.to)) {
-        newErrors.to = 'Please enter a valid email address';
-      }
-
-      // Validate each email in arrays
-      const validateArrayEmails = (arr, fieldName) => {
-        if (!Array.isArray(arr)) return '';
-        for (const email of arr) {
-          if (!validateEmail(email)) {
-            return `Invalid email in ${fieldName}: ${email}`;
+      // Validate toList as primary recipient field
+      if (!Array.isArray(formData.toList) || formData.toList.length === 0) {
+        newErrors.toList = 'Please add at least one recipient';
+      } else {
+        // Validate each email in arrays
+        const validateArrayEmails = (arr, fieldName) => {
+          if (!Array.isArray(arr)) return '';
+          for (const email of arr) {
+            if (!validateEmail(email)) {
+              return `Invalid email in ${fieldName}: ${email}`;
+            }
           }
+          return '';
+        };
+
+        const toListError = validateArrayEmails(formData.toList, 'To List');
+        if (toListError) newErrors.toList = toListError;
+
+        const ccError = validateArrayEmails(formData.cc, 'CC');
+        if (ccError) newErrors.cc = ccError;
+
+        const bccError = validateArrayEmails(formData.bcc, 'BCC');
+        if (bccError) newErrors.bcc = bccError;
+
+        const totalRecipients = countRecipients(formData);
+        if (totalRecipients > 50) {
+          newErrors.toList = `Too many recipients (${totalRecipients}). Maximum is 50.`;
         }
-        return '';
-      };
-
-      const toListError = validateArrayEmails(formData.toList, 'To List');
-      if (toListError) newErrors.toList = toListError;
-
-      const ccError = validateArrayEmails(formData.cc, 'CC');
-      if (ccError) newErrors.cc = ccError;
-
-      const bccError = validateArrayEmails(formData.bcc, 'BCC');
-      if (bccError) newErrors.bcc = bccError;
-
-      const totalRecipients = countRecipients(formData);
-      if (totalRecipients > 50) {
-        newErrors.to = `Too many recipients (${totalRecipients}). Maximum is 50.`;
       }
 
       if (!validateRequired(formData.subject, 'Subject')) {
@@ -285,7 +283,7 @@ export const DetailedEmailForm = () => {
   const buildEnhancedPrompt = () => {
     let enhancedPrompt = `In essence the email should say this: '${formData.prompt}'. Be very creative in delivering the best style, grammar, and beauty of the message.`;
 
-    const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.to);
+    const recipientName = formData.recipientName.trim() || extractNameFromEmail(formData.toList[0] || '');
     enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
     enhancedPrompt += `\n\nCONTEXT ONLY - DO NOT INCLUDE IN EMAIL: The expected subject for this email is '${formData.subject}'. Use this subject line only as guidance for the tone and direction of your message. The actual email body must NOT contain or repeat the subject line. Write only the email body content itself — no subject, no headers indicating the subject.`;
 
@@ -395,7 +393,6 @@ export const DetailedEmailForm = () => {
 
       const confirmPayload = {
         process: 'email',
-        to: formData.to,
         to_list: formData.toList,
         cc: formData.cc,
         bcc: formData.bcc,
@@ -415,7 +412,6 @@ export const DetailedEmailForm = () => {
           state: {
             email: generatedHtml,
             subject: formData.subject,
-            to: formData.to,
             to_list: formData.toList,
             cc: formData.cc,
             bcc: formData.bcc,
@@ -459,18 +455,9 @@ export const DetailedEmailForm = () => {
             </p>
 
             <div className="space-y-4">
-              <Input
-                label="Recipient Email"
-                type="email"
-                placeholder="hello@recipient.com"
-                value={formData.to}
-                onChange={(e) => updateFormData('to', e.target.value)}
-                error={errors.to}
-              />
-
               <ChipInput
-                label="To List (optional)"
-                placeholder="Add more recipients..."
+                label="To"
+                placeholder="Add recipient email..."
                 value={formData.toList}
                 onChange={(emails) => updateFormData('toList', emails)}
                 error={errors.toList}
@@ -1052,7 +1039,7 @@ export const DetailedEmailForm = () => {
             <div className="space-y-3 text-sm sm:text-base">
               <div className="p-3 border border-border">
                 <p className="text-xs text-text-muted mb-1">To</p>
-                <p className="text-sm font-medium text-text-primary truncate">{formData.to}{formData.toList.length > 0 ? `, ${formData.toList.join(', ')}` : ''}</p>
+                <p className="text-sm font-medium text-text-primary truncate">{formData.toList.join(', ')}</p>
               </div>
 
               {formData.cc.length > 0 && (
