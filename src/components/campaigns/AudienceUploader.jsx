@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 import { Upload, FileText, X, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
