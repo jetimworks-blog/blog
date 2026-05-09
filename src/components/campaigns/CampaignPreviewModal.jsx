@@ -48,7 +48,7 @@ export const CampaignPreviewModal = ({ isOpen, html, onClose, campaign }) => {
             </div>
 
             {/* Content */}
-            <div className="flex-1 min-h-0 overflow-auto bg-white p-6">
+            <div className="flex-1 min-h-0 overflow-auto bg-gray-900 p-6">
               <div
                 className="email-preview"
                 dangerouslySetInnerHTML={{ __html: html || '' }}

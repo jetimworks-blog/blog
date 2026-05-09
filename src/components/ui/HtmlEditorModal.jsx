@@ -83,7 +83,7 @@ export const HtmlEditorModal = ({ isOpen, html, onSave, onClose }) => {
             {/* Content */}
             <div className="flex-1 min-h-0">
               {showPreview ? (
-                <div className="h-full p-6 overflow-auto bg-white">
+                <div className="h-full p-6 overflow-auto bg-gray-900">
                   <div
                     className="email-preview"
                     dangerouslySetInnerHTML={{ __html: editedHtml }}
