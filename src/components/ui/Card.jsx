@@ -17,7 +17,6 @@ export const Card = ({
 }) => {
   return (
     <motion.div
-      whileHover={hoverable ? { borderColor: 'var(--color-accent)' } : {}}
       className={clsx(
         variants[variant],
         hoverable && 'card-hover cursor-pointer',
