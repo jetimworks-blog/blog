@@ -29,7 +29,7 @@ npm run preview  # Preview production build
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `VITE_API_BASE_URL` | `http://localhost:8080/everything-app` | Backend API base URL |
+| `VITE_API_BASE_URL` | `http://localhost:8080` | Backend API base URL |
 
 ## Architecture
 

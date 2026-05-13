@@ -27,7 +27,7 @@ npm run build   # Production build
 ## Environment Variables
 
 - `VITE_API_BASE_URL=http://172.20.10.3:8080` (network backend URL)
-- `.env.production`: `https://mobile-api-staging.omitsfx.com/everything-app` (staging)
+- `.env.production`: `https://mobile-api-staging.omitsfx.com` (staging)
 - Default: `http://localhost:8080` (fallback)
 
 ## Network Configuration

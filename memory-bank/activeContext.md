@@ -21,7 +21,7 @@ Updated files:
 ## Recent Changes
 
 1. Updated .env.production (April 17, 2026):
-   - Updated staging API URL to `https://mobile-api-staging.omitsfx.com/everything-app`
+   - Updated staging API URL to `https://mobile-api-staging.omitsfx.com`
    - Simplified variable comments
 
 2. Fixed PostCSS/TailwindCSS v4 configuration
