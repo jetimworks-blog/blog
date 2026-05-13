@@ -25,7 +25,14 @@ apiClient.interceptors.request.use(
 
 // Response interceptor for token refresh
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Validate response data exists and has expected shape
+    if (!response.data || typeof response.data !== 'object') {
+      console.error('[API] Invalid response data:', response);
+      return Promise.reject({ message: 'Invalid server response', response });
+    }
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
 

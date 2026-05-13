@@ -264,7 +264,16 @@ export const YoloEmailForm = () => {
 
       const previewResponse = await emailAPI.execute(previewPayload);
 
-      if (previewResponse.data.success) {
+      // Validate response structure before accessing
+      if (!previewResponse?.data || typeof previewResponse.data !== 'object') {
+        console.error('[YoloEmailForm] Invalid preview response:', previewResponse);
+        toast.error('Failed to generate preview', {
+          description: 'Invalid server response. Please try again.',
+        });
+        return;
+      }
+
+      if (previewResponse.data.success === true) {
         setGeneratedHtml(previewResponse.data.output || '');
         sessionStorage.setItem('pendingPrompt', enhancedPrompt);
         setCurrentStep(2);
@@ -276,6 +285,12 @@ export const YoloEmailForm = () => {
         });
       }
     } catch (error) {
+      console.error('[YoloEmailForm] Preview generation failed:', {
+        error,
+        response: error.response,
+        responseData: error.response?.data,
+        status: error.response?.status
+      });
       const errorMessage = error.response?.data?.error || 'An unexpected error occurred.';
       toast.error('Failed to generate preview', {
         description: errorMessage,
@@ -310,7 +325,16 @@ export const YoloEmailForm = () => {
 
       const previewResponse = await emailAPI.execute(previewPayload);
 
-      if (previewResponse.data.success) {
+      // Validate response structure before accessing
+      if (!previewResponse?.data || typeof previewResponse.data !== 'object') {
+        console.error('[YoloEmailForm] Invalid regenerate response:', previewResponse);
+        toast.error('Failed to regenerate preview', {
+          description: 'Invalid server response. Please try again.',
+        });
+        return;
+      }
+
+      if (previewResponse.data.success === true) {
         setGeneratedHtml(previewResponse.data.output || '');
         sessionStorage.setItem('pendingPrompt', enhancedPrompt);
         toast.success('Preview regenerated!');
@@ -321,6 +345,12 @@ export const YoloEmailForm = () => {
         });
       }
     } catch (error) {
+      console.error('[YoloEmailForm] Regenerate preview failed:', {
+        error,
+        response: error.response,
+        responseData: error.response?.data,
+        status: error.response?.status
+      });
       const errorMessage = error.response?.data?.error || 'An unexpected error occurred.';
       toast.error('Failed to regenerate preview', {
         description: errorMessage,
@@ -351,6 +381,15 @@ export const YoloEmailForm = () => {
 
       const sendResponse = await emailAPI.confirm(confirmPayload);
 
+      // Validate response structure before accessing
+      if (!sendResponse?.data || typeof sendResponse.data !== 'object') {
+        console.error('[YoloEmailForm] Invalid send response:', sendResponse);
+        const errorMsg = 'Invalid server response. Please try again.';
+        toast.error('Failed to send email', { description: errorMsg });
+        navigate('/result', { state: { error: errorMsg } });
+        return;
+      }
+
       if (sendResponse.data.success) {
         sessionStorage.removeItem('pendingPrompt');
         const newCount = incrementEmailsSentCount();
@@ -373,6 +412,12 @@ export const YoloEmailForm = () => {
         });
       }
     } catch (error) {
+      console.error('[YoloEmailForm] Send email failed:', {
+        error,
+        response: error.response,
+        responseData: error.response?.data,
+        status: error.response?.status
+      });
       const errorMessage = error.response?.data?.error || 'An unexpected error occurred.';
       toast.error('Failed to send email', {
         description: errorMessage,

@@ -380,7 +380,16 @@ export const DetailedEmailForm = () => {
 
       const previewResponse = await emailAPI.execute(previewPayload);
 
-      if (previewResponse.data.success) {
+      // Validate response structure before accessing
+      if (!previewResponse?.data || typeof previewResponse.data !== 'object') {
+        console.error('[DetailedEmailForm] Invalid preview response:', previewResponse);
+        toast.error('Failed to generate preview', {
+          description: 'Invalid server response. Please try again.',
+        });
+        return;
+      }
+
+      if (previewResponse.data.success === true) {
         setGeneratedHtml(previewResponse.data.output || '');
         sessionStorage.setItem('pendingPrompt', enhancedPrompt);
         setCurrentStep(3);
@@ -392,6 +401,12 @@ export const DetailedEmailForm = () => {
         });
       }
     } catch (error) {
+      console.error('[DetailedEmailForm] Preview generation failed:', {
+        error,
+        response: error.response,
+        responseData: error.response?.data,
+        status: error.response?.status
+      });
       const errorMessage = error.response?.data?.error || 'An unexpected error occurred.';
       toast.error('Failed to generate preview', {
         description: errorMessage,
@@ -414,7 +429,16 @@ export const DetailedEmailForm = () => {
 
       const previewResponse = await emailAPI.execute(previewPayload);
 
-      if (previewResponse.data.success) {
+      // Validate response structure before accessing
+      if (!previewResponse?.data || typeof previewResponse.data !== 'object') {
+        console.error('[DetailedEmailForm] Invalid regenerate response:', previewResponse);
+        toast.error('Failed to regenerate preview', {
+          description: 'Invalid server response. Please try again.',
+        });
+        return;
+      }
+
+      if (previewResponse.data.success === true) {
         setGeneratedHtml(previewResponse.data.output || '');
         sessionStorage.setItem('pendingPrompt', enhancedPrompt);
         toast.success('Preview regenerated!');
@@ -425,6 +449,12 @@ export const DetailedEmailForm = () => {
         });
       }
     } catch (error) {
+      console.error('[DetailedEmailForm] Regenerate preview failed:', {
+        error,
+        response: error.response,
+        responseData: error.response?.data,
+        status: error.response?.status
+      });
       const errorMessage = error.response?.data?.error || 'An unexpected error occurred.';
       toast.error('Failed to regenerate preview', {
         description: errorMessage,
@@ -455,6 +485,15 @@ export const DetailedEmailForm = () => {
 
       const sendResponse = await emailAPI.confirm(confirmPayload);
 
+      // Validate response structure before accessing
+      if (!sendResponse?.data || typeof sendResponse.data !== 'object') {
+        console.error('[DetailedEmailForm] Invalid send response:', sendResponse);
+        const errorMsg = 'Invalid server response. Please try again.';
+        toast.error('Failed to send email', { description: errorMsg });
+        navigate('/result', { state: { error: errorMsg } });
+        return;
+      }
+
       if (sendResponse.data.success) {
         sessionStorage.removeItem('pendingPrompt');
         const newCount = incrementEmailsSentCount();
@@ -478,6 +517,12 @@ export const DetailedEmailForm = () => {
         });
       }
     } catch (error) {
+      console.error('[DetailedEmailForm] Send email failed:', {
+        error,
+        response: error.response,
+        responseData: error.response?.data,
+        status: error.response?.status
+      });
       const errorMessage = error.response?.data?.error || 'An unexpected error occurred.';
       toast.error('Failed to send email', {
         description: errorMessage,
