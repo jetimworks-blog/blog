@@ -67,3 +67,16 @@ export const getPasswordStrength = (password) => {
     color: colors[Math.min(strength, 5)],
   };
 };
+
+export const MAX_ATTACHMENT_SIZE = 5 * 1024 * 1024; // 5MB
+export const MAX_ATTACHMENT_SIZE_TEXT = '5MB';
+
+export const validateAttachmentFile = (file) => {
+  if (!file) {
+    return { valid: false, message: 'No file selected' };
+  }
+  if (file.size > MAX_ATTACHMENT_SIZE) {
+    return { valid: false, message: `${file.name} exceeds ${MAX_ATTACHMENT_SIZE_TEXT} limit` };
+  }
+  return { valid: true, message: '' };
+};

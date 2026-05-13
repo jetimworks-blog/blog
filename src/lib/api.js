@@ -88,6 +88,15 @@ export const emailAPI = {
   execute: (data) => apiClient.post('/app/execute', data),
   confirm: (data) => apiClient.post('/app/execute/confirm', data),
   getProcesses: () => apiClient.get('/app/processes'),
+  uploadAttachments: (files) => {
+    const formData = new FormData();
+    files.forEach(file => {
+      formData.append('files', file);
+    });
+    return apiClient.post('/app/attachments/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
 };
 
 // Health API

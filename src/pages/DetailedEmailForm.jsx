@@ -11,8 +11,9 @@ import { MagicLoader } from '../components/ui/MagicLoader';
 import { ProgressSteps } from '../components/ui/ProgressSteps';
 import { HtmlEditorModal } from '../components/ui/HtmlEditorModal';
 import { ChipInput } from '../components/ui/ChipInput';
+import { AttachmentInput } from '../components/ui/AttachmentInput';
 import { emailAPI, configAPI } from '../lib/api';
-import { validateEmail, validateRequired } from '../lib/validation';
+import { validateEmail, validateRequired, validateAttachmentFile } from '../lib/validation';
 import { useAuth } from '../context/AuthContext';
 import { ArrowLeft, Send, Sparkles, ChevronRight, ChevronLeft, Eye, RefreshCw, Pencil, List, Code } from 'lucide-react';
 
@@ -175,6 +176,7 @@ export const DetailedEmailForm = () => {
   const [customTone, setCustomTone] = useState('');
   const [emailsSentCount, setEmailsSentCount] = useState(getEmailsSentCount);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [attachments, setAttachments] = useState([]);
 
   const handleOpenEditor = () => {
     setIsEditorOpen(true);
@@ -187,6 +189,50 @@ export const DetailedEmailForm = () => {
 
   const handleCloseEditor = () => {
     setIsEditorOpen(false);
+  };
+
+  const handleAttachmentsAdd = (newFiles) => {
+    const validated = newFiles.map(file => {
+      const validation = validateAttachmentFile(file);
+      return {
+        id: crypto.randomUUID(),
+        file,
+        filename: file.name,
+        size: file.size,
+        status: validation.valid ? 'pending' : 'error',
+        path: null,
+        error: validation.message,
+      };
+    });
+    setAttachments(prev => [...prev, ...validated]);
+
+    const pendingValid = validated.filter(a => a.status === 'pending');
+    if (pendingValid.length > 0) {
+      uploadPendingAttachments(pendingValid.map(a => a.file));
+    }
+  };
+
+  const handleAttachmentRemove = (id) => {
+    setAttachments(prev => prev.filter(a => a.id !== id));
+  };
+
+  const uploadPendingAttachments = async (files) => {
+    try {
+      const response = await emailAPI.uploadAttachments(files);
+      if (response.data.success) {
+        const { files: uploadedFiles } = response.data;
+        setAttachments(prev => prev.map(a => {
+          const uploaded = uploadedFiles.find(f => f.filename === a.filename);
+          return uploaded
+            ? { ...a, status: 'uploaded', path: uploaded.path }
+            : a;
+        }));
+      }
+    } catch (error) {
+      setAttachments(prev => prev.map(a =>
+        a.status === 'uploading' ? { ...a, status: 'error', error: 'Upload failed' } : a
+      ));
+    }
   };
 
   useEffect(() => {
@@ -402,6 +448,9 @@ export const DetailedEmailForm = () => {
         subject: formData.subject,
         html: generatedHtml,
         prompt: savedPrompt,
+        attachments: attachments
+          .filter(a => a.status === 'uploaded')
+          .map(a => ({ filename: a.filename, path: a.path })),
       };
 
       const sendResponse = await emailAPI.confirm(confirmPayload);
@@ -410,6 +459,7 @@ export const DetailedEmailForm = () => {
         sessionStorage.removeItem('pendingPrompt');
         const newCount = incrementEmailsSentCount();
         setEmailsSentCount(newCount);
+        setAttachments([]);
         toast.success('Email sent!');
         navigate('/result', {
           state: {
@@ -523,6 +573,13 @@ export const DetailedEmailForm = () => {
                 onChange={(e) => updateFormData('prompt', e.target.value)}
                 error={errors.prompt}
                 rows={4}
+              />
+
+              <AttachmentInput
+                attachments={attachments}
+                onAdd={handleAttachmentsAdd}
+                onRemove={handleAttachmentRemove}
+                disabled={isLoading}
               />
             </div>
           </motion.div>
@@ -1120,6 +1177,15 @@ export const DetailedEmailForm = () => {
                 <p className="text-xs text-text-muted mb-1">Your message</p>
                 <p className="text-sm text-text-secondary line-clamp-2">{formData.prompt}</p>
               </div>
+
+              {attachments.filter(a => a.status === 'uploaded').length > 0 && (
+                <div className="p-3 border border-border">
+                  <p className="text-xs text-text-muted mb-1">Attachments</p>
+                  <p className="text-sm font-medium text-text-primary">
+                    {attachments.filter(a => a.status === 'uploaded').length} file(s) attached
+                  </p>
+                </div>
+              )}
             </div>
           </motion.div>
         );
