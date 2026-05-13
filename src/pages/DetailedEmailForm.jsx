@@ -168,6 +168,7 @@ export const DetailedEmailForm = () => {
     ctaText: '',
     noStyle: true,
   });
+  const [showCcBcc, setShowCcBcc] = useState(false);
   const [generatedHtml, setGeneratedHtml] = useState('');
   const [errors, setErrors] = useState({});
   const [useCustomTone, setUseCustomTone] = useState(false);
@@ -465,21 +466,40 @@ export const DetailedEmailForm = () => {
                 error={errors.toList}
               />
 
-              <ChipInput
-                label="CC (optional)"
-                placeholder="Add CC..."
-                value={formData.cc}
-                onChange={(emails) => updateFormData('cc', emails)}
-                error={errors.cc}
-              />
+              <AnimatePresence>
+                {showCcBcc && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                  >
+                    <ChipInput
+                      label="CC (optional)"
+                      placeholder="Add CC..."
+                      value={formData.cc}
+                      onChange={(emails) => updateFormData('cc', emails)}
+                      error={errors.cc}
+                    />
 
-              <ChipInput
-                label="BCC (optional)"
-                placeholder="Add BCC..."
-                value={formData.bcc}
-                onChange={(emails) => updateFormData('bcc', emails)}
-                error={errors.bcc}
-              />
+                    <ChipInput
+                      label="BCC (optional)"
+                      placeholder="Add BCC..."
+                      value={formData.bcc}
+                      onChange={(emails) => updateFormData('bcc', emails)}
+                      error={errors.bcc}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              {!showCcBcc && (
+                <button
+                  type="button"
+                  onClick={() => setShowCcBcc(true)}
+                  className="text-sm text-text-muted hover:text-accent transition-colors"
+                >
+                  + Add CC / BCC
+                </button>
+              )}
 
               <Input
                 label="Recipient Name (optional)"

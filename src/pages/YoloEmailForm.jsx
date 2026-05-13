@@ -71,6 +71,7 @@ export const YoloEmailForm = () => {
     prompt: '',
     noStyle: true,
   });
+  const [showCcBcc, setShowCcBcc] = useState(false);
   const [generatedHtml, setGeneratedHtml] = useState('');
   const [errors, setErrors] = useState({});
   const [emailsSentCount, setEmailsSentCount] = useState(getEmailsSentCount);
@@ -408,20 +409,39 @@ export const YoloEmailForm = () => {
                   onChange={(emails) => setFormData(prev => ({ ...prev, toList: emails }))}
                   error={errors.toList}
                 />
-                <ChipInput
-                  label="CC (optional)"
-                  placeholder="Add CC..."
-                  value={formData.cc}
-                  onChange={(emails) => setFormData(prev => ({ ...prev, cc: emails }))}
-                  error={errors.cc}
-                />
-                <ChipInput
-                  label="BCC (optional)"
-                  placeholder="Add BCC..."
-                  value={formData.bcc}
-                  onChange={(emails) => setFormData(prev => ({ ...prev, bcc: emails }))}
-                  error={errors.bcc}
-                />
+                <AnimatePresence>
+                  {showCcBcc && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                    >
+                      <ChipInput
+                        label="CC (optional)"
+                        placeholder="Add CC..."
+                        value={formData.cc}
+                        onChange={(emails) => setFormData(prev => ({ ...prev, cc: emails }))}
+                        error={errors.cc}
+                      />
+                      <ChipInput
+                        label="BCC (optional)"
+                        placeholder="Add BCC..."
+                        value={formData.bcc}
+                        onChange={(emails) => setFormData(prev => ({ ...prev, bcc: emails }))}
+                        error={errors.bcc}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                {!showCcBcc && (
+                  <button
+                    type="button"
+                    onClick={() => setShowCcBcc(true)}
+                    className="text-sm text-text-muted hover:text-accent transition-colors"
+                  >
+                    + Add CC / BCC
+                  </button>
+                )}
                 <Input
                   name="recipientName"
                   label="Recipient Name (optional)"
