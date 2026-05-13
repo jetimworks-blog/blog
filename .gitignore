@@ -25,3 +25,4 @@ dist-ssr
 
 # TailwindCSS v4 (uses @tailwindcss/vite plugin, not tailwind.config.js)
 tailwind.config.js
+CLAUDE.local.md
