@@ -266,7 +266,7 @@ export const HistoryPage = () => {
 
                       {/* Recipient */}
                       <p className="text-sm text-text-muted truncate">
-                        To: {item.to}{item.to_list && item.to_list.length > 0 && `, ${item.to_list.join(', ')}`}
+                        To: {item.to}{item.to_list && item.to_list.length > 0 && item.to ? `, ${item.to_list.join(', ')}` : item.to_list?.join(', ') || ''}
                       </p>
 
                       {/* CC */}
@@ -311,6 +311,7 @@ export const HistoryPage = () => {
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       className="mt-4 pt-4 border-t border-border"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       {/* Error Message (if failed) */}
                       {!item.success && item.error_message && (
@@ -332,7 +333,7 @@ export const HistoryPage = () => {
                       <div className="mb-4">
                         <p className="text-xs text-text-muted mb-1">Recipients:</p>
                         <div className="text-sm text-text-secondary bg-surface-elevated p-3 border border-border space-y-1">
-                          <p><span className="font-medium">To:</span> {item.to}{item.to_list && item.to_list.length > 0 && `, ${item.to_list.join(', ')}`}</p>
+                          <p><span className="font-medium">To:</span> {item.to}{item.to_list && item.to_list.length > 0 && item.to ? `, ${item.to_list.join(', ')}` : item.to_list?.join(', ') || ''}</p>
                           {item.cc && item.cc.length > 0 && (
                             <p><span className="font-medium">CC:</span> {item.cc.join(', ')}</p>
                           )}
