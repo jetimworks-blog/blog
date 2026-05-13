@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { ToastProvider } from './components/ui/Toast';
 import LandingPage from './pages/LandingPage';
@@ -37,9 +38,10 @@ function App() {
   return (
     <BrowserRouter>
       <RedirectHandler />
-      <AuthProvider>
-        <ToastProvider />
-        <Routes>
+      <ThemeProvider>
+        <AuthProvider>
+          <ToastProvider />
+          <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -138,6 +140,7 @@ function App() {
           <Route path="*" element={<Navigate to="/features" replace />} />
         </Routes>
       </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

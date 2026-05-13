@@ -8,7 +8,8 @@ import { Card } from '../components/ui/Card';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { configAPI, authAPI } from '../lib/api';
 import { validateSenderEmail } from '../lib/validation';
-import { Settings, Key, Eye, EyeOff, CheckCircle, AlertTriangle, ExternalLink, Trash2, User, Mail } from 'lucide-react';
+import { Settings, Key, Eye, EyeOff, CheckCircle, AlertTriangle, ExternalLink, Trash2, User, Mail, Palette } from 'lucide-react';
+import { ThemeToggle } from '../components/ui/ThemeToggle';
 
 export const SettingsPage = () => {
   const [apiKey, setApiKey] = useState('');
@@ -306,6 +307,38 @@ export const SettingsPage = () => {
                 </Button>
               )}
             </div>
+          </Card>
+        </motion.div>
+
+        {/* Theme Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12 }}
+          className="mt-6"
+        >
+          <Card variant="bordered">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 border border-border flex items-center justify-center">
+                <Palette className="w-5 h-5 text-accent" />
+              </div>
+              <div>
+                <h2 className="text-lg text-text-primary">
+                  Appearance
+                </h2>
+                <p className="text-sm text-text-muted">
+                  Customize how KraftMail looks
+                </p>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <ThemeToggle />
+            </div>
+
+            <p className="text-xs text-text-muted">
+              System will automatically match your device's color scheme.
+            </p>
           </Card>
         </motion.div>
 

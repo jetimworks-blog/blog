@@ -10,7 +10,7 @@
   --color-accent-hover: oklch(0.75 0.2 250);
   --color-accent-muted: oklch(0.5 0.12 250);
 
-  /* Surface - Pure black palette */
+  /* Surface - Pure black palette (default/dark) */
   --color-surface: oklch(0 0 0);
   --color-surface-elevated: oklch(0.12 0 0);
   --color-surface-card: oklch(0.15 0 0);
@@ -49,6 +49,20 @@
     @apply font-sans;
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-weight: 600;
+  }
+
+  /* Light mode palette */
+  [data-theme="light"] {
+    --color-surface: oklch(0.98 0 0);
+    --color-surface-elevated: oklch(0.96 0 0);
+    --color-surface-card: oklch(1 0 0);
+    --color-surface-input: oklch(0.94 0 0);
+    --color-border: oklch(0.86 0 0);
+    --color-border-subtle: oklch(0.9 0 0);
+    --color-text-primary: oklch(0.15 0 0);
+    --color-text-secondary: oklch(0.4 0 0);
+    --color-text-muted: oklch(0.55 0 0);
+    --color-text-inverse: oklch(0.98 0 0);
   }
 }
 
