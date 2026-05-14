@@ -100,14 +100,14 @@ export const YoloEmailForm = () => {
         file,
         filename: file.name,
         size: file.size,
-        status: validation.valid ? 'pending' : 'error',
+        status: validation.valid ? 'uploading' : 'error',
         path: null,
         error: validation.message,
       };
     });
     setAttachments(prev => [...prev, ...validated]);
 
-    const pendingValid = validated.filter(a => a.status === 'pending');
+    const pendingValid = validated.filter(a => a.status === 'uploading');
     if (pendingValid.length > 0) {
       uploadPendingAttachments(pendingValid.map(a => a.file));
     }
@@ -584,9 +584,11 @@ export const YoloEmailForm = () => {
                   placeholder="I need to follow up with the team about the presentation next week. Something friendly but professional that gets them to take action..."
                   value={formData.prompt}
                   onChange={handleChange}
+                  onModalSave={(val) => setFormData(prev => ({ ...prev, prompt: val }))}
                   error={errors.prompt}
                   rows={5}
-                  maxLength={1000}
+                  expandable
+                  modal
                 />
 
                 {/* No Style Checkbox */}

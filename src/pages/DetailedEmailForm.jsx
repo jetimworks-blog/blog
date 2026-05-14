@@ -199,14 +199,14 @@ export const DetailedEmailForm = () => {
         file,
         filename: file.name,
         size: file.size,
-        status: validation.valid ? 'pending' : 'error',
+        status: validation.valid ? 'uploading' : 'error',
         path: null,
         error: validation.message,
       };
     });
     setAttachments(prev => [...prev, ...validated]);
 
-    const pendingValid = validated.filter(a => a.status === 'pending');
+    const pendingValid = validated.filter(a => a.status === 'uploading');
     if (pendingValid.length > 0) {
       uploadPendingAttachments(pendingValid.map(a => a.file));
     }
@@ -616,8 +616,11 @@ export const DetailedEmailForm = () => {
                 placeholder="I need to reach out to the marketing team about the upcoming product launch. They need to review the deck and give their feedback by Friday..."
                 value={formData.prompt}
                 onChange={(e) => updateFormData('prompt', e.target.value)}
+                onModalSave={(val) => updateFormData('prompt', val)}
                 error={errors.prompt}
                 rows={4}
+                expandable
+                modal
               />
 
               <AttachmentInput
@@ -1035,7 +1038,10 @@ export const DetailedEmailForm = () => {
                 placeholder="The most important thing I want them to remember or do after reading this..."
                 value={formData.keyMessage}
                 onChange={(e) => updateFormData('keyMessage', e.target.value)}
+                onModalSave={(val) => updateFormData('keyMessage', val)}
                 rows={2}
+                expandable
+                modal
               />
 
               {/* CTA Toggle */}

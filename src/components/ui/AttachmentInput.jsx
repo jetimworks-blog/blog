@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Paperclip, X, Check, AlertCircle, Upload } from 'lucide-react';
+import { Paperclip, X, Check, AlertCircle, Upload, Loader2 } from 'lucide-react';
 
 // Format file size for display
 const formatFileSize = (bytes) => {
@@ -17,6 +17,8 @@ const StatusIcon = ({ status }) => {
       return <AlertCircle className="w-4 h-4 text-red-500" />;
     case 'uploading':
       return <Upload className="w-4 h-4 text-blue-500 animate-pulse" />;
+    case 'pending':
+      return <Loader2 className="w-4 h-4 text-amber-500 animate-spin" />;
     default:
       return <Paperclip className="w-4 h-4 text-text-muted" />;
   }
