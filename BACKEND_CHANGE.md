@@ -1,144 +1,133 @@
-# Backend Change Summary (2026-05-13)
+# Backend API Changes Summary (2026-05-17)
 
-## New Feature: Email Attachment Upload
+## New Feature: ClientPrompt and ClientCategory for Preview Endpoint
 
 ### Overview
-Added support for uploading attachments (up to 5MB) when sending single emails via AppExecutePayload. Attachments are uploaded separately before executing the email send.
+Added `client_prompt` and `client_category` fields to the preview endpoint payload. These are stored in email history alongside the generated HTML. When generating the email, `client_prompt` is prepended to the normal prompt.
 
 ---
 
 ## API Endpoints
 
-### 1. Upload Attachments
-**Endpoint:** `POST /app/attachments/upload`
+### 1. Preview (Generate HTML)
+**Endpoint:** `POST /everything-app/app/execute`
 
 **Authentication:** Required (Bearer token)
 
-**Content-Type:** `multipart/form-data`
-
 **Request Body:**
-- Field name: `files` (multiple files allowed)
+```json
+{
+  "process": "gen",
+  "prompt": "Write an email about our new product",
+  "client_prompt": "Use a friendly tone",
+  "client_category": "detail"
+}
+```
 
 **Success Response (200):**
 ```json
 {
   "success": true,
-  "upload_id": "550e8400-e29b-41d4-a716-446655440000",
-  "files": [
-    {
-      "filename": "invoice.pdf",
-      "size": 1048576,
-      "path": "/tmp/email-attachments/550e8400.../invoice.pdf"
-    }
-  ],
+  "output": "<html>...</html>",
   "error": ""
 }
 ```
 
-**Error Responses:**
-- `400`: No files provided
-- `400`: File exceeds 5MB limit
-- `413`: Total request too large
-
-**Note:** The `path` field contains the server-side path needed for the execute call.
-
----
-
-### 2. Execute Email (with attachments)
-**Endpoint:** `POST /app/execute/confirm`
+### 2. Confirm (Send Email)
+**Endpoint:** `POST /everything-app/app/execute/confirm`
 
 **Authentication:** Required (Bearer token)
-
-**Content-Type:** `application/json`
 
 **Request Body:**
 ```json
 {
   "process": "email",
-  "to": "user@example.com",
-  "subject": "Your Invoice",
-  "html": "<p>Please find the invoice attached.</p>",
-  "attachments": [
-    {
-      "filename": "invoice.pdf",
-      "path": "/tmp/email-attachments/550e8400.../invoice.pdf"
-    }
-  ]
+  "to": "recipient@example.com",
+  "subject": "Email Subject",
+  "html": "<html>...</html>",
+  "client_prompt": "Use a friendly tone",
+  "client_category": "detail"
 }
 ```
-
-**Attachment Object Fields:**
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `filename` | string | Yes | Display name for the attachment |
-| `path` | string | Yes | Server path returned from upload endpoint |
 
 **Success Response (200):**
 ```json
 {
   "success": true,
-  "output": "email sent to user@example.com",
+  "output": "email sent to recipient@example.com",
   "error": ""
 }
 ```
 
-**Note:** After successful email send, attachment files are automatically deleted from the server.
+### 3. Email History
+**Endpoint:** `GET /everything-app/email-history`
 
----
+**Authentication:** Required (Bearer token)
 
-## All App Endpoints
+**Query Parameters:**
+- `limit` (int, optional)
+- `offset` (int, optional)
 
-### App Endpoints (protected)
-- `POST /app/execute` - Generate HTML preview
-- `POST /app/execute/confirm` - Send email (now supports attachments)
-- `GET /app/processes` - List valid processes
-- `POST /app/attachments/upload` - Upload attachments (NEW)
+**Success Response (200):**
+```json
+{
+  "data": [
+    {
+      "id": "uuid",
+      "process": "email",
+      "to": "recipient@example.com",
+      "to_list": [],
+      "cc": [],
+      "bcc": [],
+      "subject": "Email Subject",
+      "prompt": "Write an email about our new product",
+      "client_prompt": "Use a friendly tone",
+      "client_category": "detail",
+      "generated_html": "<html>...</html>",
+      "success": true,
+      "error_message": null,
+      "duration_ms": 1234,
+      "created_at": "2026-05-17T12:00:00Z"
+    }
+  ],
+  "total": 1
+}
+```
 
 ---
 
 ## Payload Changes
 
-### AppExecutePayload (execute/confirm)
-Added `attachments` field:
+### AppExecutePayload Fields
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `process` | string | Yes | "gen" for preview, "email" for confirm |
+| `prompt` | string | Yes for gen | The main prompt for HTML generation |
+| `client_prompt` | string | No | Prepended to prompt before sending to AI |
+| `client_category` | string | No | Either "yolo" or "detail" |
+| `to` | string | For email | Primary recipient |
+| `subject` | string | For email | Email subject |
+| `html` | string | For email | Pre-generated HTML from preview |
 
-```json
-{
-  "process": "email",
-  "to": "user@example.com",
-  "to_list": [],
-  "cc": [],
-  "bcc": [],
-  "subject": "Subject",
-  "html": "<p>HTML content</p>",
-  "html_file": "",
-  "prompt": "",
-  "from_email": "",
-  "from_name": "",
-  "attachments": []  // NEW: array of Attachment objects
-}
+### How ClientPrompt Works
+The `client_prompt` is concatenated with the normal `prompt` before sending to the HTML generation AI:
+```
+client_prompt + "\n\n" + prompt
 ```
 
-### Attachment Object
-```json
-{
-  "filename": "invoice.pdf",
-  "path": "/tmp/email-attachments/550e8400.../invoice.pdf"
-}
+Example: If `client_prompt` = "Use a friendly tone" and `prompt` = "Write an email about our product", the AI receives:
+```
+Use a friendly tone
+
+Write an email about our product
 ```
 
 ---
 
-## Flow
+## All App Endpoints
 
-1. Client uploads attachments via `POST /app/attachments/upload` (multipart/form-data)
-2. Server stores files in `/tmp/email-attachments/{uploadID}/`
-3. Server returns `upload_id` and file info including `path`
-4. Client calls `POST /app/execute/confirm` with attachment paths in payload
-5. Server reads local files, sends email via Resend, then deletes temp files
-
----
-
-## Validation
-- Max file size: 5MB per file
-- Files stored temporarily in `/tmp/email-attachments/` and auto-deleted after send
-- Supports PDF, images, documents (no executables)
+- `POST /everything-app/app/execute` - Generate HTML preview (NOW SUPPORTS client_prompt, client_category)
+- `POST /everything-app/app/execute/confirm` - Send email (NOW STORES client_prompt, client_category in history)
+- `GET /everything-app/app/processes` - List valid processes
+- `POST /everything-app/app/attachments/upload` - Upload attachments
+- `GET /everything-app/email-history` - Get email history (NOW RETURNS client_prompt, client_category)

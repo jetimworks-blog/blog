@@ -84,8 +84,11 @@ export const HistoryPage = () => {
     return `${(ms / 1000).toFixed(1)}s`;
   };
 
-  const getProcessIcon = (process) => {
-    switch (process) {
+  const getProcessIcon = (item) => {
+    const category = item.client_category;
+    if (category === 'yolo') return <Zap size={12} />;
+    if (category === 'detail') return <Sparkles size={12} />;
+    switch (item.process) {
       case 'email':
         return <Zap size={12} />;
       case 'chat':
@@ -98,8 +101,11 @@ export const HistoryPage = () => {
     }
   };
 
-  const getProcessLabel = (process) => {
-    switch (process) {
+  const getProcessLabel = (item) => {
+    const category = item.client_category;
+    if (category === 'yolo') return 'YOLO';
+    if (category === 'detail') return 'Detailed';
+    switch (item.process) {
       case 'email':
         return 'YOLO';
       case 'chat':
@@ -109,19 +115,19 @@ export const HistoryPage = () => {
       case 'gen-email':
         return 'Detailed';
       default:
-        return process || 'Unknown';
+        return item.process || 'Unknown';
     }
   };
 
   const filteredHistory = history.filter(item => {
     if (filter === 'all') return true;
-    if (filter === 'yolo') return item.process === 'email';
-    if (filter === 'detailed') return item.process === 'gen-email';
+    if (filter === 'yolo') return item.client_category === 'yolo';
+    if (filter === 'detailed') return item.client_category === 'detail';
     return true;
   });
 
   const handleResend = (item) => {
-    if (item.process === 'email') {
+    if (item.client_category === 'yolo') {
       navigate('/send/yolo', { state: { historyItem: item } });
     } else {
       navigate('/send/detailed', { state: { historyItem: item } });
@@ -229,8 +235,8 @@ export const HistoryPage = () => {
                         <span className={`
                           inline-flex items-center gap-1 px-2 py-0.5 border border-accent text-accent text-xs font-medium
                         `}>
-                          {getProcessIcon(item.process)}
-                          {getProcessLabel(item.process)}
+                          {getProcessIcon(item)}
+                          {getProcessLabel(item)}
                         </span>
 
                         {/* Success/Failure Badge */}
@@ -287,6 +293,13 @@ export const HistoryPage = () => {
                       <p className="text-sm text-text-muted mt-2 line-clamp-2">
                         <span className="font-medium text-text-secondary">Prompt:</span> {item.prompt || 'No prompt recorded'}
                       </p>
+
+                      {/* Client Prompt (if present) */}
+                      {item.client_prompt && (
+                        <p className="text-sm text-text-muted mt-1 line-clamp-2">
+                          <span className="font-medium text-text-secondary">Style:</span> {item.client_prompt}
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -328,6 +341,24 @@ export const HistoryPage = () => {
                           {item.prompt || 'No prompt recorded'}
                         </p>
                       </div>
+
+                      {/* Client Prompt (if present) */}
+                      {item.client_prompt && (
+                        <div className="mb-4">
+                          <p className="text-xs text-text-muted mb-1">Style / Client Prompt:</p>
+                          <p className="text-sm text-text-secondary bg-surface-elevated p-3 border border-border">
+                            {item.client_prompt}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Client Category */}
+                      {item.client_category && (
+                        <div className="mb-4">
+                          <p className="text-xs text-text-muted mb-1">Form Type:</p>
+                          <p className="text-sm text-text-secondary capitalize">{item.client_category}</p>
+                        </div>
+                      )}
 
                       {/* Recipients */}
                       <div className="mb-4">

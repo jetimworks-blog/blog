@@ -260,6 +260,8 @@ export const YoloEmailForm = () => {
       const previewPayload = {
         process: 'gen',
         prompt: enhancedPrompt,
+        client_prompt: formData.noStyle ? 'Plain text professional email, no HTML styling, no decorative elements.' : '',
+        client_category: 'yolo',
       };
 
       const previewResponse = await emailAPI.execute(previewPayload);
@@ -321,6 +323,8 @@ export const YoloEmailForm = () => {
       const previewPayload = {
         process: 'gen',
         prompt: enhancedPrompt,
+        client_prompt: formData.noStyle ? 'Plain text professional email, no HTML styling, no decorative elements.' : '',
+        client_category: 'yolo',
       };
 
       const previewResponse = await emailAPI.execute(previewPayload);
@@ -374,6 +378,8 @@ export const YoloEmailForm = () => {
         subject: formData.subject,
         html: generatedHtml,
         prompt: savedPrompt,
+        client_prompt: formData.noStyle ? 'Plain text professional email, no HTML styling, no decorative elements.' : '',
+        client_category: 'yolo',
         attachments: attachments
           .filter(a => a.status === 'uploaded')
           .map(a => ({ filename: a.filename, path: a.path })),
