@@ -327,56 +327,55 @@ export const DetailedEmailForm = () => {
     setCurrentStep(prev => Math.max(prev - 1, 0));
   };
 
-  const buildEnhancedPrompt = () => {
-    let enhancedPrompt = `In essence the email should say this: '${formData.prompt}'. Be very creative in delivering the best style, grammar, and beauty of the message.`;
-
+  const buildClientPrompt = () => {
+    let clientPrompt = '';
     const recipientName = formData.recipientName.trim();
     if (recipientName) {
-      enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
+      clientPrompt += `Recipient name: ${recipientName}.\n`;
     }
-    enhancedPrompt += `\n\nCONTEXT ONLY - DO NOT INCLUDE IN EMAIL: The expected subject for this email is '${formData.subject}'. Use this subject line only as guidance for the tone and direction of your message. The actual email body must NOT contain or repeat the subject line. Write only the email body content itself — no subject, no headers indicating the subject.`;
+    clientPrompt += `Subject: ${formData.subject}.\n`;
 
     if (formData.noStyle) {
-      enhancedPrompt += `\n\nIMPORTANT - NO STYLE MODE: This is a professional business email. Do NOT use any HTML styling, decorative elements, background colors, gradients, shadows, or fancy layouts. Format the email as plain, clean text content using only the following HTML elements: paragraphs (<p>), line breaks (<br>), bold text (<b> or <strong>), and simple lists (<ul>/<li> if needed). Use only basic inline CSS for font-family (Arial or sans-serif), font-size (14-16px), line-height (1.5), and color (black or #333333 on white background). The email should look like a simple, professional plain-text message. No headers with colored backgrounds, no colored borders, no fancy buttons, no decorative elements whatsoever. Keep it clean, minimal, and highly readable.`;
+      clientPrompt += `Plain text professional email, no HTML styling, no decorative elements.\n`;
     } else {
       if (useCustomTone && customTone.trim()) {
-        enhancedPrompt += `\n\nTone & Style Description: ${customTone}`;
+        clientPrompt += `Tone & style: ${customTone}\n`;
       } else {
-        enhancedPrompt += `\n\nTone: ${formData.tone}`;
-        enhancedPrompt += `\nStyle: ${formData.style}`;
-        enhancedPrompt += `\nFont preference: ${formData.font}`;
-        enhancedPrompt += `\nColor theme: ${formData.color}`;
-        enhancedPrompt += `\nOverall feel: ${formData.feel}`;
-        enhancedPrompt += `\nEmail width: ${formData.emailWidth}%`;
-        enhancedPrompt += `\nBorder radius: ${formData.borderRadius}`;
-        enhancedPrompt += `\nShadow depth: ${formData.shadow}`;
-        enhancedPrompt += `\nContent spacing: ${formData.spacing}`;
-        enhancedPrompt += `\nHeader style: ${formData.headerStyle}`;
+        clientPrompt += `Tone: ${formData.tone}.\n`;
+        clientPrompt += `Style: ${formData.style}.\n`;
+        clientPrompt += `Font: ${formData.font}.\n`;
+        clientPrompt += `Color theme: ${formData.color}.\n`;
+        clientPrompt += `Overall feel: ${formData.feel}.\n`;
+        clientPrompt += `Email width: ${formData.emailWidth}%.\n`;
+        clientPrompt += `Border radius: ${formData.borderRadius}.\n`;
+        clientPrompt += `Shadow: ${formData.shadow}.\n`;
+        clientPrompt += `Spacing: ${formData.spacing}.\n`;
+        clientPrompt += `Header style: ${formData.headerStyle}.\n`;
       }
     }
 
-    enhancedPrompt += `\nWord count: ${formData.wordCountMin}-${formData.wordCountMax} words`;
+    clientPrompt += `Word count: ${formData.wordCountMin}-${formData.wordCountMax} words.\n`;
     if (formData.keyMessage) {
-      enhancedPrompt += `\n\nIn essence the key message should say this: '${formData.keyMessage}'. Be very creative in delivering the best style, grammar, and beauty of the key message.`;
+      clientPrompt += `Key message: ${formData.keyMessage}.\n`;
     }
     if (formData.includeCTA && formData.ctaText) {
-      enhancedPrompt += `\nCall to action: ${formData.ctaText}`;
+      clientPrompt += `Call to action: ${formData.ctaText}.\n`;
     }
     const senderName = getSenderName(user, fromName);
-    enhancedPrompt += `\n\nSign the email that it is from ${senderName}.`;
-    return enhancedPrompt;
+    clientPrompt += `Sign the email from ${senderName}.`;
+    return clientPrompt;
   };
 
   const handleGeneratePreview = async () => {
     setIsLoading(true);
 
     try {
-      const enhancedPrompt = buildEnhancedPrompt();
+      const clientPrompt = buildClientPrompt();
 
       const previewPayload = {
         process: 'gen',
-        prompt: enhancedPrompt,
-        client_prompt: formData.noStyle ? 'Plain text professional email, no HTML styling, no decorative elements.' : '',
+        prompt: formData.prompt, // User's actual input
+        client_prompt: clientPrompt,
         client_category: 'detail',
       };
 
@@ -393,7 +392,7 @@ export const DetailedEmailForm = () => {
 
       if (previewResponse.data.success === true) {
         setGeneratedHtml(previewResponse.data.output || '');
-        sessionStorage.setItem('pendingPrompt', enhancedPrompt);
+        sessionStorage.setItem('pendingPrompt', formData.prompt);
         setCurrentStep(3);
         toast.success('Preview generated!');
       } else {
@@ -422,12 +421,12 @@ export const DetailedEmailForm = () => {
     setIsLoading(true);
 
     try {
-      const enhancedPrompt = buildEnhancedPrompt();
+      const clientPrompt = buildClientPrompt();
 
       const previewPayload = {
         process: 'gen',
-        prompt: enhancedPrompt,
-        client_prompt: formData.noStyle ? 'Plain text professional email, no HTML styling, no decorative elements.' : '',
+        prompt: formData.prompt, // User's actual input
+        client_prompt: clientPrompt,
         client_category: 'detail',
       };
 
@@ -444,7 +443,7 @@ export const DetailedEmailForm = () => {
 
       if (previewResponse.data.success === true) {
         setGeneratedHtml(previewResponse.data.output || '');
-        sessionStorage.setItem('pendingPrompt', enhancedPrompt);
+        sessionStorage.setItem('pendingPrompt', formData.prompt);
         toast.success('Preview regenerated!');
       } else {
         const errorMsg = previewResponse.data.error || 'Failed to regenerate preview.';
@@ -472,7 +471,7 @@ export const DetailedEmailForm = () => {
     setIsLoading(true);
 
     try {
-      const savedPrompt = sessionStorage.getItem('pendingPrompt') || '';
+      const clientPrompt = buildClientPrompt();
 
       const confirmPayload = {
         process: 'email',
@@ -481,8 +480,8 @@ export const DetailedEmailForm = () => {
         bcc: formData.bcc,
         subject: formData.subject,
         html: generatedHtml,
-        prompt: savedPrompt,
-        client_prompt: formData.noStyle ? 'Plain text professional email, no HTML styling, no decorative elements.' : '',
+        prompt: formData.prompt, // User's actual input
+        client_prompt: clientPrompt,
         client_category: 'detail',
         attachments: attachments
           .filter(a => a.status === 'uploaded')

@@ -245,22 +245,22 @@ export const YoloEmailForm = () => {
     try {
       const senderName = getSenderName(user, fromName);
       const recipientName = formData.recipientName.trim();
-      let enhancedPrompt = `In essence the email should say this: '${formData.prompt}'. Be very creative in delivering the best style, grammar, and beauty of the message.`;
+
+      // Build client_prompt with all instructions (not the user's actual prompt)
+      let clientPrompt = '';
       if (recipientName) {
-        enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
+        clientPrompt += `Recipient name: ${recipientName}.\n`;
       }
-      enhancedPrompt += `\n\nCONTEXT ONLY - DO NOT INCLUDE IN EMAIL: The expected subject for this email is '${formData.subject}'. Use this subject line only as guidance for the tone and direction of your message. The actual email body must NOT contain or repeat the subject line. Write only the email body content itself — no subject, no headers indicating the subject.`;
-
+      clientPrompt += `Subject: ${formData.subject}.\n`;
       if (formData.noStyle) {
-        enhancedPrompt += `\n\nIMPORTANT - NO STYLE MODE: This is a professional business email. Do NOT use any HTML styling, decorative elements, background colors, gradients, shadows, or fancy layouts. Format the email as plain, clean text content using only the following HTML elements: paragraphs (<p>), line breaks (<br>), bold text (<b> or <strong>), and simple lists (<ul>/<li> if needed). Use only basic inline CSS for font-family (Arial or sans-serif), font-size (14-16px), line-height (1.5), and color (black or #333333 on white background). The email should look like a simple, professional plain-text message. No headers with colored backgrounds, no colored borders, no fancy buttons, no decorative elements whatsoever. Keep it clean, minimal, and highly readable.`;
+        clientPrompt += `Plain text professional email, no HTML styling, no decorative elements.\n`;
       }
-
-      enhancedPrompt += `\n\nSign the email that it is from ${senderName}.`;
+      clientPrompt += `Sign the email from ${senderName}.`;
 
       const previewPayload = {
         process: 'gen',
-        prompt: enhancedPrompt,
-        client_prompt: formData.noStyle ? 'Plain text professional email, no HTML styling, no decorative elements.' : '',
+        prompt: formData.prompt, // User's actual input
+        client_prompt: clientPrompt,
         client_category: 'yolo',
       };
 
@@ -277,7 +277,7 @@ export const YoloEmailForm = () => {
 
       if (previewResponse.data.success === true) {
         setGeneratedHtml(previewResponse.data.output || '');
-        sessionStorage.setItem('pendingPrompt', enhancedPrompt);
+        sessionStorage.setItem('pendingPrompt', formData.prompt);
         setCurrentStep(2);
         toast.success('Preview generated!');
       } else {
@@ -308,22 +308,22 @@ export const YoloEmailForm = () => {
     try {
       const senderName = getSenderName(user, fromName);
       const recipientName = formData.recipientName.trim();
-      let enhancedPrompt = `In essence the email should say this: '${formData.prompt}'. Be very creative in delivering the best style, grammar, and beauty of the message.`;
+
+      // Build client_prompt with all instructions (not the user's actual prompt)
+      let clientPrompt = '';
       if (recipientName) {
-        enhancedPrompt += `\n\nThe Recipient name is ${recipientName}.`;
+        clientPrompt += `Recipient name: ${recipientName}.\n`;
       }
-      enhancedPrompt += `\n\nCONTEXT ONLY - DO NOT INCLUDE IN EMAIL: The expected subject for this email is '${formData.subject}'. Use this subject line only as guidance for the tone and direction of your message. The actual email body must NOT contain or repeat the subject line. Write only the email body content itself — no subject, no headers indicating the subject.`;
-
+      clientPrompt += `Subject: ${formData.subject}.\n`;
       if (formData.noStyle) {
-        enhancedPrompt += `\n\nIMPORTANT - NO STYLE MODE: This is a professional business email. Do NOT use any HTML styling, decorative elements, background colors, gradients, shadows, or fancy layouts. Format the email as plain, clean text content using only the following HTML elements: paragraphs (<p>), line breaks (<br>), bold text (<b> or <strong>), and simple lists (<ul>/<li> if needed). Use only basic inline CSS for font-family (Arial or sans-serif), font-size (14-16px), line-height (1.5), and color (black or #333333 on white background). The email should look like a simple, professional plain-text message. No headers with colored backgrounds, no colored borders, no fancy buttons, no decorative elements whatsoever. Keep it clean, minimal, and highly readable.`;
+        clientPrompt += `Plain text professional email, no HTML styling, no decorative elements.\n`;
       }
-
-      enhancedPrompt += `\n\nSign the email that it is from ${senderName}.`;
+      clientPrompt += `Sign the email from ${senderName}.`;
 
       const previewPayload = {
         process: 'gen',
-        prompt: enhancedPrompt,
-        client_prompt: formData.noStyle ? 'Plain text professional email, no HTML styling, no decorative elements.' : '',
+        prompt: formData.prompt, // User's actual input
+        client_prompt: clientPrompt,
         client_category: 'yolo',
       };
 
@@ -340,7 +340,7 @@ export const YoloEmailForm = () => {
 
       if (previewResponse.data.success === true) {
         setGeneratedHtml(previewResponse.data.output || '');
-        sessionStorage.setItem('pendingPrompt', enhancedPrompt);
+        sessionStorage.setItem('pendingPrompt', formData.prompt);
         toast.success('Preview regenerated!');
       } else {
         const errorMsg = previewResponse.data.error || 'Failed to regenerate preview.';
@@ -368,7 +368,19 @@ export const YoloEmailForm = () => {
     setIsLoading(true);
 
     try {
-      const savedPrompt = sessionStorage.getItem('pendingPrompt') || '';
+      const senderName = getSenderName(user, fromName);
+      const recipientName = formData.recipientName.trim();
+
+      // Build client_prompt with all instructions (not the user's actual prompt)
+      let clientPrompt = '';
+      if (recipientName) {
+        clientPrompt += `Recipient name: ${recipientName}.\n`;
+      }
+      clientPrompt += `Subject: ${formData.subject}.\n`;
+      if (formData.noStyle) {
+        clientPrompt += `Plain text professional email, no HTML styling, no decorative elements.\n`;
+      }
+      clientPrompt += `Sign the email from ${senderName}.`;
 
       const confirmPayload = {
         process: 'email',
@@ -377,8 +389,8 @@ export const YoloEmailForm = () => {
         bcc: formData.bcc,
         subject: formData.subject,
         html: generatedHtml,
-        prompt: savedPrompt,
-        client_prompt: formData.noStyle ? 'Plain text professional email, no HTML styling, no decorative elements.' : '',
+        prompt: formData.prompt, // User's actual input
+        client_prompt: clientPrompt,
         client_category: 'yolo',
         attachments: attachments
           .filter(a => a.status === 'uploaded')

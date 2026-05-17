@@ -293,13 +293,6 @@ export const HistoryPage = () => {
                       <p className="text-sm text-text-muted mt-2 line-clamp-2">
                         <span className="font-medium text-text-secondary">Prompt:</span> {item.prompt || 'No prompt recorded'}
                       </p>
-
-                      {/* Client Prompt (if present) */}
-                      {item.client_prompt && (
-                        <p className="text-sm text-text-muted mt-1 line-clamp-2">
-                          <span className="font-medium text-text-secondary">Style:</span> {item.client_prompt}
-                        </p>
-                      )}
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -342,13 +335,14 @@ export const HistoryPage = () => {
                         </p>
                       </div>
 
-                      {/* Client Prompt (if present) */}
-                      {item.client_prompt && (
+                      {/* Generated HTML */}
+                      {item.generated_html && (
                         <div className="mb-4">
-                          <p className="text-xs text-text-muted mb-1">Style / Client Prompt:</p>
-                          <p className="text-sm text-text-secondary bg-surface-elevated p-3 border border-border">
-                            {item.client_prompt}
-                          </p>
+                          <p className="text-xs text-text-muted mb-1">Generated Email:</p>
+                          <div
+                            className="text-sm text-text-secondary bg-surface-elevated p-3 border border-border prose prose-sm max-w-none"
+                            dangerouslySetInnerHTML={{ __html: item.generated_html }}
+                          />
                         </div>
                       )}
 
