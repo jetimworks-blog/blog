@@ -9,13 +9,14 @@ import { Textarea } from '../components/ui/Textarea';
 import { Card } from '../components/ui/Card';
 import { MagicLoader } from '../components/ui/MagicLoader';
 import { ProgressSteps } from '../components/ui/ProgressSteps';
-import { HtmlEditorModal } from '../components/ui/HtmlEditorModal';
+import { WysiwygEditorModal } from '../components/editor/WysiwygEditorModal';
+import { EmailWysiwygEditor } from '../components/editor/EmailWysiwygEditor';
 import { ChipInput } from '../components/ui/ChipInput';
 import { AttachmentInput } from '../components/ui/AttachmentInput';
 import { emailAPI, configAPI } from '../lib/api';
 import { validateEmail, validateRequired, validateAttachmentFile } from '../lib/validation';
 import { useAuth } from '../context/AuthContext';
-import { ArrowLeft, Send, Sparkles, ChevronRight, ChevronLeft, Eye, RefreshCw, Pencil, List, Code } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles, ChevronRight, ChevronLeft, Eye, RefreshCw, Pencil, List, Edit3 } from 'lucide-react';
 
 // Helper function to extract name from email address
 const extractNameFromEmail = (email) => {
@@ -176,6 +177,7 @@ export const DetailedEmailForm = () => {
   const [customTone, setCustomTone] = useState('');
   const [emailsSentCount, setEmailsSentCount] = useState(getEmailsSentCount);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [isInlineEditing, setIsInlineEditing] = useState(false);
   const [attachments, setAttachments] = useState([]);
 
   const handleOpenEditor = () => {
@@ -1148,12 +1150,29 @@ export const DetailedEmailForm = () => {
               <div className="bg-surface-elevated px-4 py-2 border-b border-border flex items-center justify-between">
                 <span className="text-sm font-medium text-text-secondary">Email Preview</span>
                 <div className="flex items-center gap-2">
+                  {isInlineEditing ? (
+                    <button
+                      onClick={() => setIsInlineEditing(false)}
+                      className="flex items-center gap-1 text-sm text-accent hover:text-accent-hover transition-colors min-h-10 px-2"
+                    >
+                      <Eye className="w-4 h-4" />
+                      Done Editing
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setIsInlineEditing(true)}
+                      className="flex items-center gap-1 text-sm text-text-secondary hover:text-accent transition-colors min-h-10 px-2"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                      Edit Inline
+                    </button>
+                  )}
                   <button
                     onClick={handleOpenEditor}
                     className="flex items-center gap-1 text-sm text-text-secondary hover:text-accent transition-colors min-h-10 px-2"
                   >
-                    <Code className="w-4 h-4" />
-                    Edit HTML
+                    <Edit3 className="w-4 h-4" />
+                    Edit Visually
                   </button>
                   <button
                     onClick={handleRegeneratePreview}
@@ -1164,10 +1183,19 @@ export const DetailedEmailForm = () => {
                   </button>
                 </div>
               </div>
-              <div
-                className="p-4 sm:p-6 bg-gray-900 max-h-64 sm:max-h-96 overflow-auto [&_table]:w-full email-preview"
-                dangerouslySetInnerHTML={{ __html: generatedHtml || '<p class="text-text-muted">No preview generated</p>' }}
-              />
+              {isInlineEditing ? (
+                <div className="bg-white">
+                  <EmailWysiwygEditor
+                    initialContent={generatedHtml}
+                    onUpdate={(html) => setGeneratedHtml(html)}
+                  />
+                </div>
+              ) : (
+                <div
+                  className="p-4 sm:p-6 bg-gray-900 max-h-64 sm:max-h-96 overflow-auto [&_table]:w-full email-preview"
+                  dangerouslySetInnerHTML={{ __html: generatedHtml || '<p class="text-text-muted">No preview generated</p>' }}
+                />
+              )}
             </div>
 
             {/* Summary */}
@@ -1355,8 +1383,8 @@ export const DetailedEmailForm = () => {
         </Card>
       </div>
 
-      {/* HTML Editor Modal */}
-      <HtmlEditorModal
+      {/* WYSIWYG Editor Modal */}
+      <WysiwygEditorModal
         isOpen={isEditorOpen}
         html={generatedHtml}
         onSave={handleSaveHtml}
