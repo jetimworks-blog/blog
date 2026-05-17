@@ -87,12 +87,12 @@ export const EmailResult = () => {
           </motion.div>
 
           <h1 className="text-3xl md:text-4xl text-text-primary mb-2">
-            {mode === 'detailed' ? 'Your Masterpiece is Ready' : 'Email Crafted'}
+            {mode === 'detailed' ? 'Your Email Was Sent' : 'Email Sent Successfully'}
           </h1>
           <p className="text-lg text-text-secondary">
             {mode === 'detailed'
-              ? 'Every detail has been perfected. Review your creation below.'
-              : 'Quick and painless. Your email is ready to send.'
+              ? 'Your masterpiece has been delivered. A copy is shown below for your records.'
+              : 'Your email has been sent. Review it below.'
             }
           </p>
         </motion.div>
@@ -108,7 +108,7 @@ export const EmailResult = () => {
             <div className="bg-surface-elevated border-b border-border p-4">
               <div className="flex items-center gap-3 mb-3">
                 <Mail className="w-5 h-5 text-text-muted" />
-                <span className="text-sm font-medium text-text-secondary">Email Preview</span>
+                <span className="text-sm font-medium text-text-secondary">Sent Email</span>
                 {mode === 'detailed' && (
                   <span className="px-2 py-0.5 border border-accent text-accent text-xs">
                     <Sparkles size={12} />
@@ -193,7 +193,7 @@ export const EmailResult = () => {
         >
           <Card className="inline-block">
             <p className="text-text-muted text-sm">
-              <span className="font-medium text-text-secondary">Tip:</span> Copy the HTML directly and paste it into your email platform.
+              <span className="font-medium text-text-secondary">Tip:</span> A copy of your sent email is shown above for your records.
             </p>
           </Card>
         </motion.div>
