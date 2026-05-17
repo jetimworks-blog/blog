@@ -177,7 +177,6 @@ export const DetailedEmailForm = () => {
   const [customTone, setCustomTone] = useState('');
   const [emailsSentCount, setEmailsSentCount] = useState(getEmailsSentCount);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
-  const [isInlineEditing, setIsInlineEditing] = useState(false);
   const [attachments, setAttachments] = useState([]);
 
   const handleOpenEditor = () => {
@@ -1150,23 +1149,6 @@ export const DetailedEmailForm = () => {
               <div className="bg-surface-elevated px-4 py-2 border-b border-border flex items-center justify-between">
                 <span className="text-sm font-medium text-text-secondary">Email Preview</span>
                 <div className="flex items-center gap-2">
-                  {isInlineEditing ? (
-                    <button
-                      onClick={() => setIsInlineEditing(false)}
-                      className="flex items-center gap-1 text-sm text-accent hover:text-accent-hover transition-colors min-h-10 px-2"
-                    >
-                      <Eye className="w-4 h-4" />
-                      Done Editing
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setIsInlineEditing(true)}
-                      className="flex items-center gap-1 text-sm text-text-secondary hover:text-accent transition-colors min-h-10 px-2"
-                    >
-                      <Edit3 className="w-4 h-4" />
-                      Edit Inline
-                    </button>
-                  )}
                   <button
                     onClick={handleOpenEditor}
                     className="flex items-center gap-1 text-sm text-text-secondary hover:text-accent transition-colors min-h-10 px-2"
@@ -1183,19 +1165,10 @@ export const DetailedEmailForm = () => {
                   </button>
                 </div>
               </div>
-              {isInlineEditing ? (
-                <div className="bg-white">
-                  <EmailWysiwygEditor
-                    initialContent={generatedHtml}
-                    onUpdate={(html) => setGeneratedHtml(html)}
-                  />
-                </div>
-              ) : (
                 <div
                   className="p-4 sm:p-6 bg-gray-900 max-h-64 sm:max-h-96 overflow-auto [&_table]:w-full email-preview"
                   dangerouslySetInnerHTML={{ __html: generatedHtml || '<p class="text-text-muted">No preview generated</p>' }}
                 />
-              )}
             </div>
 
             {/* Summary */}
