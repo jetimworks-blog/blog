@@ -25,7 +25,7 @@ export const ChipInput = ({ label, placeholder, value = [], onChange, error }) =
   }, [value, onChange]);
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' || e.key === ',') {
+    if (e.key === 'Enter' || e.key === ',' || e.key === ' ') {
       e.preventDefault();
       if (inputValue.trim()) {
         addEmails(inputValue);
@@ -65,7 +65,7 @@ export const ChipInput = ({ label, placeholder, value = [], onChange, error }) =
           <label className="block text-sm font-medium text-text-secondary">
             {label}
             <span className="text-text-muted font-normal ml-1 text-xs">
-              (Enter, comma, or paste to add)
+              (Space, Enter, comma, or paste to add)
             </span>
           </label>
         </div>
