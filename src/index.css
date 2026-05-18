@@ -146,4 +146,24 @@
   .email-preview a {
     color: #87ceeb !important;
   }
+
+  /* List styling - ensure bullets and numbers are visible */
+  .email-preview ul,
+  .email-preview ol {
+    padding-left: 1.5rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .email-preview li {
+    list-style: disc !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .email-preview ul {
+    list-style-type: disc !important;
+  }
+
+  .email-preview ol {
+    list-style-type: decimal !important;
+  }
 }
