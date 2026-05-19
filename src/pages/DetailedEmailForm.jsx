@@ -336,23 +336,23 @@ export const DetailedEmailForm = () => {
     }
     clientPrompt += `Subject: ${formData.subject}.\n`;
 
+    if (useCustomTone && customTone.trim()) {
+      clientPrompt += `Tone & style: ${customTone}\n`;
+    } else {
+      clientPrompt += `Tone: ${formData.tone}.\n`;
+      clientPrompt += `Style: ${formData.style}.\n`;
+      clientPrompt += `Font: ${formData.font}.\n`;
+      clientPrompt += `Color theme: ${formData.color}.\n`;
+      clientPrompt += `Overall feel: ${formData.feel}.\n`;
+      clientPrompt += `Email width: ${formData.emailWidth}%.\n`;
+      clientPrompt += `Border radius: ${formData.borderRadius}.\n`;
+      clientPrompt += `Shadow: ${formData.shadow}.\n`;
+      clientPrompt += `Spacing: ${formData.spacing}.\n`;
+      clientPrompt += `Header style: ${formData.headerStyle}.\n`;
+    }
+
     if (formData.noStyle) {
       clientPrompt += `Plain text professional email, no HTML styling, no decorative elements.\n`;
-    } else {
-      if (useCustomTone && customTone.trim()) {
-        clientPrompt += `Tone & style: ${customTone}\n`;
-      } else {
-        clientPrompt += `Tone: ${formData.tone}.\n`;
-        clientPrompt += `Style: ${formData.style}.\n`;
-        clientPrompt += `Font: ${formData.font}.\n`;
-        clientPrompt += `Color theme: ${formData.color}.\n`;
-        clientPrompt += `Overall feel: ${formData.feel}.\n`;
-        clientPrompt += `Email width: ${formData.emailWidth}%.\n`;
-        clientPrompt += `Border radius: ${formData.borderRadius}.\n`;
-        clientPrompt += `Shadow: ${formData.shadow}.\n`;
-        clientPrompt += `Spacing: ${formData.spacing}.\n`;
-        clientPrompt += `Header style: ${formData.headerStyle}.\n`;
-      }
     }
 
     clientPrompt += `Word count: ${formData.wordCountMin}-${formData.wordCountMax} words.\n`;
