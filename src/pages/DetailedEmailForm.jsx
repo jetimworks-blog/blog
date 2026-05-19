@@ -18,6 +18,102 @@ import { validateEmail, validateRequired, validateAttachmentFile } from '../lib/
 import { useAuth } from '../context/AuthContext';
 import { ArrowLeft, Send, Sparkles, ChevronRight, ChevronLeft, Eye, RefreshCw, Pencil, List, Edit3 } from 'lucide-react';
 
+// Helper function to parse client_prompt string into form fields
+const parseClientPrompt = (clientPrompt) => {
+  if (!clientPrompt) return {};
+
+  const result = {};
+  const lines = clientPrompt.split('\n');
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    // Subject: ...
+    if (trimmed.startsWith('Subject:')) {
+      const value = trimmed.slice(8).replace(/\.$/, '').trim();
+      if (value && value !== 'undefined') result.subject = value;
+    }
+    // Tone: ...
+    else if (trimmed.startsWith('Tone:')) {
+      const value = trimmed.slice(5).replace(/\.$/, '').trim();
+      if (value && value !== 'undefined') result.tone = value;
+    }
+    // Tone & style: ... (custom tone)
+    else if (trimmed.startsWith('Tone & style:')) {
+      const value = trimmed.slice(13).trim();
+      if (value && value !== 'undefined') {
+        result.customTone = value;
+        result.useCustomTone = true;
+      }
+    }
+    // Style: ...
+    else if (trimmed.startsWith('Style:')) {
+      const value = trimmed.slice(6).replace(/\.$/, '').trim();
+      if (value && value !== 'undefined') result.style = value;
+    }
+    // Font: ...
+    else if (trimmed.startsWith('Font:')) {
+      const value = trimmed.slice(5).replace(/\.$/, '').trim();
+      if (value && value !== 'undefined') result.font = value;
+    }
+    // Color theme: ...
+    else if (trimmed.startsWith('Color theme:')) {
+      const value = trimmed.slice(12).replace(/\.$/, '').trim();
+      if (value && value !== 'undefined') result.color = value;
+    }
+    // Overall feel: ...
+    else if (trimmed.startsWith('Overall feel:')) {
+      const value = trimmed.slice(13).replace(/\.$/, '').trim();
+      if (value && value !== 'undefined') result.feel = value;
+    }
+    // Email width: ...
+    else if (trimmed.startsWith('Email width:')) {
+      const value = trimmed.slice(12).replace(/%$/, '').replace(/\.$/, '').trim();
+      if (value && value !== 'undefined') result.emailWidth = value;
+    }
+    // Border radius: ...
+    else if (trimmed.startsWith('Border radius:')) {
+      const value = trimmed.slice(14).replace(/\.$/, '').trim();
+      if (value && value !== 'undefined') result.borderRadius = value;
+    }
+    // Shadow: ...
+    else if (trimmed.startsWith('Shadow:')) {
+      const value = trimmed.slice(7).replace(/\.$/, '').trim();
+      if (value && value !== 'undefined') result.shadow = value;
+    }
+    // Spacing: ...
+    else if (trimmed.startsWith('Spacing:')) {
+      const value = trimmed.slice(8).replace(/\.$/, '').trim();
+      if (value && value !== 'undefined') result.spacing = value;
+    }
+    // Header style: ...
+    else if (trimmed.startsWith('Header style:')) {
+      const value = trimmed.slice(13).replace(/\.$/, '').trim();
+      if (value && value !== 'undefined') result.headerStyle = value;
+    }
+    // Word count: min-max words.
+    else if (trimmed.startsWith('Word count:')) {
+      const match = trimmed.match(/Word count:\s*(\d+)-(\d+)/);
+      if (match) {
+        result.wordCountMin = parseInt(match[1], 10);
+        result.wordCountMax = parseInt(match[2], 10);
+      }
+    }
+    // Plain text professional email... -> noStyle
+    else if (trimmed.includes('Plain text professional email') || trimmed.includes('no HTML styling')) {
+      result.noStyle = true;
+    }
+    // Key message: ...
+    else if (trimmed.startsWith('Key message:')) {
+      const value = trimmed.slice(12).replace(/\.$/, '').trim();
+      if (value && value !== 'undefined') result.keyMessage = value;
+    }
+  }
+
+  return result;
+};
+
 // Helper function to extract name from email address
 const extractNameFromEmail = (email) => {
   if (!email) return 'User';
@@ -239,6 +335,7 @@ export const DetailedEmailForm = () => {
   useEffect(() => {
     const historyData = location.state?.historyItem;
     if (historyData) {
+      const parsedStyles = parseClientPrompt(historyData.client_prompt);
       setFormData(prev => ({
         ...prev,
         toList: Array.isArray(historyData.to_list) ? historyData.to_list : [],
@@ -247,7 +344,27 @@ export const DetailedEmailForm = () => {
         recipientName: historyData.recipientName || prev.recipientName,
         subject: historyData.subject || prev.subject,
         prompt: historyData.prompt || prev.prompt,
+        // Apply parsed styling fields from client_prompt
+        tone: parsedStyles.tone || prev.tone,
+        style: parsedStyles.style || prev.style,
+        font: parsedStyles.font || prev.font,
+        color: parsedStyles.color || prev.color,
+        feel: parsedStyles.feel || prev.feel,
+        emailWidth: parsedStyles.emailWidth || prev.emailWidth,
+        borderRadius: parsedStyles.borderRadius || prev.borderRadius,
+        shadow: parsedStyles.shadow || prev.shadow,
+        spacing: parsedStyles.spacing || prev.spacing,
+        headerStyle: parsedStyles.headerStyle || prev.headerStyle,
+        wordCountMin: parsedStyles.wordCountMin || prev.wordCountMin,
+        wordCountMax: parsedStyles.wordCountMax || prev.wordCountMax,
+        keyMessage: parsedStyles.keyMessage || prev.keyMessage,
+        noStyle: parsedStyles.noStyle !== undefined ? parsedStyles.noStyle : prev.noStyle,
       }));
+      // Apply custom tone if present
+      if (parsedStyles.useCustomTone) {
+        setUseCustomTone(true);
+        setCustomTone(parsedStyles.customTone || '');
+      }
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
