@@ -109,16 +109,6 @@ export const LandingPage = () => {
                 )}
               </motion.div>
 
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="mt-6 text-sm text-text-muted"
-              >
-                No credit card required — Free to get started
-              </motion.p>
-            </motion.div>
-
             {/* Right: Visual - Technical terminal aesthetic */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
