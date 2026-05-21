@@ -109,6 +109,8 @@ export const LandingPage = () => {
                 )}
               </motion.div>
 
+            </motion.div>
+
             {/* Right: Visual - Technical terminal aesthetic */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
