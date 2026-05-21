@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
-import { Menu, X, Mail, User, LogOut, Settings, History, Send } from 'lucide-react';
+import { Menu, X, Mail, User, LogOut, Settings, History, Send, Shield } from 'lucide-react';
 import { useState } from 'react';
 
 export const Navbar = () => {
@@ -15,6 +15,7 @@ export const Navbar = () => {
         { to: '/campaigns', label: 'Campaigns', icon: Send },
         { to: '/history', label: 'History', icon: History },
         { to: '/settings', label: 'Settings', icon: Settings },
+        ...(user?.is_staff ? [{ to: '/admin', label: 'Admin', icon: Shield }] : []),
       ]
     : [];
 

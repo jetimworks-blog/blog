@@ -145,4 +145,45 @@ export const historyAPI = {
     apiClient.get('/email-history', { params: { limit, offset } }),
 };
 
+// Admin API
+export const adminAPI = {
+  // Users Management
+  users: {
+    list: (params) => apiClient.get('/admin/users', { params }),
+    get: (id) => apiClient.get(`/admin/users/${id}`),
+    update: (id, data) => apiClient.put(`/admin/users/${id}`, data),
+    delete: (id) => apiClient.delete(`/admin/users/${id}`),
+  },
+
+  // Campaigns Management
+  campaigns: {
+    list: (params) => apiClient.get('/admin/campaigns', { params }),
+    get: (id) => apiClient.get(`/admin/campaigns/${id}`),
+    cancel: (id) => apiClient.post(`/admin/campaigns/${id}/cancel`),
+    delete: (id) => apiClient.delete(`/admin/campaigns/${id}`),
+  },
+
+  // Email History
+  emailHistory: {
+    list: (params) => apiClient.get('/admin/email-history', { params }),
+    get: (id) => apiClient.get(`/admin/email-history/${id}`),
+    retry: (id) => apiClient.post(`/admin/email-history/${id}/retry`),
+  },
+
+  // Request Logs
+  requests: {
+    list: (params) => apiClient.get('/admin/requests', { params }),
+    cleanup: (params) => apiClient.delete('/admin/requests/cleanup', { params }),
+  },
+
+  // Statistics
+  stats: {
+    overview: () => apiClient.get('/admin/stats'),
+    users: (params) => apiClient.get('/admin/stats/users', { params }),
+    emails: (params) => apiClient.get('/admin/stats/emails', { params }),
+    campaigns: (params) => apiClient.get('/admin/stats/campaigns', { params }),
+    leaderboard: (params) => apiClient.get('/admin/stats/leaderboard', { params }),
+  },
+};
+
 export default apiClient;

@@ -19,6 +19,14 @@ import CampaignsPage from './pages/campaigns/CampaignsPage';
 import CampaignNewPage from './pages/campaigns/CampaignNewPage';
 import CampaignDetailPage from './pages/campaigns/CampaignDetailPage';
 import CampaignEditPage from './pages/campaigns/CampaignEditPage';
+import AdminLayout from './components/admin/AdminLayout';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
+import AdminCampaignsPage from './pages/admin/AdminCampaignsPage';
+import AdminEmailHistoryPage from './pages/admin/AdminEmailHistoryPage';
+import AdminRequestLogsPage from './pages/admin/AdminRequestLogsPage';
+import AdminStatsPage from './pages/admin/AdminStatsPage';
+import { AdminProtectedRoute } from './components/admin/AdminProtectedRoute';
 
 function RedirectHandler() {
   const navigate = useNavigate();
@@ -135,6 +143,25 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          {/* Admin Routes */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminProtectedRoute>
+                  <AdminLayout />
+                </AdminProtectedRoute>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<AdminDashboardPage />} />
+            <Route path="users" element={<AdminUsersPage />} />
+            <Route path="campaigns" element={<AdminCampaignsPage />} />
+            <Route path="email-history" element={<AdminEmailHistoryPage />} />
+            <Route path="requests" element={<AdminRequestLogsPage />} />
+            <Route path="stats" element={<AdminStatsPage />} />
+          </Route>
 
           {/* Catch-all redirect */}
           <Route path="*" element={<Navigate to="/features" replace />} />
