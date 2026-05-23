@@ -1,10 +1,41 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { validateEmail } from '../../lib/validation';
 
-export const ChipInput = ({ label, placeholder, value = [], onChange, error }) => {
+export const ChipInput = ({ label, placeholder, value = [], onChange, error, suggestions = [] }) => {
   const [inputValue, setInputValue] = useState('');
+  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef(null);
+  const containerRef = useRef(null);
+  const suggestionsRef = useRef(null);
+
+  // Filter suggestions based on input
+  useEffect(() => {
+    if (!inputValue.trim() || suggestions.length === 0) {
+      setFilteredSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+    const query = inputValue.toLowerCase();
+    const filtered = suggestions
+      .filter(email => !value.map(v => v.toLowerCase()).includes(email.toLowerCase()))
+      .filter(email => email.toLowerCase().includes(query))
+      .slice(0, 5);
+    setFilteredSuggestions(filtered);
+    setShowSuggestions(filtered.length > 0);
+  }, [inputValue, suggestions, value]);
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const addEmails = useCallback((text) => {
     // Split by comma, semicolon, or whitespace
@@ -30,10 +61,13 @@ export const ChipInput = ({ label, placeholder, value = [], onChange, error }) =
       if (inputValue.trim()) {
         addEmails(inputValue);
         setInputValue('');
+        setShowSuggestions(false);
       }
     } else if (e.key === 'Backspace' && inputValue === '' && value.length > 0) {
       // Remove last chip when backspacing on empty input
       onChange(value.slice(0, -1));
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
     }
   };
 
@@ -52,14 +86,22 @@ export const ChipInput = ({ label, placeholder, value = [], onChange, error }) =
     const text = e.clipboardData.getData('text');
     addEmails(text);
     setInputValue('');
+    setShowSuggestions(false);
   };
 
   const removeChip = (index) => {
     onChange(value.filter((_, i) => i !== index));
   };
 
+  const handleSuggestionClick = (email) => {
+    addEmails(email);
+    setInputValue('');
+    setShowSuggestions(false);
+    inputRef.current?.focus();
+  };
+
   return (
-    <div className="mb-4">
+    <div className="mb-4 relative" ref={containerRef}>
       {label && (
         <div className="flex items-center justify-between mb-2">
           <label className="block text-sm font-medium text-text-secondary">
@@ -108,10 +150,35 @@ export const ChipInput = ({ label, placeholder, value = [], onChange, error }) =
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           onPaste={handlePaste}
+          onFocus={() => {
+            if (filteredSuggestions.length > 0) setShowSuggestions(true);
+          }}
           placeholder={value.length === 0 ? placeholder : ''}
           className="flex-1 min-w-[150px] bg-transparent outline-none text-sm text-text-primary placeholder:text-text-muted"
         />
       </div>
+
+      {showSuggestions && filteredSuggestions.length > 0 && (
+        <div
+          ref={suggestionsRef}
+          className="absolute z-50 w-full mt-1 bg-surface-input border border-border rounded-md shadow-lg overflow-hidden"
+        >
+          {filteredSuggestions.map((email, index) => (
+            <button
+              key={email}
+              type="button"
+              onClick={() => handleSuggestionClick(email)}
+              className={`
+                w-full px-3 py-2 text-left text-sm text-text-primary
+                hover:bg-accent/10 transition-colors
+                ${index !== filteredSuggestions.length - 1 ? 'border-b border-border' : ''}
+              `}
+            >
+              {email}
+            </button>
+          ))}
+        </div>
+      )}
 
       {error && (
         <p className="mt-1 text-sm text-error">{error}</p>

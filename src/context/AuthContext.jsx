@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { authAPI } from '../lib/api';
 import { getAuthState, setAuthState, clearAuthState, setStoredToken, setStoredRefreshToken, setStoredUser, clearStoredUser } from '../lib/auth';
+import { fetchAndCachePreviousEmails } from '../lib/previousEmails';
 
 export const AuthContext = createContext(null);
 
@@ -29,6 +30,9 @@ export const AuthProvider = ({ children }) => {
       setStoredUser(userData);
       setUser(userData);
       setIsAuthenticated(true);
+
+      // Preload previous emails after login
+      fetchAndCachePreviousEmails();
 
       return { success: true, user: userData };
     } catch (error) {

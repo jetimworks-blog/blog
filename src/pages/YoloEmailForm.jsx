@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
@@ -16,6 +16,7 @@ import { AttachmentInput } from '../components/ui/AttachmentInput';
 import { emailAPI, configAPI } from '../lib/api';
 import { validateEmail, validateRequired, validateAttachmentFile } from '../lib/validation';
 import { useAuth } from '../context/AuthContext';
+import { getPreviousEmails, addEmailsToPrevious, fetchAndCachePreviousEmails } from '../lib/previousEmails';
 import { ArrowLeft, Send, Zap, ChevronRight, Eye, RefreshCw, Edit3 } from 'lucide-react';
 
 // Helper function to extract name from email address
@@ -79,6 +80,16 @@ export const YoloEmailForm = () => {
   const [emailsSentCount, setEmailsSentCount] = useState(getEmailsSentCount);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [attachments, setAttachments] = useState([]);
+
+  // Load previous emails for autocomplete
+  const previousEmails = useMemo(() => {
+    const cached = getPreviousEmails();
+    if (cached.length === 0) {
+      // Trigger fetch if cache is empty
+      fetchAndCachePreviousEmails();
+    }
+    return cached;
+  }, []);
 
   const handleOpenEditor = () => {
     setIsEditorOpen(true);
@@ -424,6 +435,8 @@ export const YoloEmailForm = () => {
             bcc: formData.bcc,
           }
         });
+        // Update previous emails cache with recipients from this email
+        addEmailsToPrevious([...formData.toList, ...formData.cc, ...formData.bcc]);
       } else {
         const errorMsg = sendResponse.data.error || 'Failed to send email.';
         toast.error('Send failed', {
@@ -522,6 +535,7 @@ export const YoloEmailForm = () => {
                   value={formData.toList}
                   onChange={(emails) => setFormData(prev => ({ ...prev, toList: emails }))}
                   error={errors.toList}
+                  suggestions={previousEmails}
                 />
                 <AnimatePresence>
                   {showCcBcc && (
@@ -536,6 +550,7 @@ export const YoloEmailForm = () => {
                         value={formData.cc}
                         onChange={(emails) => setFormData(prev => ({ ...prev, cc: emails }))}
                         error={errors.cc}
+                        suggestions={previousEmails}
                       />
                       <ChipInput
                         label="BCC (optional)"
@@ -543,6 +558,7 @@ export const YoloEmailForm = () => {
                         value={formData.bcc}
                         onChange={(emails) => setFormData(prev => ({ ...prev, bcc: emails }))}
                         error={errors.bcc}
+                        suggestions={previousEmails}
                       />
                     </motion.div>
                   )}

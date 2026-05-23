@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
@@ -16,6 +16,7 @@ import { AttachmentInput } from '../components/ui/AttachmentInput';
 import { emailAPI, configAPI } from '../lib/api';
 import { validateEmail, validateRequired, validateAttachmentFile } from '../lib/validation';
 import { useAuth } from '../context/AuthContext';
+import { getPreviousEmails, addEmailsToPrevious, fetchAndCachePreviousEmails } from '../lib/previousEmails';
 import { ArrowLeft, Send, Sparkles, ChevronRight, ChevronLeft, Eye, RefreshCw, Pencil, List, Edit3 } from 'lucide-react';
 
 // Helper function to parse client_prompt string into form fields
@@ -274,6 +275,15 @@ export const DetailedEmailForm = () => {
   const [emailsSentCount, setEmailsSentCount] = useState(getEmailsSentCount);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [attachments, setAttachments] = useState([]);
+
+  // Load previous emails for autocomplete
+  const previousEmails = useMemo(() => {
+    const cached = getPreviousEmails();
+    if (cached.length === 0) {
+      fetchAndCachePreviousEmails();
+    }
+    return cached;
+  }, []);
 
   const handleOpenEditor = () => {
     setIsEditorOpen(true);
@@ -633,6 +643,8 @@ export const DetailedEmailForm = () => {
             mode: 'detailed',
           }
         });
+        // Update previous emails cache with recipients from this email
+        addEmailsToPrevious([...formData.toList, ...formData.cc, ...formData.bcc]);
       } else {
         const errorMsg = sendResponse.data.error || 'Failed to send email.';
         toast.error('Send failed', {
@@ -682,6 +694,7 @@ export const DetailedEmailForm = () => {
                 value={formData.toList}
                 onChange={(emails) => updateFormData('toList', emails)}
                 error={errors.toList}
+                suggestions={previousEmails}
               />
 
               <AnimatePresence>
@@ -697,6 +710,7 @@ export const DetailedEmailForm = () => {
                       value={formData.cc}
                       onChange={(emails) => updateFormData('cc', emails)}
                       error={errors.cc}
+                      suggestions={previousEmails}
                     />
 
                     <ChipInput
@@ -705,6 +719,7 @@ export const DetailedEmailForm = () => {
                       value={formData.bcc}
                       onChange={(emails) => updateFormData('bcc', emails)}
                       error={errors.bcc}
+                      suggestions={previousEmails}
                     />
                   </motion.div>
                 )}
