@@ -17,7 +17,7 @@ import { emailAPI, configAPI } from '../lib/api';
 import { validateEmail, validateRequired, validateAttachmentFile } from '../lib/validation';
 import { useAuth } from '../context/AuthContext';
 import { getPreviousEmails, addEmailsToPrevious, fetchAndCachePreviousEmails } from '../lib/previousEmails';
-import { ArrowLeft, Send, Zap, ChevronRight, Eye, RefreshCw, Edit3 } from 'lucide-react';
+import { ArrowLeft, Send, Zap, ChevronRight, Eye, RefreshCw, Edit3, Globe } from 'lucide-react';
 
 // Helper function to extract name from email address
 const extractNameFromEmail = (email) => {
@@ -266,6 +266,8 @@ export const YoloEmailForm = () => {
       clientPrompt += `Subject: ${formData.subject}.\n`;
       if (formData.noStyle) {
         clientPrompt += `Plain text professional email, no HTML styling, no decorative elements.\n`;
+      } else {
+        clientPrompt += `CRITICAL: Create a visually stunning, professionally styled HTML email. Use inline CSS styles extensively — include eye-catching colors, elegant typography, tasteful spacing, and proper table-based layouts for structure. The email MUST look polished and impressive, not plain. Apply all styling directly in HTML attributes and inline styles for maximum email client compatibility.\n`;
       }
       clientPrompt += `Sign the email from ${senderName}.`;
 
@@ -329,6 +331,8 @@ export const YoloEmailForm = () => {
       clientPrompt += `Subject: ${formData.subject}.\n`;
       if (formData.noStyle) {
         clientPrompt += `Plain text professional email, no HTML styling, no decorative elements.\n`;
+      } else {
+        clientPrompt += `CRITICAL: Create a visually stunning, professionally styled HTML email. Use inline CSS styles extensively — include eye-catching colors, elegant typography, tasteful spacing, and proper table-based layouts for structure. The email MUST look polished and impressive, not plain. Apply all styling directly in HTML attributes and inline styles for maximum email client compatibility.\n`;
       }
       clientPrompt += `Sign the email from ${senderName}.`;
 
@@ -391,6 +395,8 @@ export const YoloEmailForm = () => {
       clientPrompt += `Subject: ${formData.subject}.\n`;
       if (formData.noStyle) {
         clientPrompt += `Plain text professional email, no HTML styling, no decorative elements.\n`;
+      } else {
+        clientPrompt += `CRITICAL: Create a visually stunning, professionally styled HTML email. Use inline CSS styles extensively — include eye-catching colors, elegant typography, tasteful spacing, and proper table-based layouts for structure. The email MUST look polished and impressive, not plain. Apply all styling directly in HTML attributes and inline styles for maximum email client compatibility.\n`;
       }
       clientPrompt += `Sign the email from ${senderName}.`;
 
@@ -698,6 +704,16 @@ export const YoloEmailForm = () => {
                     >
                       <RefreshCw className="w-4 h-4" />
                       Regenerate
+                    </button>
+                    <button
+                      onClick={() => {
+                        sessionStorage.setItem('previewHtml', generatedHtml);
+                        window.open('/preview', '_blank');
+                      }}
+                      title="View in Browser"
+                      className="flex items-center gap-1 text-sm text-text-secondary hover:text-accent transition-colors min-h-10 px-2"
+                    >
+                      <Globe className="w-4 h-4" />
                     </button>
                   </div>
                 </div>

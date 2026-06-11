@@ -13,6 +13,7 @@ import HomePage from './pages/HomePage';
 import YoloEmailForm from './pages/YoloEmailForm';
 import DetailedEmailForm from './pages/DetailedEmailForm';
 import EmailResult from './pages/EmailResult';
+import EmailPreviewPage from './pages/EmailPreviewPage';
 import HistoryPage from './pages/HistoryPage';
 import SettingsPage from './pages/SettingsPage';
 import CampaignsPage from './pages/campaigns/CampaignsPage';
@@ -58,6 +59,9 @@ function App() {
 
           {/* Landing Page */}
           <Route path="/features" element={<LandingPage />} />
+
+          {/* Email Preview Page */}
+          <Route path="/preview" element={<EmailPreviewPage />} />
 
           {/* Root: redirect based on auth status */}
           <Route path="/" element={<Navigate to="/features" replace />} />

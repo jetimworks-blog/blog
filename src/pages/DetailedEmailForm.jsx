@@ -17,7 +17,7 @@ import { emailAPI, configAPI } from '../lib/api';
 import { validateEmail, validateRequired, validateAttachmentFile } from '../lib/validation';
 import { useAuth } from '../context/AuthContext';
 import { getPreviousEmails, addEmailsToPrevious, fetchAndCachePreviousEmails } from '../lib/previousEmails';
-import { ArrowLeft, Send, Sparkles, ChevronRight, ChevronLeft, Eye, RefreshCw, Pencil, List, Edit3 } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles, ChevronRight, ChevronLeft, Eye, RefreshCw, Pencil, List, Edit3, Globe } from 'lucide-react';
 
 // Helper function to parse client_prompt string into form fields
 const parseClientPrompt = (clientPrompt) => {
@@ -480,6 +480,8 @@ export const DetailedEmailForm = () => {
 
     if (formData.noStyle) {
       clientPrompt += `Plain text professional email, no HTML styling, no decorative elements.\n`;
+    } else {
+      clientPrompt += `CRITICAL: Apply ALL selected styles aggressively. The email MUST be visually impressive with rich inline CSS — bold colors, elegant fonts, proper spacing, borders, shadows where appropriate, and professional table layouts. This is not optional. Every style selection must be visibly reflected in the final email. Make it eye-catching and polished.\n`;
     }
 
     clientPrompt += `Word count: ${formData.wordCountMin}-${formData.wordCountMax} words.\n`;
@@ -1294,6 +1296,16 @@ export const DetailedEmailForm = () => {
                   >
                     <RefreshCw className="w-4 h-4" />
                     Regenerate
+                  </button>
+                  <button
+                    onClick={() => {
+                      sessionStorage.setItem('previewHtml', generatedHtml);
+                      window.open('/preview', '_blank');
+                    }}
+                    title="View in Browser"
+                    className="flex items-center gap-1 text-sm text-text-secondary hover:text-accent transition-colors min-h-10 px-2"
+                  >
+                    <Globe className="w-4 h-4" />
                   </button>
                 </div>
               </div>
