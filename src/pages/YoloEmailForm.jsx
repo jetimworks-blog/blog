@@ -276,6 +276,7 @@ export const YoloEmailForm = () => {
         prompt: formData.prompt, // User's actual input
         client_prompt: clientPrompt,
         client_category: 'yolo',
+        style: !formData.noStyle,
       };
 
       const previewResponse = await emailAPI.execute(previewPayload);
@@ -341,6 +342,7 @@ export const YoloEmailForm = () => {
         prompt: formData.prompt, // User's actual input
         client_prompt: clientPrompt,
         client_category: 'yolo',
+        style: !formData.noStyle,
       };
 
       const previewResponse = await emailAPI.execute(previewPayload);

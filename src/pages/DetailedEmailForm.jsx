@@ -507,6 +507,7 @@ export const DetailedEmailForm = () => {
         prompt: formData.prompt, // User's actual input
         client_prompt: clientPrompt,
         client_category: 'detail',
+        style: !formData.noStyle,
       };
 
       const previewResponse = await emailAPI.execute(previewPayload);
@@ -558,6 +559,7 @@ export const DetailedEmailForm = () => {
         prompt: formData.prompt, // User's actual input
         client_prompt: clientPrompt,
         client_category: 'detail',
+        style: !formData.noStyle,
       };
 
       const previewResponse = await emailAPI.execute(previewPayload);
