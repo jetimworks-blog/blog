@@ -1,9 +1,9 @@
-# Backend API Changes Summary (2026-05-17)
+# Backend API Changes Summary (2026-06-11)
 
-## New Feature: ClientPrompt and ClientCategory for Preview Endpoint
+## New Feature: Style Check for HTML Generation
 
 ### Overview
-Added `client_prompt` and `client_category` fields to the preview endpoint payload. These are stored in email history alongside the generated HTML. When generating the email, `client_prompt` is prepended to the normal prompt.
+Added `style` boolean field to the preview endpoint payload. When `style: true`, after the semantic check passes, a design check is performed to verify proper styling (colors, visual hierarchy, professional appearance). If design check fails, generation retries with lower temperature.
 
 ---
 
@@ -20,7 +20,8 @@ Added `client_prompt` and `client_category` fields to the preview endpoint paylo
   "process": "gen",
   "prompt": "Write an email about our new product",
   "client_prompt": "Use a friendly tone",
-  "client_category": "detail"
+  "client_category": "detail",
+  "style": true
 }
 ```
 
@@ -87,7 +88,7 @@ Added `client_prompt` and `client_category` fields to the preview endpoint paylo
       "success": true,
       "error_message": null,
       "duration_ms": 1234,
-      "created_at": "2026-05-17T12:00:00Z"
+      "created_at": "2026-06-11T12:00:00Z"
     }
   ],
   "total": 1
@@ -105,9 +106,25 @@ Added `client_prompt` and `client_category` fields to the preview endpoint paylo
 | `prompt` | string | Yes for gen | The main prompt for HTML generation |
 | `client_prompt` | string | No | Prepended to prompt before sending to AI |
 | `client_category` | string | No | Either "yolo" or "detail" |
+| `style` | boolean | No | Enable design check after semantic check (default: false) |
 | `to` | string | For email | Primary recipient |
 | `subject` | string | For email | Email subject |
 | `html` | string | For email | Pre-generated HTML from preview |
+
+### How Style Check Works
+When `style: true`:
+1. Generate HTML with temperature sweep (0.2 → 0.1 → 0.0)
+2. Validate HTML structure
+3. Semantic check (score >= 7 required)
+4. **Design check** (score >= 7 required) - only if style=true
+5. Return HTML or retry on failure
+
+Design check evaluates:
+- Visual styling (not just bare HTML tables)
+- Colors for hierarchy and emphasis
+- Fonts, spacing, layout
+- Professional/polished appearance
+- Alignment with original prompt's intent
 
 ### How ClientPrompt Works
 The `client_prompt` is concatenated with the normal `prompt` before sending to the HTML generation AI:
@@ -126,8 +143,8 @@ Write an email about our product
 
 ## All App Endpoints
 
-- `POST /everything-app/app/execute` - Generate HTML preview (NOW SUPPORTS client_prompt, client_category)
-- `POST /everything-app/app/execute/confirm` - Send email (NOW STORES client_prompt, client_category in history)
+- `POST /everything-app/app/execute` - Generate HTML preview (SUPPORTS client_prompt, client_category, style)
+- `POST /everything-app/app/execute/confirm` - Send email (STORES client_prompt, client_category in history)
 - `GET /everything-app/app/processes` - List valid processes
 - `POST /everything-app/app/attachments/upload` - Upload attachments
-- `GET /everything-app/email-history` - Get email history (NOW RETURNS client_prompt, client_category)
+- `GET /everything-app/email-history` - Get email history (RETURNS client_prompt, client_category)
