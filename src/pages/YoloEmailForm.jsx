@@ -10,6 +10,7 @@ import { MagicLoader } from '../components/ui/MagicLoader';
 import { WysiwygEditorModal } from '../components/editor/WysiwygEditorModal';
 import { ChipInput } from '../components/ui/ChipInput';
 import { AttachmentInput } from '../components/ui/AttachmentInput';
+import { TemplateSelector } from '../components/TemplateSelector';
 import { GraphWorkflow } from '../components/workflow/GraphWorkflow';
 import { StepPanel } from '../components/workflow/StepPanel';
 import { WorkflowBackdrop } from '../components/workflow/WorkflowBackdrop';
@@ -71,6 +72,7 @@ export const YoloEmailForm = () => {
     subject: '',
     prompt: '',
     noStyle: true,
+    selectedTemplate: null,
   });
   const [showCcBcc, setShowCcBcc] = useState(false);
   const [generatedHtml, setGeneratedHtml] = useState('');
@@ -117,6 +119,7 @@ export const YoloEmailForm = () => {
       }
       return Object.keys(errs).length ? errs : null;
     },
+    null, // template — always passes, optional
     null, // preview — no advance-time validation
     null, // send — final
   ];
@@ -176,8 +179,7 @@ export const YoloEmailForm = () => {
     }
   };
 
-  // Next-button handler. Branch per step: 0 = validate+advance, 1 = generate
-  // preview, 2 = just advance to send view, 3 = send.
+  // Next-button handler. Branch per step: 0 = validate+advance, 1 = validate+advance to template, 2 = generate preview, 3 = just advance to send view, 4 = send.
   const handleNext = async () => {
     setErrors({});
     if (workflow.currentStep === 0) {
@@ -190,12 +192,18 @@ export const YoloEmailForm = () => {
     if (workflow.currentStep === 1) {
       const errs = workflow.validateCurrent();
       if (errs) { showValidationErrors(errs); return; }
-      await handleGeneratePreview();
+      workflow.completeStep(1);
+      workflow.nextStep();
       return;
     }
     if (workflow.currentStep === 2) {
+      // Template step — generate preview with template data
+      await handleGeneratePreview();
+      return;
+    }
+    if (workflow.currentStep === 3) {
       // Preview -> Send: just mark preview complete and advance.
-      workflow.completeStep(2);
+      workflow.completeStep(3);
       workflow.nextStep();
       return;
     }
@@ -216,6 +224,9 @@ export const YoloEmailForm = () => {
     let clientPrompt = '';
     if (recipientName) clientPrompt += `Recipient name: ${recipientName}.\n`;
     clientPrompt += `Subject: ${formData.subject}.\n`;
+    if (formData.selectedTemplate) {
+      clientPrompt += `Use this email template as the base structure and styling: ${formData.selectedTemplate.html}\n`;
+    }
     if (formData.noStyle) {
       clientPrompt += `Plain text professional email, no HTML styling, no decorative elements.\n`;
     } else {
@@ -244,8 +255,8 @@ export const YoloEmailForm = () => {
       if (previewResponse.data.success === true) {
         setGeneratedHtml(previewResponse.data.output || '');
         sessionStorage.setItem('pendingPrompt', formData.prompt);
-        workflow.completeStep(1);
-        workflow.nextStep();
+        workflow.completeStep(2);
+        workflow.nextStep(); // Move to preview step (step 3)
         toast.success('Preview generated!');
       } else {
         toast.error('Preview failed', { description: previewResponse.data.error || 'Failed to generate preview.' });
@@ -319,8 +330,8 @@ export const YoloEmailForm = () => {
         const newCount = incrementEmailsSentCount();
         setEmailsSentCount(newCount);
         setAttachments([]);
-        workflow.completeStep(2);
         workflow.completeStep(3);
+        workflow.completeStep(4);
         toast.success('Email sent!');
         navigate('/result', {
           state: {
@@ -726,8 +737,18 @@ export const YoloEmailForm = () => {
         >
           {workflow.currentStep === 0 && renderRecipientStep()}
           {workflow.currentStep === 1 && renderDetailsStep()}
-          {workflow.currentStep === 2 && renderPreviewStep()}
-          {workflow.currentStep === 3 && renderSendStep()}
+          {workflow.currentStep === 2 && (
+            <TemplateSelector
+              onSelectTemplate={(template) => {
+                setFormData((prev) => ({ ...prev, selectedTemplate: template }));
+              }}
+              onSkip={() => {
+                setFormData((prev) => ({ ...prev, selectedTemplate: null }));
+              }}
+            />
+          )}
+          {workflow.currentStep === 3 && renderPreviewStep()}
+          {workflow.currentStep === 4 && renderSendStep()}
         </StepPanel>
 
         {/* Nav buttons row */}
@@ -751,19 +772,26 @@ export const YoloEmailForm = () => {
 
           {workflow.currentStep === 1 && (
             <Button onClick={handleNext} className="w-full sm:w-auto">
+              Next
+              <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
+          )}
+
+          {workflow.currentStep === 2 && (
+            <Button onClick={handleNext} className="w-full sm:w-auto">
               <Eye className="w-4 h-4 mr-2" />
               Generate Preview
             </Button>
           )}
 
-          {workflow.currentStep === 2 && (
+          {workflow.currentStep === 3 && (
             <Button onClick={handleNext} className="w-full sm:w-auto">
               Continue to Send
               <ChevronRight className="w-4 h-4 ml-2" />
             </Button>
           )}
 
-          {workflow.currentStep === 3 && (
+          {workflow.currentStep === 4 && (
             <Button
               variant="primary"
               size="lg"

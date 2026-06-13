@@ -10,6 +10,7 @@ import { MagicLoader } from '../components/ui/MagicLoader';
 import { WysiwygEditorModal } from '../components/editor/WysiwygEditorModal';
 import { ChipInput } from '../components/ui/ChipInput';
 import { AttachmentInput } from '../components/ui/AttachmentInput';
+import { TemplateSelector } from '../components/TemplateSelector';
 import { GraphWorkflow } from '../components/workflow/GraphWorkflow';
 import { StepPanel } from '../components/workflow/StepPanel';
 import { WorkflowBackdrop } from '../components/workflow/WorkflowBackdrop';
@@ -267,6 +268,7 @@ export const DetailedEmailForm = () => {
     includeCTA: false,
     ctaText: '',
     noStyle: true,
+    selectedTemplate: null,
   });
   const [showCcBcc, setShowCcBcc] = useState(false);
   const [generatedHtml, setGeneratedHtml] = useState('');
@@ -419,6 +421,7 @@ export const DetailedEmailForm = () => {
     },
     null, // tone — no advance-time validation
     null, // content
+    null, // template — always passes, optional
     null, // preview
     null, // send
   ];
@@ -449,12 +452,19 @@ export const DetailedEmailForm = () => {
       return;
     }
     if (workflow.currentStep === 2) {
-      // Content -> Preview: trigger preview generation
-      await handleGeneratePreview();
+      // Content -> Template: just advance
+      workflow.completeStep(2);
+      workflow.nextStep();
       return;
     }
     if (workflow.currentStep === 3) {
-      workflow.completeStep(3);
+      // Template -> Preview: generate preview then advance
+      await handleGeneratePreview();
+      return;
+    }
+    if (workflow.currentStep === 4) {
+      // Preview -> Send: just advance
+      workflow.completeStep(4);
       workflow.nextStep();
       return;
     }
@@ -475,6 +485,10 @@ export const DetailedEmailForm = () => {
       clientPrompt += `Recipient name: ${recipientName}.\n`;
     }
     clientPrompt += `Subject: ${formData.subject}.\n`;
+
+    if (formData.selectedTemplate) {
+      clientPrompt += `Use this email template as the base structure and styling: ${formData.selectedTemplate.html}\n`;
+    }
 
     if (useCustomTone && customTone.trim()) {
       clientPrompt += `Tone & style: ${customTone}\n`;
@@ -537,8 +551,8 @@ export const DetailedEmailForm = () => {
       if (previewResponse.data.success === true) {
         setGeneratedHtml(previewResponse.data.output || '');
         sessionStorage.setItem('pendingPrompt', formData.prompt);
-        workflow.completeStep(2);
-        workflow.nextStep();
+        workflow.completeStep(3);
+        workflow.nextStep(); // Move to preview step (step 4)
         toast.success('Preview generated!');
       } else {
         const errorMsg = previewResponse.data.error || 'Failed to generate preview.';
@@ -1280,8 +1294,20 @@ export const DetailedEmailForm = () => {
 
       case 3:
         return (
+          <TemplateSelector
+            onSelectTemplate={(template) => {
+              setFormData((prev) => ({ ...prev, selectedTemplate: template }));
+            }}
+            onSkip={() => {
+              setFormData((prev) => ({ ...prev, selectedTemplate: null }));
+            }}
+          />
+        );
+
+      case 4:
+        return (
           <Motion.div
-            key="step3"
+            key="step4"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
@@ -1406,7 +1432,7 @@ export const DetailedEmailForm = () => {
           </Motion.div>
         );
 
-      case 4:
+      case 5:
         return (
           <>
             <h2 className="text-lg sm:text-xl text-text-primary mb-3 sm:mb-4">
@@ -1482,8 +1508,8 @@ export const DetailedEmailForm = () => {
         <WorkflowBackdrop />
         <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center relative z-10">
           <MagicLoader
-            title={workflow.currentStep === 3 ? 'Generating preview...' : 'Crafting your masterpiece...'}
-            subtitle={workflow.currentStep === 3 ? 'Creating HTML email' : 'Every detail matters'}
+            title={workflow.currentStep === 2 ? 'Generating preview...' : 'Crafting your masterpiece...'}
+            subtitle={workflow.currentStep === 2 ? 'Creating HTML email' : 'Every detail matters'}
             variant="generating"
           />
         </div>
@@ -1547,7 +1573,7 @@ export const DetailedEmailForm = () => {
           {renderStep()}
         </StepPanel>
 
-        <div className={`flex flex-col sm:flex-row justify-between items-center gap-3 mt-6 ${workflow.currentStep === 4 ? 'sm:flex-col-reverse sm:gap-4' : ''}`}>
+        <div className={`flex flex-col sm:flex-row justify-between items-center gap-3 mt-6 ${workflow.currentStep === 5 ? 'sm:flex-col-reverse sm:gap-4' : ''}`}>
           <Button
             variant="ghost"
             onClick={handleBack}
@@ -1574,19 +1600,26 @@ export const DetailedEmailForm = () => {
 
           {workflow.currentStep === 2 && (
             <Button onClick={handleNext} className="w-full sm:w-auto">
+              Next
+              <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
+          )}
+
+          {workflow.currentStep === 3 && (
+            <Button onClick={handleNext} className="w-full sm:w-auto">
               <Eye className="w-4 h-4 mr-2" />
               Generate Preview
             </Button>
           )}
 
-          {workflow.currentStep === 3 && (
+          {workflow.currentStep === 4 && (
             <Button onClick={handleNext} className="w-full sm:w-auto">
               Continue to Send
               <ChevronRight className="w-4 h-4 ml-2" />
             </Button>
           )}
 
-          {workflow.currentStep === 4 && (
+          {workflow.currentStep === 5 && (
             <Button
               variant="primary"
               size="lg"

@@ -1,4 +1,4 @@
-import { Mail, FileText, Eye, Send, Palette, Type, ListOrdered } from 'lucide-react';
+import { Mail, FileText, Eye, Send, Palette, Type, ListOrdered, LayoutTemplate } from 'lucide-react';
 
 /**
  * Step configurations for the two email flows.
@@ -23,6 +23,12 @@ export const yoloSteps = [
     label: 'Details',
     icon: FileText,
     accent: 'oklch(0.72 0.17 290)', // violet
+  },
+  {
+    id: 'template',
+    label: 'Template',
+    icon: LayoutTemplate,
+    accent: 'oklch(0.75 0.15 180)', // teal
   },
   {
     id: 'preview',
@@ -56,6 +62,12 @@ export const detailedSteps = [
     label: 'Content',
     icon: ListOrdered,
     accent: 'oklch(0.82 0.14 80)', // amber
+  },
+  {
+    id: 'template',
+    label: 'Template',
+    icon: LayoutTemplate,
+    accent: 'oklch(0.75 0.15 180)', // teal
   },
   {
     id: 'preview',
