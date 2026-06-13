@@ -112,8 +112,15 @@ export function useGraphWorkflow({
   );
 
   const canNavigateTo = useCallback(
-    (stepIndex) => stepIndex >= 0 && stepIndex < steps.length,
-    [steps.length]
+    (stepIndex) => {
+      if (stepIndex < 0 || stepIndex >= steps.length) return false;
+      // All previous steps must be completed before visiting a new step
+      for (let i = 0; i < stepIndex; i++) {
+        if (!completedSteps.has(i)) return false;
+      }
+      return true;
+    },
+    [completedSteps, steps.length]
   );
 
   const getStepStatus = useCallback(

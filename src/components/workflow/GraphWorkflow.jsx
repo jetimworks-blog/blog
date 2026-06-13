@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 import { WorkflowNode } from './WorkflowNode';
 

@@ -462,7 +462,11 @@ export const DetailedEmailForm = () => {
 
   const handleBack = () => workflow.prevStep();
 
-  const handleNodeClick = (index) => workflow.goToStep(index);
+  const handleNodeClick = (index) => {
+    if (workflow.canNavigateTo(index)) {
+      workflow.goToStep(index);
+    }
+  };
 
   const buildClientPrompt = () => {
     let clientPrompt = '';

@@ -205,7 +205,9 @@ export const YoloEmailForm = () => {
 
   // Click any node = free nav. No validation. The target step just opens.
   const handleNodeClick = (index) => {
-    workflow.goToStep(index);
+    if (workflow.canNavigateTo(index)) {
+      workflow.goToStep(index);
+    }
   };
 
   const buildClientPrompt = () => {
