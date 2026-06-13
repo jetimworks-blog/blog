@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { EmailPreview } from '../components/ui/EmailPreview';
 
 export default function EmailPreviewPage() {
   const [html, setHtml] = useState('');
@@ -25,10 +26,9 @@ export default function EmailPreviewPage() {
 
   return (
     <div className="min-h-screen bg-gray-950">
-      <div
-        className="email-preview"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <div className="relative w-full h-full" style={{ height: '100vh' }}>
+        <EmailPreview html={html} />
+      </div>
     </div>
   );
 }

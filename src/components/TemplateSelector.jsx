@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, X } from 'lucide-react';
 import { emailTemplates } from '../lib/emailTemplates';
+import { EmailPreview } from './ui/EmailPreview';
 
 export const TemplateSelector = ({ onSelectTemplate, onSkip }) => {
   const [selectedId, setSelectedId] = useState(null);

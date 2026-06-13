@@ -6,6 +6,7 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Copy, Check, Mail, Sparkles, ArrowLeft, Home, AlertCircle, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
+import { EmailPreview } from '../components/ui/EmailPreview';
 
 export const EmailResult = () => {
   const location = useLocation();
@@ -142,10 +143,9 @@ export const EmailResult = () => {
 
             {/* Email Content */}
             <div className="p-6 md:p-8">
-              <div
-                className="prose prose-navy max-w-none email-preview"
-                dangerouslySetInnerHTML={{ __html: email }}
-              />
+              <div className="relative w-full min-h-[300px]">
+                <EmailPreview html={email} />
+              </div>
             </div>
           </Card>
         </motion.div>

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Editor from '@monaco-editor/react';
 import { X, Save, Eye, Code } from 'lucide-react';
 import { Button } from './Button';
+import { EmailPreview } from './EmailPreview';
 
 export const HtmlEditorModal = ({ isOpen, html, onSave, onClose }) => {
   const [editedHtml, setEditedHtml] = useState(html);
@@ -83,11 +84,10 @@ export const HtmlEditorModal = ({ isOpen, html, onSave, onClose }) => {
             {/* Content */}
             <div className="flex-1 min-h-0">
               {showPreview ? (
-                <div className="h-full p-6 overflow-auto bg-gray-900">
-                  <div
-                    className="email-preview"
-                    dangerouslySetInnerHTML={{ __html: editedHtml }}
-                  />
+                <div className="relative h-full p-6 overflow-auto bg-gray-900">
+                  <div className="relative w-full h-full min-h-[400px]">
+                    <EmailPreview html={editedHtml} />
+                  </div>
                 </div>
               ) : (
                 <Editor

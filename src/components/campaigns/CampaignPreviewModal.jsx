@@ -1,6 +1,7 @@
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { X, Eye } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { EmailPreview } from '../ui/EmailPreview';
 
 export const CampaignPreviewModal = ({ isOpen, html, onClose, campaign }) => {
   const handleClose = () => {
@@ -48,11 +49,10 @@ export const CampaignPreviewModal = ({ isOpen, html, onClose, campaign }) => {
             </div>
 
             {/* Content */}
-            <div className="flex-1 min-h-0 overflow-auto bg-gray-900 p-6">
-              <div
-                className="email-preview"
-                dangerouslySetInnerHTML={{ __html: html || '' }}
-              />
+            <div className="relative flex-1 min-h-0 overflow-auto bg-gray-900 p-6">
+              <div className="relative w-full h-full min-h-[400px]">
+                <EmailPreview html={html || ''} />
+              </div>
             </div>
 
             {/* Footer */}

@@ -21,6 +21,7 @@ import { validateEmail, validateRequired, validateAttachmentFile } from '../lib/
 import { useAuth } from '../context/AuthContext';
 import { getPreviousEmails, addEmailsToPrevious, fetchAndCachePreviousEmails } from '../lib/previousEmails';
 import { ArrowLeft, Send, Sparkles, ChevronRight, ChevronLeft, Eye, RefreshCw, Pencil, List, Edit3, Globe } from 'lucide-react';
+import { EmailPreview } from '../components/ui/EmailPreview';
 
 // Helper function to parse client_prompt string into form fields
 const parseClientPrompt = (clientPrompt) => {
@@ -1351,9 +1352,10 @@ export const DetailedEmailForm = () => {
                 </div>
               </div>
                 <div
-                  className="p-4 sm:p-6 bg-gray-900 max-h-64 sm:max-h-96 overflow-auto prose prose-sm max-w-none [&_table]:w-full email-preview"
-                  dangerouslySetInnerHTML={{ __html: generatedHtml || '<p class="text-text-muted">No preview generated</p>' }}
-                />
+                  className="relative p-4 sm:p-6 bg-gray-900 min-h-64 sm:min-h-96 overflow-auto"
+                >
+                  <EmailPreview html={generatedHtml || ''} />
+                </div>
             </div>
 
             {/* Summary */}

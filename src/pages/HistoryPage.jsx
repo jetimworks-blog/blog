@@ -6,6 +6,7 @@ import { Layout } from '../components/layout/Layout';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
+import { EmailPreview } from '../components/ui/EmailPreview';
 import { historyAPI } from '../lib/api';
 import {
   History,
@@ -339,10 +340,9 @@ export const HistoryPage = () => {
                       {item.generated_html && (
                         <div className="mb-4">
                           <p className="text-xs text-text-muted mb-1">Generated Email:</p>
-                          <div
-                            className="text-sm text-text-secondary bg-surface-elevated p-3 border border-border prose prose-sm max-w-none"
-                            dangerouslySetInnerHTML={{ __html: item.generated_html }}
-                          />
+                          <div className="h-48 border border-border">
+                            <EmailPreview html={item.generated_html} />
+                          </div>
                         </div>
                       )}
 
