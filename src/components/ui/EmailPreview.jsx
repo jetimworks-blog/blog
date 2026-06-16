@@ -34,7 +34,7 @@ export function EmailPreview({ html, className = '' }) {
       width: 100%;
       min-height: 100%;
       height: 100%;
-      background-color: transparent;
+      background-color: #ffffff;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
@@ -42,6 +42,7 @@ export function EmailPreview({ html, className = '' }) {
       -moz-osx-font-smoothing: grayscale;
       min-height: 100%;
       height: 100%;
+      background-color: #ffffff;
     }
     /* Ensure table layouts work properly */
     table {
@@ -81,7 +82,7 @@ ${html}
         width: '100%',
         height: '100%',
         border: 'none',
-        backgroundColor: 'transparent',
+        backgroundColor: '#ffffff',
       }}
     />
   );

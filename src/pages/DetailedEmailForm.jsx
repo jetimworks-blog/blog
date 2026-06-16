@@ -7,7 +7,7 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Textarea } from '../components/ui/Textarea';
 import { MagicLoader } from '../components/ui/MagicLoader';
-import { WysiwygEditorModal } from '../components/editor/WysiwygEditorModal';
+import { HtmlEditorModal } from '../components/ui/HtmlEditorModal';
 import { ChipInput } from '../components/ui/ChipInput';
 import { AttachmentInput } from '../components/ui/AttachmentInput';
 import { TemplateSelector } from '../components/TemplateSelector';
@@ -488,7 +488,7 @@ export const DetailedEmailForm = () => {
     clientPrompt += `Subject: ${formData.subject}.\n`;
 
     if (formData.selectedTemplate) {
-      clientPrompt += `Use this email template as the base structure and styling: ${formData.selectedTemplate.html}\n`;
+      clientPrompt += `Use this email template as the base structure and styling word-for-word. Preserve the exact HTML structure, inline CSS styles, class names, element hierarchy, and all design attributes. Only replace the text content with the user's message. You may add, remove, or modify elements based on the context of the user's message. Template: ${formData.selectedTemplate.html}\n`;
     }
 
     if (useCustomTone && customTone.trim()) {
@@ -1330,7 +1330,7 @@ export const DetailedEmailForm = () => {
                     className="flex items-center gap-1 text-sm text-text-secondary hover:text-accent transition-colors min-h-10 px-2"
                   >
                     <Edit3 className="w-4 h-4" />
-                    Edit Visually
+                    Edit HTML
                   </button>
                   <button
                     onClick={handleRegeneratePreview}
@@ -1635,7 +1635,7 @@ export const DetailedEmailForm = () => {
         </div>
       </div>
 
-      <WysiwygEditorModal
+      <HtmlEditorModal
         isOpen={isEditorOpen}
         html={generatedHtml}
         onSave={(edited) => {

@@ -1,10 +1,32 @@
-import { motion } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { Zap, Sparkles, Clock, Shield } from 'lucide-react';
+import { Zap, Sparkles, Clock, Shield, Play, Pause } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+
+const emailImages = [
+  '/email-templates/images/01-simple-text.png',
+  '/email-templates/images/02-personal-thankyou.png',
+  '/email-templates/images/03-corporate-announcement.png',
+  '/email-templates/images/04-promotional-sale.png',
+  '/email-templates/images/05-invoice.png',
+  '/email-templates/images/06-proposal.png',
+  '/email-templates/images/07-partnership-invitation.png',
+  '/email-templates/images/08-newsletter.png',
+  '/email-templates/images/09-event-invitation.png',
+  '/email-templates/images/10-security-alert.png',
+  '/email-templates/images/11-verification.png',
+  '/email-templates/images/12-shipping-notification.png',
+  '/email-templates/images/13-appointment-reminder.png',
+  '/email-templates/images/14-feedback-request.png',
+  '/email-templates/images/15-abandoned-cart.png',
+  '/email-templates/images/16-welcome.png',
+];
+
+const backgroundImages = emailImages.slice(0, 6);
 
 const features = [
   {
@@ -37,11 +59,65 @@ const fadeInUp = {
 
 export const LandingPage = () => {
   const { isAuthenticated } = useAuth();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % emailImages.length);
+  }, []);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(nextSlide, 2000);
+    return () => clearInterval(interval);
+  }, [isPlaying, nextSlide]);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    const hideTimer = setTimeout(() => setShowControls(false), 1500);
+    return () => clearTimeout(hideTimer);
+  }, [isPlaying, currentIndex]);
+
+  const togglePlay = () => {
+    setIsPlaying((prev) => !prev);
+    if (!isPlaying) {
+      setShowControls(false);
+    } else {
+      setShowControls(true);
+    }
+  };
 
   return (
     <Layout showFooter={false}>
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-surface">
+        {/* Background email template images - subtle and scattered */}
+        <div className="absolute inset-0 overflow-hidden">
+          {backgroundImages.map((img, index) => (
+            <motion.div
+              key={img}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.08 }}
+              transition={{ delay: index * 0.1, duration: 0.6 }}
+              className="absolute"
+              style={{
+                top: `${10 + (index % 3) * 25}%`,
+                left: `${5 + (index % 4) * 20}%`,
+                width: '280px',
+                height: '180px',
+                transform: `rotate(${(index % 2 === 0 ? '' : '-') + (index * 7 % 15)}deg)`,
+              }}
+            >
+              <img
+                src={img}
+                alt=""
+                className="w-full h-full object-cover rounded-lg shadow-2xl"
+              />
+            </motion.div>
+          ))}
+        </div>
+
         {/* Dot grid pattern - subtle */}
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.5) 1px, transparent 0)',
@@ -111,41 +187,74 @@ export const LandingPage = () => {
 
             </motion.div>
 
-            {/* Right: Visual - Technical terminal aesthetic */}
+            {/* Right: Carousel "video" player */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
               className="relative hidden lg:block"
             >
-              <div className="relative border border-border bg-surface-card p-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 bg-accent flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-surface" />
+              {/* Ambient glow */}
+              <div className="absolute -inset-4 bg-gradient-to-r from-accent/20 via-transparent to-accent/20 rounded-2xl blur-xl opacity-50" />
+
+              <div className="relative border border-border bg-surface-card overflow-hidden shadow-2xl shadow-accent/20 ring-1 ring-accent/10">
+                {/* Header bar */}
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-accent flex items-center justify-center">
+                      <Sparkles className="w-4 h-4 text-surface" />
+                    </div>
+                    <span className="font-semibold text-text-primary">KraftMail</span>
                   </div>
-                  <span className="font-semibold text-lg text-text-primary">KraftMail</span>
                 </div>
 
-                <div className="space-y-4 mb-6">
-                  <div className="h-3 bg-surface-elevated rounded w-full" />
-                  <div className="h-3 bg-surface-elevated rounded w-3/4" />
-                  <div className="h-3 bg-surface-elevated rounded w-5/6" />
+                {/* Carousel viewport */}
+                <div
+                  className="relative aspect-[4/3] bg-surface-elevated cursor-pointer group"
+                  onClick={togglePlay}
+                  onMouseEnter={() => setShowControls(true)}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={currentIndex}
+                      src={emailImages[currentIndex]}
+                      alt="Email template preview"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.4 }}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </AnimatePresence>
+
+                  {/* Play/Pause overlay */}
+                  <AnimatePresence>
+                    {showControls && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute inset-0 flex items-center justify-center bg-black/30"
+                      >
+                        <div className="w-16 h-16 rounded-full bg-surface/90 flex items-center justify-center border border-border shadow-xl">
+                          {isPlaying ? (
+                            <Pause className="w-7 h-7 text-text-primary" />
+                          ) : (
+                            <Play className="w-7 h-7 text-text-primary ml-1" />
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
-                <div className="p-4 bg-surface-elevated border border-border">
+                {/* Message */}
+                <div className="p-4 border-t border-border bg-gradient-to-r from-accent/5 to-transparent">
                   <p className="text-sm text-text-secondary">
-                    "Your email has been crafted with care. Ready to impress?"
+                    Choose from our well crafted templates or simply describe your own.
                   </p>
                 </div>
-              </div>
-
-              {/* Floating terminal lines */}
-              <div className="absolute -top-4 -right-4 bg-surface-card border border-border px-4 py-2 text-xs text-text-muted font-mono">
-                <span className="text-accent">$</span> email craft --send
-              </div>
-
-              <div className="absolute -bottom-4 -left-4 bg-surface-card border border-border px-4 py-2 text-xs text-text-muted font-mono">
-                <span className="text-success">✓</span> ready to send
               </div>
             </motion.div>
           </div>
