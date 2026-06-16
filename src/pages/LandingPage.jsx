@@ -74,6 +74,12 @@ export const LandingPage = () => {
   }, [isPlaying, nextSlide]);
 
   useEffect(() => {
+    // Show controls briefly on initial load, then hide
+    const initialTimer = setTimeout(() => setShowControls(false), 2000);
+    return () => clearTimeout(initialTimer);
+  }, []);
+
+  useEffect(() => {
     if (!isPlaying) return;
     const hideTimer = setTimeout(() => setShowControls(false), 1500);
     return () => clearTimeout(hideTimer);
