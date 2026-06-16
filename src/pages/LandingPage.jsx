@@ -194,68 +194,55 @@ export const LandingPage = () => {
               transition={{ delay: 0.3 }}
               className="relative hidden lg:block"
             >
-              {/* Ambient glow */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-accent/20 via-transparent to-accent/20 rounded-2xl blur-xl opacity-50" />
+              {/* Carousel viewport - no border */}
+              <div
+                className="relative aspect-[4/3] cursor-pointer group overflow-hidden"
+                onClick={togglePlay}
+                onMouseEnter={() => setShowControls(true)}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={currentIndex}
+                    src={emailImages[currentIndex]}
+                    alt="Email template preview"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                </AnimatePresence>
 
-              <div className="relative border border-border bg-surface-card overflow-hidden shadow-2xl shadow-accent/20 ring-1 ring-accent/10">
-                {/* Header bar */}
-                <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-accent flex items-center justify-center">
-                      <Sparkles className="w-4 h-4 text-surface" />
-                    </div>
-                    <span className="font-semibold text-text-primary">KraftMail</span>
-                  </div>
-                </div>
-
-                {/* Carousel viewport */}
-                <div
-                  className="relative aspect-[4/3] bg-surface-elevated cursor-pointer group"
-                  onClick={togglePlay}
-                  onMouseEnter={() => setShowControls(true)}
-                >
-                  <AnimatePresence mode="wait">
-                    <motion.img
-                      key={currentIndex}
-                      src={emailImages[currentIndex]}
-                      alt="Email template preview"
+                {/* Play/Pause overlay */}
+                <AnimatePresence>
+                  {showControls && (
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      transition={{ duration: 0.4 }}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                  </AnimatePresence>
-
-                  {/* Play/Pause overlay */}
-                  <AnimatePresence>
-                    {showControls && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="absolute inset-0 flex items-center justify-center bg-black/30"
-                      >
-                        <div className="w-16 h-16 rounded-full bg-surface/90 flex items-center justify-center border border-border shadow-xl">
-                          {isPlaying ? (
-                            <Pause className="w-7 h-7 text-text-primary" />
-                          ) : (
-                            <Play className="w-7 h-7 text-text-primary ml-1" />
-                          )}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Message */}
-                <div className="p-4 border-t border-border bg-gradient-to-r from-accent/5 to-transparent">
-                  <p className="text-sm text-text-secondary">
-                    Choose from our well crafted templates or simply describe your own.
-                  </p>
-                </div>
+                      transition={{ duration: 0.2 }}
+                      className="absolute inset-0 flex items-center justify-center bg-black/30"
+                    >
+                      <div className="w-16 h-16 rounded-full bg-surface/90 flex items-center justify-center border border-border shadow-xl">
+                        {isPlaying ? (
+                          <Pause className="w-7 h-7 text-text-primary" />
+                        ) : (
+                          <Play className="w-7 h-7 text-text-primary ml-1" />
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
+
+              {/* Workflow text */}
+              <p className="mt-6 text-center text-lg text-text-secondary font-light tracking-wide">
+                <span className="text-text-primary font-medium">Describe Email</span>
+                <span className="mx-3 text-accent">→</span>
+                <span className="text-text-primary font-medium">Choose Template</span>
+                <span className="mx-3 text-accent">→</span>
+                <span className="text-text-primary font-medium">Send Email</span>
+              </p>
             </motion.div>
           </div>
         </div>
