@@ -36,13 +36,13 @@ const features = [
   },
   {
     icon: Sparkles,
-    title: 'AI-Powered Magic',
-    description: 'Our intelligent system understands your intent and creates emails that resonate.',
+    title: 'Smart Templates',
+    description: 'Our template engine learns from your industry to craft emails that hit the mark.',
   },
   {
     icon: Clock,
     title: 'Two Modes',
-    description: 'Quick YOLO send when speed matters, or detailed crafting when perfection counts.',
+    description: 'Quick send when speed matters, or detailed customization when every word counts.',
   },
   {
     icon: Shield,
@@ -60,8 +60,8 @@ const fadeInUp = {
 export const LandingPage = () => {
   const { isAuthenticated } = useAuth();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [showControls, setShowControls] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [showControls, setShowControls] = useState(false);
 
   const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % emailImages.length);
@@ -133,8 +133,8 @@ export const LandingPage = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 className="inline-flex items-center gap-2 px-4 py-2 border border-accent text-accent text-sm font-medium mb-6"
               >
-                <Sparkles size={16} />
-                AI-Powered Email Writing
+                <Zap size={16} />
+                Intelligent Email Automation
               </motion.span>
 
               <motion.h1
@@ -144,7 +144,7 @@ export const LandingPage = () => {
                 className="text-5xl md:text-6xl lg:text-7xl font-bold text-text-primary mb-6 leading-tight"
               >
                 Email Writing,{' '}
-                <span className="text-accent">Reimagined</span>
+                <span className="text-accent">Automated</span>
               </motion.h1>
 
               <motion.p
@@ -153,8 +153,8 @@ export const LandingPage = () => {
                 transition={{ delay: 0.2 }}
                 className="text-xl text-text-secondary mb-10 max-w-lg mx-auto lg:mx-0"
               >
-                Stop struggling with the perfect words. Our AI-powered email crafter
-                transforms your ideas into compelling, professional emails in seconds.
+                Stop building emails from scratch. Our intelligent system transforms your brief
+                into polished, professional emails — ready to send in seconds.
               </motion.p>
 
               <motion.div
@@ -173,7 +173,7 @@ export const LandingPage = () => {
                   <>
                     <Link to="/register">
                       <Button size="lg" className="w-full sm:w-auto">
-                        Start Crafting for Free
+                        Automate Your Emails
                       </Button>
                     </Link>
                     <Link to="/login">
@@ -306,10 +306,10 @@ export const LandingPage = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-6">
-              Ready to Transform Your Email Game?
+              Ready to Streamline Your Outreach?
             </h2>
             <p className="text-xl text-text-secondary mb-10">
-              Join professionals who send better emails in seconds.
+              Join professionals who automate their email workflow with precision.
             </p>
             <Link to="/register">
               <Button size="lg">
