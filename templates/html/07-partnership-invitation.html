@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partnership Invitation</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: #f0ebe3;
+      padding: 40px 20px;
+    }
+    .invitation {
+      max-width: 580px;
+      margin: 0 auto;
+      background: #faf8f5;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 10px 50px rgba(0,0,0,0.08);
+    }
+    .elegant-border {
+      height: 8px;
+      background: linear-gradient(90deg, #8b7355, #c4a77d, #8b7355);
+    }
+    .header {
+      text-align: center;
+      padding: 50px 40px 35px;
+    }
+    .emblem {
+      width: 70px;
+      height: 70px;
+      border: 2px solid #8b7355;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 25px;
+      font-size: 28px;
+      color: #8b7355;
+    }
+    .header h1 {
+      font-size: 14px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #8b7355;
+      margin-bottom: 8px;
+    }
+    .header h2 {
+      font-size: 32px;
+      font-weight: 400;
+      color: #2c2c2c;
+      margin-bottom: 5px;
+    }
+    .header .tagline {
+      font-style: italic;
+      color: #888;
+      font-size: 15px;
+    }
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: #c4a77d;
+      margin: 30px auto;
+    }
+    .content {
+      padding: 0 50px 40px;
+      text-align: center;
+    }
+    .content p {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 18px;
+    }
+    .highlight-text {
+      background: linear-gradient(135deg, #f5f0e8, #ebe5da);
+      padding: 25px;
+      border-radius: 6px;
+      margin: 30px 0;
+      border: 1px solid #e5ddd0;
+    }
+    .highlight-text p {
+      font-size: 15px;
+      color: #2c2c2c;
+      margin: 0;
+    }
+    .event-details {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin: 35px 0;
+      padding: 25px 0;
+      border-top: 1px solid #e5ddd0;
+      border-bottom: 1px solid #e5ddd0;
+    }
+    .detail-item {
+      text-align: center;
+    }
+    .detail-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 6px;
+    }
+    .detail-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2c2c2c;
+    }
+    .rsvp-btn {
+      display: inline-block;
+      background: #8b7355;
+      color: white;
+      padding: 15px 45px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: background 0.2s;
+    }
+    .rsvp-btn:hover { background: #7a6548; }
+    .footer {
+      background: #2c2c2c;
+      padding: 30px 40px;
+      text-align: center;
+    }
+    .footer p {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="invitation">
+    <div class="elegant-border"></div>
+    <div class="header">
+      <div class="emblem">&#9670;</div>
+      <h1>You Are Cordially</h1>
+      <h2>Invited</h2>
+      <div class="tagline">to a Strategic Partnership Discussion</div>
+    </div>
+    <div class="divider"></div>
+    <div class="content">
+      <p>On behalf of Vera Wang Bridal and the LVMH Luxury Group, it is our distinct pleasure to extend this invitation to a private dialogue regarding a potential collaboration.</p>
+
+      <div class="highlight-text">
+        <p>This exclusive roundtable brings together industry leaders to explore synergies in sustainable luxury, digital innovation, and global market expansion.</p>
+      </div>
+
+      <div class="event-details">
+        <div class="detail-item">
+          <div class="detail-label">Date</div>
+          <div class="detail-value">July 8, 2026</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Time</div>
+          <div class="detail-value">2:00 PM</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Venue</div>
+          <div class="detail-value">The Pierre, NYC</div>
+        </div>
+      </div>
+
+      <a href="#" class="rsvp-btn">RSVP by June 28</a>
+    </div>
+    <div class="footer">
+      <p>For inquiries: partnerships@lvmh.com</p>
+    </div>
+  </div>
+</body>
+</html>

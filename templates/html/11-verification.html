@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Verification</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Figtree', -apple-system, sans-serif;
+      background: #f4f4f5;
+      padding: 40px 20px;
+    }
+    .email-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+    }
+    .top-accent {
+      height: 4px;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7);
+    }
+    .content {
+      padding: 50px 40px;
+      text-align: center;
+    }
+    .icon-circle {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, #f0f0ff, #e8e5ff);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+      font-size: 32px;
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #18181b;
+      margin-bottom: 12px;
+    }
+    .subtitle {
+      font-size: 15px;
+      color: #71717a;
+      line-height: 1.6;
+      margin-bottom: 35px;
+    }
+    .code-box {
+      background: #fafafa;
+      border: 2px dashed #e4e4e7;
+      border-radius: 12px;
+      padding: 25px 35px;
+      margin-bottom: 30px;
+    }
+    .verification-code {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: 8px;
+      color: #18181b;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    .code-note {
+      font-size: 12px;
+      color: #a1a1aa;
+      margin-top: 12px;
+    }
+    .verify-btn {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      padding: 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      transition: opacity 0.2s;
+      margin-bottom: 20px;
+    }
+    .verify-btn:hover { opacity: 0.9; }
+    .alt-action {
+      font-size: 13px;
+      color: #71717a;
+    }
+    .alt-action a {
+      color: #6366f1;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .security-note {
+      margin-top: 35px;
+      padding: 18px;
+      background: #fafafa;
+      border-radius: 10px;
+      font-size: 12px;
+      color: #a1a1aa;
+      line-height: 1.6;
+    }
+    .footer {
+      padding: 25px;
+      background: #fafafa;
+      border-top: 1px solid #f0f0f0;
+      text-align: center;
+    }
+    .footer p {
+      font-size: 11px;
+      color: #a1a1aa;
+    }
+    .footer a {
+      color: #71717a;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="top-accent"></div>
+    <div class="content">
+      <div class="icon-circle">&#128273;</div>
+      <h1>Verify Your Email</h1>
+      <p class="subtitle">Enter the verification code below to confirm your email address and activate your account.</p>
+
+      <div class="code-box">
+        <div class="verification-code">7X4K</div>
+        <div class="code-note">This code expires in 15 minutes</div>
+      </div>
+
+      <a href="#" class="verify-btn">Verify Email Address</a>
+      <p class="alt-action">Didn't request this? <a href="#">Ignore this email</a></p>
+
+      <div class="security-note">
+        For your security, never share this code with anyone. Our team will never ask for your verification code.
+      </div>
+    </div>
+    <div class="footer">
+      <p>Acme Corp &bull; 100 Market St, San Francisco, CA<br>
+      <a href="#">Privacy Policy</a> &bull; <a href="#">Terms of Service</a></p>
+    </div>
+  </div>
+</body>
+</html>

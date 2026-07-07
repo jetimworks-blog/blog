@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      background: #e8eef5;
+      padding: 40px 20px;
+    }
+    .invoice {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .invoice-header {
+      background: #1e3a5f;
+      padding: 35px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .invoice-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -1px;
+    }
+    .invoice-meta {
+      text-align: right;
+      color: rgba(255,255,255,0.8);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+    .invoice-meta strong {
+      color: #ffffff;
+      display: block;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    .invoice-number {
+      font-size: 14px;
+      color: #5ba3e0;
+      margin-top: 10px;
+    }
+    .addresses {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      padding: 40px;
+      border-bottom: 1px solid #eee;
+    }
+    .address-block label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #999;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .address-block .name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1e3a5f;
+      margin-bottom: 5px;
+    }
+    .address-block .detail {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+    }
+    .items-table {
+      padding: 0 40px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th {
+      text-align: left;
+      padding: 15px 10px;
+      border-bottom: 2px solid #1e3a5f;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #666;
+    }
+    th:last-child { text-align: right; }
+    td {
+      padding: 18px 10px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 14px;
+      color: #333;
+    }
+    td:last-child { text-align: right; }
+    td.description { color: #1e3a5f; font-weight: 500; }
+    td.amount { font-family: 'IBM Plex Mono', monospace; }
+    .totals {
+      padding: 30px 40px 40px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .totals-table {
+      width: 280px;
+    }
+    .totals-table tr td {
+      padding: 10px 0;
+      border: none;
+    }
+    .totals-table tr.subtotal td { color: #666; font-size: 13px; }
+    .totals-table tr.tax td { color: #666; font-size: 13px; }
+    .totals-table tr.total {
+      border-top: 2px solid #1e3a5f;
+      font-weight: 700;
+    }
+    .totals-table tr.total td {
+      font-size: 18px;
+      color: #1e3a5f;
+      padding-top: 15px;
+    }
+    .payment-info {
+      background: #f8fafc;
+      padding: 30px 40px;
+      border-top: 1px solid #eee;
+    }
+    .payment-info h4 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #999;
+      margin-bottom: 12px;
+    }
+    .payment-details {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      font-size: 13px;
+      color: #444;
+    }
+    .payment-details strong { color: #1e3a5f; }
+    .status {
+      display: inline-block;
+      background: #22c55e;
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .footer {
+      padding: 25px 40px;
+      text-align: center;
+      font-size: 12px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="invoice">
+    <div class="invoice-header">
+      <div>
+        <div class="invoice-title">INVOICE</div>
+      </div>
+      <div class="invoice-meta">
+        <strong>Bright Media Agency</strong>
+        448 Market Street, Suite 1200<br>
+        San Francisco, CA 94102<br>
+        billing@brightmedia.co
+        <div class="invoice-number">INV-2024-0847</div>
+      </div>
+    </div>
+    <div class="addresses">
+      <div class="address-block">
+        <label>Bill To</label>
+        <div class="name">Horizon Tech Solutions</div>
+        <div class="detail">
+          Attn: Accounts Payable<br>
+          9200 Sunset Boulevard<br>
+          West Hollywood, CA 90069<br>
+          ap@horizontech.io
+        </div>
+      </div>
+      <div class="address-block">
+        <label>Invoice Details</label>
+        <div class="detail">
+          <strong>Issue Date:</strong> June 13, 2026<br>
+          <strong>Due Date:</strong> July 13, 2026<br>
+          <strong>Status:</strong> <span class="status">Paid</span>
+        </div>
+      </div>
+    </div>
+    <div class="items-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Qty</th>
+            <th>Unit Price</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="description">Brand Strategy & Consultation</td>
+            <td>12 hrs</td>
+            <td class="amount">$185.00</td>
+            <td class="amount">$2,220.00</td>
+          </tr>
+          <tr>
+            <td class="description">UI/UX Design - Mobile App</td>
+            <td>40 hrs</td>
+            <td class="amount">$165.00</td>
+            <td class="amount">$6,600.00</td>
+          </tr>
+          <tr>
+            <td class="description">Frontend Development</td>
+            <td>60 hrs</td>
+            <td class="amount">$175.00</td>
+            <td class="amount">$10,500.00</td>
+          </tr>
+          <tr>
+            <td class="description">Project Management</td>
+            <td>8 hrs</td>
+            <td class="amount">$125.00</td>
+            <td class="amount">$1,000.00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="totals">
+      <table class="totals-table">
+        <tr class="subtotal">
+          <td>Subtotal</td>
+          <td>$20,320.00</td>
+        </tr>
+        <tr class="tax">
+          <td>Tax (0%)</td>
+          <td>$0.00</td>
+        </tr>
+        <tr class="total">
+          <td>Total Due</td>
+          <td>$20,320.00</td>
+        </tr>
+      </table>
+    </div>
+    <div class="payment-info">
+      <h4>Payment Information</h4>
+      <div class="payment-details">
+        <div>
+          <strong>Bank:</strong> Chase Bank<br>
+          <strong>Account:</strong> 4582 3391 7740
+        </div>
+        <div>
+          <strong>Routing:</strong> 021000021<br>
+          <strong>SWIFT:</strong> CHASUS33
+        </div>
+        <div>
+          <strong>Reference:</strong> HT-0847<br>
+          <strong>Currency:</strong> USD
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      Thank you for your business.
+    </div>
+  </div>
+</body>
+</html>

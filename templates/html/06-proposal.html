@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Proposal</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Playfair Display', Georgia, serif;
+      background: #f5f3f0;
+      color: #2c2c2c;
+      line-height: 1.7;
+      padding: 40px 20px;
+    }
+    .proposal {
+      max-width: 680px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+    }
+    .cover {
+      background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%);
+      padding: 60px 50px;
+      color: white;
+    }
+    .cover-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #b8956a;
+      margin-bottom: 30px;
+    }
+    .cover h1 {
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 25px;
+    }
+    .cover .subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      color: rgba(255,255,255,0.7);
+      max-width: 450px;
+    }
+    .cover-accent {
+      width: 60px;
+      height: 3px;
+      background: #b8956a;
+      margin: 35px 0;
+    }
+    .cover-meta {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 40px;
+    }
+    .content {
+      padding: 55px 50px;
+    }
+    .section-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #b8956a;
+      margin-bottom: 15px;
+    }
+    .section-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #1a1a1a;
+    }
+    .section-text {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 35px;
+    }
+    .deliverables {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin: 30px 0;
+    }
+    .deliverable {
+      background: #faf9f7;
+      padding: 20px;
+      border-radius: 6px;
+      border-left: 3px solid #b8956a;
+    }
+    .deliverable h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+    }
+    .deliverable p {
+      font-size: 13px;
+      color: #777;
+    }
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 35px 0;
+    }
+    .pricing-table th {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #999;
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #e0ddd8;
+    }
+    .pricing-table td {
+      padding: 18px 15px;
+      border-bottom: 1px solid #f0ede8;
+      font-size: 15px;
+    }
+    .pricing-table tr:last-child td {
+      border-bottom: none;
+      font-weight: 700;
+      font-size: 18px;
+      color: #1a1a1a;
+      padding-top: 25px;
+    }
+    .cta-section {
+      background: #1a1a1a;
+      padding: 40px;
+      text-align: center;
+      border-radius: 4px;
+      margin-top: 40px;
+    }
+    .cta-section p {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 20px;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: #b8956a;
+      color: white;
+      padding: 16px 40px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: background 0.2s;
+    }
+    .cta-btn:hover { background: #a07d5a; }
+    .validity {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 20px;
+    }
+    .signature-section {
+      margin-top: 50px;
+      padding-top: 35px;
+      border-top: 1px solid #e8e4de;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    .signature-block label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #999;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .signature-block .name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+    .signature-block .date {
+      font-size: 13px;
+      color: #888;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="proposal">
+    <div class="cover">
+      <div class="cover-tag">Confidential Proposal</div>
+      <h1>Digital Transformation Strategy</h1>
+      <div class="cover-accent"></div>
+      <div class="subtitle">A comprehensive engagement to modernize your enterprise infrastructure and accelerate digital capabilities.</div>
+      <div class="cover-meta">
+        Prepared for: Meridian Financial Group<br>
+        June 13, 2026
+      </div>
+    </div>
+    <div class="content">
+      <div class="section-label">Executive Summary</div>
+      <h2 class="section-title">Project Overview</h2>
+      <p class="section-text">This proposal outlines a strategic partnership to transform Meridian Financial's technological foundation. Over 16 weeks, our team will deliver a cloud-native infrastructure migration, API modernization, and implementation of real-time analytics dashboards.</p>
+
+      <div class="section-label">Deliverables</div>
+      <div class="deliverables">
+        <div class="deliverable">
+          <h4>Cloud Architecture</h4>
+          <p>AWS infrastructure redesign with Kubernetes orchestration</p>
+        </div>
+        <div class="deliverable">
+          <h4>API Gateway</h4>
+          <p>Unified API layer with GraphQL and REST endpoints</p>
+        </div>
+        <div class="deliverable">
+          <h4>Analytics Platform</h4>
+          <p>Real-time dashboards with predictive modeling</p>
+        </div>
+        <div class="deliverable">
+          <h4>DevOps Pipeline</h4>
+          <p>CI/CD with automated testing and deployment</p>
+        </div>
+      </div>
+
+      <div class="section-label">Investment</div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th>Phase</th>
+            <th>Timeline</th>
+            <th>Investment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Discovery & Planning</td>
+            <td>3 weeks</td>
+            <td>$45,000</td>
+          </tr>
+          <tr>
+            <td>Infrastructure Migration</td>
+            <td>5 weeks</td>
+            <td>$120,000</td>
+          </tr>
+          <tr>
+            <td>API Development</td>
+            <td>4 weeks</td>
+            <td>$85,000</td>
+          </tr>
+          <tr>
+            <td>Analytics & Launch</td>
+            <td>4 weeks</td>
+            <td>$75,000</td>
+          </tr>
+          <tr>
+            <td colspan="2">Total Investment</td>
+            <td>$325,000</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="cta-section">
+        <p>Ready to transform your technology landscape?</p>
+        <a href="#" class="cta-btn">Accept Proposal</a>
+        <div class="validity">This proposal is valid until July 13, 2026</div>
+      </div>
+
+      <div class="signature-section">
+        <div class="signature-block">
+          <label>Accepted by</label>
+          <div class="name">James Whitmore</div>
+          <div class="date">Date: _______________</div>
+        </div>
+        <div class="signature-block">
+          <label>Proposed by</label>
+          <div class="name">Alexandra Chen</div>
+          <div class="date">Date: June 13, 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

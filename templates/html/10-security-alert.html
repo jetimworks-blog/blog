@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Alert</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: #0a0a0f;
+      padding: 40px 20px;
+    }
+    .alert {
+      max-width: 580px;
+      margin: 0 auto;
+      background: #111;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #222;
+    }
+    .urgent-bar {
+      background: linear-gradient(90deg, #ff3b3b, #ff6b6b);
+      padding: 14px 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .urgent-icon {
+      width: 24px;
+      height: 24px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .urgent-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .header {
+      padding: 35px 30px 25px;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .shield-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #ff3b3b, #ff6b6b);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+    .header .timestamp {
+      font-size: 12px;
+      color: #555;
+    }
+    .content {
+      padding: 30px;
+    }
+    .warning-box {
+      background: rgba(255, 59, 59, 0.08);
+      border: 1px solid rgba(255, 59, 59, 0.2);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 25px;
+    }
+    .warning-box .label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #ff6b6b;
+      margin-bottom: 8px;
+    }
+    .warning-box .text {
+      font-size: 14px;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.6;
+    }
+    .details-grid {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 15px;
+      background: #0d0d12;
+      border-radius: 6px;
+      border: 1px solid #1a1a1a;
+    }
+    .detail-key {
+      font-size: 12px;
+      color: #666;
+    }
+    .detail-val {
+      font-size: 12px;
+      color: #ff6b6b;
+      font-weight: 600;
+    }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .action-btn {
+      display: block;
+      padding: 14px;
+      border-radius: 8px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .action-primary {
+      background: #ff3b3b;
+      color: white;
+    }
+    .action-primary:hover { background: #ff5252; }
+    .action-secondary {
+      background: transparent;
+      border: 1px solid #333;
+      color: #888;
+    }
+    .action-secondary:hover { border-color: #555; color: #aaa; }
+    .reassurance {
+      margin-top: 25px;
+      padding: 18px;
+      background: rgba(74, 222, 128, 0.05);
+      border: 1px solid rgba(74, 222, 128, 0.15);
+      border-radius: 8px;
+      font-size: 12px;
+      color: #4ade80;
+      text-align: center;
+    }
+    .footer {
+      padding: 20px 30px;
+      border-top: 1px solid #1a1a1a;
+      text-align: center;
+    }
+    .footer p {
+      font-size: 11px;
+      color: #444;
+    }
+    .footer a {
+      color: #666;
+      text-decoration: none;
+    }
+    .footer a:hover { color: #888; }
+  </style>
+</head>
+<body>
+  <div class="alert">
+    <div class="urgent-bar">
+      <div class="urgent-icon">&#9888;</div>
+      <div class="urgent-text">Security Alert Detected</div>
+    </div>
+    <div class="header">
+      <div class="shield-icon">&#128737;</div>
+      <h1>Unrecognized Device Sign-In</h1>
+      <div class="timestamp">Detected: June 13, 2026 at 3:42 AM UTC</div>
+    </div>
+    <div class="content">
+      <div class="warning-box">
+        <div class="label">What Happened</div>
+        <div class="text">A sign-in attempt to your account was made from an unrecognized Windows device in Moscow, Russia. This location does not match any of your recent sign-in history.</div>
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-row">
+          <span class="detail-key">Location</span>
+          <span class="detail-val">Moscow, Russia</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">Device</span>
+          <span class="detail-val">Windows 11 / Chrome</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">IP Address</span>
+          <span class="detail-val">185.220.101.42</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">Risk Score</span>
+          <span class="detail-val">HIGH</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a href="#" class="action-btn action-primary">Secure My Account</a>
+        <a href="#" class="action-btn action-secondary">This Wasn't Me</a>
+      </div>
+
+      <div class="reassurance">
+        &#10003; Your account has been temporarily protected. No action has been taken yet.
+      </div>
+    </div>
+    <div class="footer">
+      <p>If you didn't attempt this sign-in, <a href="#">click here immediately</a></p>
+    </div>
+  </div>
+</body>
+</html>

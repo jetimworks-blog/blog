@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You Note</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Caveat', 'Segoe Script', cursive;
+      background: linear-gradient(135deg, #fef6e8 0%, #fde8d4 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .card {
+      max-width: 520px;
+      margin: 0 auto;
+      background: #fffefa;
+      padding: 50px 45px;
+      border-radius: 8px;
+      box-shadow: 0 8px 40px rgba(180, 140, 90, 0.15);
+      position: relative;
+      border: 1px solid #f5e6d3;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 24px;
+      background: #e8c9a8;
+      border-radius: 0 0 30px 30px;
+      opacity: 0.6;
+    }
+    .handwriting {
+      font-size: 26px;
+      line-height: 1.8;
+      color: #4a3f35;
+    }
+    .handwriting .line { display: block; margin-bottom: 8px; }
+    .handwriting .indent { margin-left: 40px; }
+    .heart {
+      display: inline-block;
+      color: #d4736a;
+      font-size: 24px;
+      margin: 0 4px;
+    }
+    .signed {
+      margin-top: 40px;
+      text-align: right;
+      font-size: 22px;
+      color: #6b5a4e;
+    }
+    .date {
+      text-align: center;
+      margin-top: 35px;
+      font-size: 14px;
+      color: #a08b7a;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="handwriting">
+      <span class="line">Hey there,</span>
+      <span class="line"><span class="heart">&#9829;</span></span>
+      <span class="line">Just wanted to say a huge</span>
+      <span class="line">thank you for being such</span>
+      <span class="line">a wonderful friend <span class="heart">&#9829;</span></span>
+      <span class="line">Your kindness means the</span>
+      <span class="line indent">world to me. Coffee on</span>
+      <span class="line indent">me next time?</span>
+      <span class="line"><span class="heart">&#9829;</span></span>
+    </div>
+    <div class="signed">With love,<br>Rachel</div>
+    <div class="date">June 13, 2026</div>
+  </div>
+</body>
+</html>
