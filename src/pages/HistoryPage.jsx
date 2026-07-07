@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { Layout } from '../components/layout/Layout';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
-import { EmailPreview } from '../components/ui/EmailPreview';
 import { historyAPI } from '../lib/api';
 import {
   History,
@@ -21,7 +20,9 @@ import {
   CheckCircle,
   XCircle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  X,
+  ExternalLink
 } from 'lucide-react';
 
 export const HistoryPage = () => {
@@ -34,6 +35,7 @@ export const HistoryPage = () => {
   const [total, setTotal] = useState(0);
   const [limit, setLimit] = useState(20);
   const [offset, setOffset] = useState(0);
+  const [previewModal, setPreviewModal] = useState({ open: false, item: null });
 
   const loadHistory = async (resetOffset = true) => {
     const currentOffset = resetOffset ? 0 : offset;
@@ -68,6 +70,17 @@ export const HistoryPage = () => {
   useEffect(() => {
     loadHistory();
   }, []);
+
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Escape' && previewModal.open) {
+      setPreviewModal({ open: false, item: null });
+    }
+  }, [previewModal.open]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -339,10 +352,14 @@ export const HistoryPage = () => {
                       {/* Generated HTML */}
                       {item.generated_html && (
                         <div className="mb-4">
-                          <p className="text-xs text-text-muted mb-1">Generated Email:</p>
-                          <div className="h-48 border border-border">
-                            <EmailPreview html={item.generated_html} />
-                          </div>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => setPreviewModal({ open: true, item })}
+                          >
+                            <ExternalLink className="w-3 h-3 mr-1" />
+                            Preview Email
+                          </Button>
                         </div>
                       )}
 
@@ -401,6 +418,83 @@ export const HistoryPage = () => {
           </div>
         )}
       </div>
+
+      {/* Email Preview Modal */}
+      <AnimatePresence>
+        {previewModal.open && previewModal.item && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            onClick={() => setPreviewModal({ open: false, item: null })}
+          >
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+
+            {/* Modal Content */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: 'spring', duration: 0.3 }}
+              className="relative w-full max-w-4xl h-[85vh] bg-surface-elevated border border-border shadow-2xl flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
+                <div>
+                  <h2 className="text-lg font-medium text-text-primary">Email Preview</h2>
+                  <p className="text-sm text-text-muted truncate max-w-md">
+                    To: {previewModal.item.to}
+                  </p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setPreviewModal({ open: false, item: null })}
+                  className="text-text-muted hover:text-text-primary"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+
+              {/* Modal Body - Email Preview */}
+              <div className="flex-1 overflow-hidden bg-white">
+                <iframe
+                  srcDoc={`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; min-height: 100%; height: 100%; background-color: #ffffff; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; min-height: 100%; height: 100%; padding: 24px; }
+    table { border-collapse: collapse; border-spacing: 0; }
+    td, th { padding: 0; }
+    img { border: 0; display: block; }
+    a { text-decoration: none; color: inherit; }
+  </style>
+</head>
+<body>
+${previewModal.item.generated_html}
+</body>
+</html>`}
+                  className="w-full h-full border-0"
+                  title="Email Preview"
+                  sandbox="allow-same-origin"
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Layout>
   );
 };

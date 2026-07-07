@@ -43,6 +43,7 @@ export function EmailPreview({ html, className = '' }) {
       min-height: 100%;
       height: 100%;
       background-color: #ffffff;
+      padding: 24px;
     }
     /* Ensure table layouts work properly */
     table {
