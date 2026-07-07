@@ -1,24 +1,31 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, X } from 'lucide-react';
-import { emailTemplates } from '../lib/emailTemplates';
-import { EmailPreview } from './ui/EmailPreview';
+import { templates, getTemplateHtml } from '../lib/templates';
 
 export const TemplateSelector = ({ onSelectTemplate, onSkip }) => {
   const [selectedId, setSelectedId] = useState(null);
+  const [loadingId, setLoadingId] = useState(null);
 
-  const handleSelect = (template) => {
+  const handleSelect = async (template) => {
     setSelectedId(template.id);
-  };
+    setLoadingId(template.id);
 
-  const handleConfirm = () => {
-    if (selectedId) {
-      const template = emailTemplates.find((t) => t.id === selectedId);
-      onSelectTemplate(template);
+    try {
+      const html = await getTemplateHtml(template.id);
+      if (html) {
+        const templateWithHtml = { ...template, html };
+        onSelectTemplate(templateWithHtml);
+      }
+    } catch (error) {
+      console.error('Error loading template:', error);
+    } finally {
+      setLoadingId(null);
     }
   };
 
   const handleSkip = () => {
+    setSelectedId(null);
     onSkip();
   };
 
@@ -44,7 +51,7 @@ export const TemplateSelector = ({ onSelectTemplate, onSkip }) => {
 
       <div className="relative">
         <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
-          {emailTemplates.map((template) => (
+          {templates.map((template) => (
             <motion.div
               key={template.id}
               whileHover={{ scale: 1.02 }}
@@ -55,14 +62,18 @@ export const TemplateSelector = ({ onSelectTemplate, onSkip }) => {
               }`}
             >
               <div className="relative bg-surface-elevated border border-border rounded-lg overflow-hidden">
-                {/* Template preview */}
-                <div className="h-40 overflow-hidden bg-gray-100">
-                  <iframe
-                    srcDoc={template.html}
-                    title={template.name}
-                    className="w-full h-full border-0 transform scale-[0.4] origin-top-left pointer-events-none"
-                    style={{ width: '250%', height: '250%' }}
+                {/* Template preview - screenshot */}
+                <div className="h-40 overflow-hidden bg-gray-100 flex items-center justify-center">
+                  <img
+                    src={template.screenshot}
+                    alt={template.name}
+                    className="w-full h-full object-cover object-top"
                   />
+                  {loadingId === template.id && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    </div>
+                  )}
                 </div>
 
                 {/* Template info */}
@@ -72,7 +83,7 @@ export const TemplateSelector = ({ onSelectTemplate, onSkip }) => {
                 </div>
 
                 {/* Checkmark overlay */}
-                {selectedId === template.id && (
+                {selectedId === template.id && !loadingId && (
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -86,17 +97,6 @@ export const TemplateSelector = ({ onSelectTemplate, onSkip }) => {
           ))}
         </div>
       </div>
-
-      {selectedId && (
-        <div className="flex justify-end">
-          <button
-            onClick={handleConfirm}
-            className="px-4 py-2 bg-accent text-surface text-sm font-medium rounded-lg hover:bg-accent-hover transition-colors"
-          >
-            Use This Template
-          </button>
-        </div>
-      )}
     </div>
   );
 };

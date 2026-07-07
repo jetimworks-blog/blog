@@ -46,7 +46,7 @@ export const Button = ({
           <span>Loading...</span>
         </span>
       ) : (
-        <span className="flex items-center gap-2">{children}</span>
+        <span className="flex items-center justify-center gap-2">{children}</span>
       )}
     </motion.button>
   );

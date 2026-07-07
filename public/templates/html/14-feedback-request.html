@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Request</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', -apple-system, sans-serif;
+      background: #faf8f5;
+      padding: 40px 20px;
+    }
+    .feedback-form {
+      max-width: 540px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.06);
+    }
+    .form-header {
+      padding: 45px 35px 35px;
+      text-align: center;
+      background: linear-gradient(180deg, #fef9f3 0%, #ffffff 100%);
+    }
+    .avatar {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+    }
+    .form-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+    .form-header p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+    }
+    .rating-section {
+      padding: 30px 35px;
+      border-top: 1px solid #f0ebe3;
+    }
+    .rating-label {
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 18px;
+    }
+    .stars {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+    .star {
+      width: 44px;
+      height: 44px;
+      background: #f5f3f0;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .star:hover {
+      background: #fef3c7;
+      transform: scale(1.1);
+    }
+    .star.filled {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: white;
+    }
+    .questions {
+      padding: 0 35px 25px;
+    }
+    .question {
+      margin-bottom: 25px;
+    }
+    .question label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .question input,
+    .question textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #e5e2dd;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      background: #faf9f7;
+    }
+    .question input:focus,
+    .question textarea:focus {
+      outline: none;
+      border-color: #f59e0b;
+      background: #fff;
+    }
+    .question textarea {
+      resize: none;
+      height: 80px;
+    }
+    .scale-options {
+      display: flex;
+      gap: 8px;
+    }
+    .scale-option {
+      flex: 1;
+      padding: 12px;
+      background: #f5f3f0;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .scale-option:hover { background: #fef3c7; color: #92400e; }
+    .scale-option.selected {
+      background: #f59e0b;
+      color: white;
+    }
+    .submit-btn {
+      display: block;
+      width: calc(100% - 70px);
+      margin: 0 35px 30px;
+      padding: 16px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+    }
+    .incentive {
+      margin: 0 35px 25px;
+      padding: 18px;
+      background: #fef3c7;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .incentive p {
+      font-size: 13px;
+      color: #92400e;
+    }
+    .incentive strong {
+      font-weight: 700;
+    }
+    .footer {
+      padding: 20px 35px;
+      background: #faf9f7;
+      text-align: center;
+    }
+    .footer p {
+      font-size: 11px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="feedback-form">
+    <div class="form-header">
+      <div class="avatar">&#128075;</div>
+      <h1>How was your visit?</h1>
+      <p>Your feedback helps us improve. Share your experience at our Downtown location and get rewarded.</p>
+    </div>
+
+    <div class="rating-section">
+      <div class="rating-label">Tap to rate your experience</div>
+      <div class="stars">
+        <div class="star filled">&#9733;</div>
+        <div class="star filled">&#9733;</div>
+        <div class="star filled">&#9733;</div>
+        <div class="star filled">&#9733;</div>
+        <div class="star">&#9733;</div>
+      </div>
+    </div>
+
+    <div class="questions">
+      <div class="question">
+        <label>What did you visit us for?</label>
+        <input type="text" placeholder="e.g., Annual physical, Flu symptoms, Blood work">
+      </div>
+
+      <div class="question">
+        <label>How likely are you to recommend us?</label>
+        <div class="scale-options">
+          <div class="scale-option">1</div>
+          <div class="scale-option">2</div>
+          <div class="scale-option selected">3</div>
+          <div class="scale-option">4</div>
+          <div class="scale-option">5</div>
+        </div>
+      </div>
+
+      <div class="question">
+        <label>Any additional comments?</label>
+        <textarea placeholder="Tell us about your experience..."></textarea>
+      </div>
+    </div>
+
+    <div class="incentive">
+      <p><strong>&#127873; Thank you!</strong> Complete this survey and receive 15% off your next visit.</p>
+    </div>
+
+    <button class="submit-btn">Submit Feedback</button>
+
+    <div class="footer">
+      <p>Your responses are confidential and help us serve you better.</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Wanderlust</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Clash Display', 'Inter', sans-serif;
+      background: #0f0f0f;
+      padding: 40px 20px;
+    }
+    .welcome-email {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #111;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #222;
+    }
+    .hero-section {
+      padding: 60px 40px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 60%),
+        #111;
+    }
+    .logo-text {
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    .logo-text span {
+      background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-section h1 {
+      font-size: 42px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.15;
+      margin-bottom: 18px;
+    }
+    .hero-section h1 .gradient {
+      background: linear-gradient(135deg, #f97316, #fb923c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-section p {
+      font-size: 16px;
+      color: rgba(255,255,255,0.6);
+      max-width: 420px;
+      margin: 0 auto 30px;
+      line-height: 1.7;
+    }
+    .verify-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+      color: white;
+      padding: 16px 40px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .verify-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(139, 92, 246, 0.3);
+    }
+    .member-card {
+      margin: 0 30px;
+      background: #1a1a1a;
+      border-radius: 16px;
+      padding: 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      border: 1px solid #2a2a2a;
+    }
+    .member-badge {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #f97316, #fb923c);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+    .member-info h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    .member-info p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+    .features-section {
+      padding: 40px 30px;
+    }
+    .features-title {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+    .feature-card {
+      background: #1a1a1a;
+      border-radius: 14px;
+      padding: 22px;
+      border: 1px solid #222;
+    }
+    .feature-icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+    .feature-card h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+    .feature-card p {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.5;
+    }
+    .quote-section {
+      margin: 0 30px 30px;
+      padding: 25px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(249, 115, 22, 0.1));
+      border-radius: 14px;
+      border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+    .quote-section p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.8);
+      font-style: italic;
+      line-height: 1.7;
+      text-align: center;
+    }
+    .quote-section .author {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 12px;
+      font-style: normal;
+      text-align: center;
+    }
+    .social-section {
+      padding: 30px;
+      text-align: center;
+      border-top: 1px solid #1a1a1a;
+    }
+    .social-label {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 18px;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    .social-link {
+      width: 44px;
+      height: 44px;
+      background: #1a1a1a;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .social-link:hover { background: #2a2a2a; }
+    .footer {
+      padding: 30px;
+      text-align: center;
+      border-top: 1px solid #1a1a1a;
+    }
+    .footer p {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+    }
+    .footer a {
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome-email">
+    <div class="hero-section">
+      <div class="logo-text">wander<span>lust</span></div>
+      <h1>Your adventure<br>begins <span class="gradient">now.</span></h1>
+      <p>Welcome to the community of 50,000+ travelers who explore the world differently. Let's make some unforgettable memories.</p>
+      <a href="#" class="verify-btn">Explore Now &#8594;</a>
+    </div>
+
+    <div class="member-card">
+      <div class="member-badge">&#127757;</div>
+      <div class="member-info">
+        <h3>Explorer Member</h3>
+        <p>You've unlocked exclusive access to curated trips</p>
+      </div>
+    </div>
+
+    <div class="features-section">
+      <div class="features-title">What awaits you</div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">&#128752;</div>
+          <h4>Curated Destinations</h4>
+          <p>Hand-picked experiences you won't find anywhere else</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128188;</div>
+          <h4>Insider Deals</h4>
+          <p>Up to 40% off on premium hotels and experiences</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128101;</div>
+          <h4>Travel Community</h4>
+          <p>Connect with fellow explorers and share stories</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128340;</div>
+          <h4>Smart Planning</h4>
+          <p>AI-powered itineraries built just for you</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote-section">
+      <p>"The world is a book, and those who do not travel read only one page."</p>
+      <div class="author">&#8212; Saint Augustine</div>
+    </div>
+
+    <div class="social-section">
+      <div class="social-label">Follow the journey</div>
+      <div class="social-links">
+        <a href="#" class="social-link">&#9654;</a>
+        <a href="#" class="social-link">&#9651;</a>
+        <a href="#" class="social-link">&#9679;</a>
+        <a href="#" class="social-link">&#9733;</a>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>&#169; 2026 Wanderlust Travel Co.<br>
+      <a href="#">Privacy</a> &bull; <a href="#">Terms</a> &bull; <a href="#">Preferences</a></p>
+    </div>
+  </div>
+</body>
+</html>

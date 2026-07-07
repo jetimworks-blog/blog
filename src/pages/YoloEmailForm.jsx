@@ -226,7 +226,9 @@ export const YoloEmailForm = () => {
     if (recipientName) clientPrompt += `Recipient name: ${recipientName}.\n`;
     clientPrompt += `Subject: ${formData.subject}.\n`;
     if (formData.selectedTemplate) {
-      clientPrompt += `Use this email template as the base structure and styling word-for-word. Preserve the exact HTML structure, inline CSS styles, class names, element hierarchy, and all design attributes. Only replace the text content with the user's message. You may add, remove, or modify elements based on the context of the user's message. Template: ${formData.selectedTemplate.html}\n`;
+      // Template is sent via html_template param, not client_prompt.
+      // Just provide injection context here.
+      clientPrompt += `Use the provided HTML template as the base layout. Fill in {{header}} with a relevant header/title based on the email content. Fill in {{body}} with the main email body content. Fill in {{footer}} with a footer (e.g., company name or unsubscribe link).\n`;
     }
     if (formData.noStyle) {
       clientPrompt += `Plain text professional email, no HTML styling, no decorative elements.\n`;
@@ -240,13 +242,20 @@ export const YoloEmailForm = () => {
   const handleGeneratePreview = async () => {
     setIsLoading(true);
     try {
-      const previewResponse = await emailAPI.execute({
+      const previewPayload = {
         process: 'gen',
         prompt: formData.prompt,
         client_prompt: buildClientPrompt(),
         client_category: 'yolo',
         style: !formData.noStyle,
-      });
+      };
+
+      // Inject HTML template if a template is selected
+      if (formData.selectedTemplate?.html) {
+        previewPayload.html_template = formData.selectedTemplate.html;
+      }
+
+      const previewResponse = await emailAPI.execute(previewPayload);
 
       if (!previewResponse?.data || typeof previewResponse.data !== 'object') {
         toast.error('Failed to generate preview', { description: 'Invalid server response.' });
@@ -273,13 +282,20 @@ export const YoloEmailForm = () => {
   const handleRegeneratePreview = async () => {
     setIsLoading(true);
     try {
-      const previewResponse = await emailAPI.execute({
+      const previewPayload = {
         process: 'gen',
         prompt: formData.prompt,
         client_prompt: buildClientPrompt(),
         client_category: 'yolo',
         style: !formData.noStyle,
-      });
+      };
+
+      // Inject HTML template if a template is selected
+      if (formData.selectedTemplate?.html) {
+        previewPayload.html_template = formData.selectedTemplate.html;
+      }
+
+      const previewResponse = await emailAPI.execute(previewPayload);
 
       if (!previewResponse?.data || typeof previewResponse.data !== 'object') {
         toast.error('Failed to regenerate preview', { description: 'Invalid server response.' });

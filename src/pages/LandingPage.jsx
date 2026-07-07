@@ -176,18 +176,11 @@ export const LandingPage = () => {
                     </Button>
                   </Link>
                 ) : (
-                  <>
-                    <Link to="/register">
-                      <Button size="lg" className="w-full sm:w-auto">
-                        Automate Your Emails
-                      </Button>
-                    </Link>
-                    <Link to="/login">
-                      <Button variant="secondary" size="lg" className="w-full sm:w-auto">
-                        Sign In
-                      </Button>
-                    </Link>
-                  </>
+                  <Link to="/register">
+                    <Button size="lg" className="w-full sm:w-auto">
+                      Automate Your Emails
+                    </Button>
+                  </Link>
                 )}
               </motion.div>
 

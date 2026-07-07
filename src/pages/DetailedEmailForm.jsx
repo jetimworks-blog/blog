@@ -488,7 +488,9 @@ export const DetailedEmailForm = () => {
     clientPrompt += `Subject: ${formData.subject}.\n`;
 
     if (formData.selectedTemplate) {
-      clientPrompt += `Use this email template as the base structure and styling word-for-word. Preserve the exact HTML structure, inline CSS styles, class names, element hierarchy, and all design attributes. Only replace the text content with the user's message. You may add, remove, or modify elements based on the context of the user's message. Template: ${formData.selectedTemplate.html}\n`;
+      // Template is sent via html_template param, not client_prompt.
+      // Just provide injection context here.
+      clientPrompt += `Use the provided HTML template as the base layout. Fill in {{header}} with a relevant header/title based on the email content. Fill in {{body}} with the main email body content. Fill in {{footer}} with a footer (e.g., company name or unsubscribe link). Fill in {{title}} with an appropriate page title.\n`;
     }
 
     if (useCustomTone && customTone.trim()) {
@@ -537,6 +539,11 @@ export const DetailedEmailForm = () => {
         client_category: 'detail',
         style: !formData.noStyle,
       };
+
+      // Inject HTML template if a template is selected
+      if (formData.selectedTemplate?.html) {
+        previewPayload.html_template = formData.selectedTemplate.html;
+      }
 
       const previewResponse = await emailAPI.execute(previewPayload);
 
@@ -590,6 +597,11 @@ export const DetailedEmailForm = () => {
         client_category: 'detail',
         style: !formData.noStyle,
       };
+
+      // Inject HTML template if a template is selected
+      if (formData.selectedTemplate?.html) {
+        previewPayload.html_template = formData.selectedTemplate.html;
+      }
 
       const previewResponse = await emailAPI.execute(previewPayload);
 

@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
-import { Menu, X, Mail, User, LogOut, Settings, History, Send, Shield } from 'lucide-react';
+import { Menu, X, Mail, User, LogOut, Settings, History, Send, Shield, Crown } from 'lucide-react';
 import { useState } from 'react';
 
 export const Navbar = () => {
@@ -17,7 +17,9 @@ export const Navbar = () => {
         { to: '/settings', label: 'Settings', icon: Settings },
         ...(user?.is_staff ? [{ to: '/admin', label: 'Admin', icon: Shield }] : []),
       ]
-    : [];
+    : [
+        { to: '/pricing', label: 'Pricing', icon: Crown },
+      ];
 
   const isActive = (path) => location.pathname === path;
 

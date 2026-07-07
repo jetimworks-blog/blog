@@ -27,6 +27,7 @@ import AdminCampaignsPage from './pages/admin/AdminCampaignsPage';
 import AdminEmailHistoryPage from './pages/admin/AdminEmailHistoryPage';
 import AdminRequestLogsPage from './pages/admin/AdminRequestLogsPage';
 import AdminStatsPage from './pages/admin/AdminStatsPage';
+import PricingPage from './pages/PricingPage';
 import { AdminProtectedRoute } from './components/admin/AdminProtectedRoute';
 
 function RedirectHandler() {
@@ -59,6 +60,7 @@ function App() {
 
           {/* Landing Page */}
           <Route path="/features" element={<LandingPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
 
           {/* Email Preview Page */}
           <Route path="/preview" element={<EmailPreviewPage />} />
