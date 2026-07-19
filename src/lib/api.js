@@ -111,34 +111,6 @@ export const healthAPI = {
   check: () => apiClient.get('/health'),
 };
 
-// Campaign API
-export const campaignAPI = {
-  // CRUD
-  create: (data) => apiClient.post('/campaigns/campaigns', data),
-  list: (limit = 20, offset = 0) =>
-    apiClient.get('/campaigns/campaigns', { params: { limit, offset } }),
-  get: (id) => apiClient.get(`/campaigns/campaigns/${id}`),
-  update: (id, data) => apiClient.put(`/campaigns/campaigns/${id}`, data),
-  delete: (id) => apiClient.delete(`/campaigns/campaigns/${id}`),
-
-  // Actions
-  upload: (id, file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    return apiClient.post(`/campaigns/campaigns/${id}/upload`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-  },
-  schedule: (id, data) => apiClient.post(`/campaigns/campaigns/${id}/schedule`, data),
-  send: (id) => apiClient.post(`/campaigns/campaigns/${id}/send`),
-  cancel: (id) => apiClient.post(`/campaigns/campaigns/${id}/cancel`),
-
-  // Data
-  recipients: (id, limit = 100, offset = 0) =>
-    apiClient.get(`/campaigns/campaigns/${id}/recipients`, { params: { limit, offset } }),
-  stats: (id) => apiClient.get(`/campaigns/campaigns/${id}/stats`),
-};
-
 // Email History API
 export const historyAPI = {
   getAll: (limit = 20, offset = 0) =>
@@ -153,14 +125,6 @@ export const adminAPI = {
     get: (id) => apiClient.get(`/admin/users/${id}`),
     update: (id, data) => apiClient.put(`/admin/users/${id}`, data),
     delete: (id) => apiClient.delete(`/admin/users/${id}`),
-  },
-
-  // Campaigns Management
-  campaigns: {
-    list: (params) => apiClient.get('/admin/campaigns', { params }),
-    get: (id) => apiClient.get(`/admin/campaigns/${id}`),
-    cancel: (id) => apiClient.post(`/admin/campaigns/${id}/cancel`),
-    delete: (id) => apiClient.delete(`/admin/campaigns/${id}`),
   },
 
   // Email History
@@ -181,7 +145,6 @@ export const adminAPI = {
     overview: () => apiClient.get('/admin/stats'),
     users: (params) => apiClient.get('/admin/stats/users', { params }),
     emails: (params) => apiClient.get('/admin/stats/emails', { params }),
-    campaigns: (params) => apiClient.get('/admin/stats/campaigns', { params }),
     leaderboard: (params) => apiClient.get('/admin/stats/leaderboard', { params }),
   },
 };

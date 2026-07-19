@@ -18,7 +18,6 @@ const defaultFunFacts = [
   "The average office worker receives 121 emails per day",
   "Email marketing has an average ROI of $42 for every $1 spent",
   "The first email was sent in 1971 by Ray Tomlinson",
-  "45% of email campaigns are opened on mobile devices",
   "Personalized emails improve click rates by 14%",
   "Tuesday is the most popular day to send marketing emails",
   "The subject line is the #1 factor in email open rates",

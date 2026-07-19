@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import {
   LayoutDashboard,
   Users,
-  Send,
   Mail,
   FileText,
   BarChart3,
@@ -14,7 +13,6 @@ import {
 const adminNavItems = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/admin/users', label: 'Users', icon: Users },
-  { to: '/admin/campaigns', label: 'Campaigns', icon: Send },
   { to: '/admin/email-history', label: 'Email History', icon: Mail },
   { to: '/admin/requests', label: 'Request Logs', icon: FileText },
   { to: '/admin/stats', label: 'Statistics', icon: BarChart3 },

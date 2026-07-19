@@ -16,14 +16,9 @@ import EmailResult from './pages/EmailResult';
 import EmailPreviewPage from './pages/EmailPreviewPage';
 import HistoryPage from './pages/HistoryPage';
 import SettingsPage from './pages/SettingsPage';
-import CampaignsPage from './pages/campaigns/CampaignsPage';
-import CampaignNewPage from './pages/campaigns/CampaignNewPage';
-import CampaignDetailPage from './pages/campaigns/CampaignDetailPage';
-import CampaignEditPage from './pages/campaigns/CampaignEditPage';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
-import AdminCampaignsPage from './pages/admin/AdminCampaignsPage';
 import AdminEmailHistoryPage from './pages/admin/AdminEmailHistoryPage';
 import AdminRequestLogsPage from './pages/admin/AdminRequestLogsPage';
 import AdminStatsPage from './pages/admin/AdminStatsPage';
@@ -117,38 +112,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/campaigns"
-            element={
-              <ProtectedRoute>
-                <CampaignsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/campaigns/new"
-            element={
-              <ProtectedRoute>
-                <CampaignNewPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/campaigns/:id"
-            element={
-              <ProtectedRoute>
-                <CampaignDetailPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/campaigns/:id/edit"
-            element={
-              <ProtectedRoute>
-                <CampaignEditPage />
-              </ProtectedRoute>
-            }
-          />
 
           {/* Admin Routes */}
           <Route
@@ -163,7 +126,6 @@ function App() {
           >
             <Route index element={<AdminDashboardPage />} />
             <Route path="users" element={<AdminUsersPage />} />
-            <Route path="campaigns" element={<AdminCampaignsPage />} />
             <Route path="email-history" element={<AdminEmailHistoryPage />} />
             <Route path="requests" element={<AdminRequestLogsPage />} />
             <Route path="stats" element={<AdminStatsPage />} />

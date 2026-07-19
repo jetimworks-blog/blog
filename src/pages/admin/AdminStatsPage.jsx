@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import {
   Users,
   Mail,
-  Send,
   Trophy,
   TrendingUp,
 } from 'lucide-react';
@@ -15,7 +14,6 @@ const tabs = [
   { id: 'overview', label: 'Overview', icon: TrendingUp },
   { id: 'users', label: 'Users', icon: Users },
   { id: 'emails', label: 'Emails', icon: Mail },
-  { id: 'campaigns', label: 'Campaigns', icon: Send },
   { id: 'leaderboard', label: 'Leaderboard', icon: Trophy },
 ];
 
@@ -25,25 +23,22 @@ export const AdminStatsPage = () => {
   const [stats, setStats] = useState(null);
   const [userStats, setUserStats] = useState([]);
   const [emailStats, setEmailStats] = useState([]);
-  const [campaignStats, setCampaignStats] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
     const fetchAllStats = async () => {
       try {
         setLoading(true);
-        const [statsRes, userRes, emailRes, campaignRes, leaderRes] = await Promise.all([
+        const [statsRes, userRes, emailRes, leaderRes] = await Promise.all([
           adminAPI.stats.overview(),
           adminAPI.stats.users({ days: 30 }),
           adminAPI.stats.emails({ days: 30 }),
-          adminAPI.stats.campaigns({ days: 30 }),
           adminAPI.stats.leaderboard({ limit: 10 }),
         ]);
 
         setStats(statsRes.data);
         setUserStats(userRes.data);
         setEmailStats(emailRes.data);
-        setCampaignStats(campaignRes.data);
         setLeaderboard(leaderRes.data);
       } catch (error) {
         toast.error('Failed to load statistics');
@@ -57,7 +52,7 @@ export const AdminStatsPage = () => {
 
   const renderOverview = () => (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -79,15 +74,6 @@ export const AdminStatsPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-surface-card border border-border rounded-2xl p-6"
-        >
-          <p className="text-sm text-text-muted font-medium">Total Campaigns</p>
-          <p className="text-3xl font-bold text-text-primary mt-2">{stats?.total_campaigns || 0}</p>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
           className="bg-surface-card border border-border rounded-2xl p-6"
         >
           <p className="text-sm text-text-muted font-medium">Emails Today</p>
@@ -204,64 +190,6 @@ export const AdminStatsPage = () => {
     </div>
   );
 
-  const renderCampaigns = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-surface-card border border-border rounded-2xl p-6"
-        >
-          <p className="text-sm text-text-muted font-medium">Total Campaigns</p>
-          <p className="text-3xl font-bold text-text-primary mt-2">
-            {campaignStats.reduce((acc, d) => acc + d.total, 0)}
-          </p>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-surface-card border border-border rounded-2xl p-6"
-        >
-          <p className="text-sm text-text-muted font-medium">Total Sent</p>
-          <p className="text-3xl font-bold text-green-400 mt-2">
-            {campaignStats.reduce((acc, d) => acc + d.sent, 0).toLocaleString()}
-          </p>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-surface-card border border-border rounded-2xl p-6"
-        >
-          <p className="text-sm text-text-muted font-medium">Total Failed</p>
-          <p className="text-3xl font-bold text-red-400 mt-2">
-            {campaignStats.reduce((acc, d) => acc + d.failed, 0).toLocaleString()}
-          </p>
-        </motion.div>
-      </div>
-
-      <StatChart
-        type="line"
-        data={campaignStats.map((d) => ({
-          date: d.date,
-          total: d.total,
-        }))}
-        title="Campaigns Created Over Time"
-      />
-
-      <StatChart
-        type="bar"
-        data={campaignStats.map((d) => ({
-          date: d.date,
-          sent: d.sent,
-          failed: d.failed,
-        }))}
-        title="Email Send Results"
-      />
-    </div>
-  );
-
   const renderLeaderboard = () => (
     <div className="space-y-6">
       <div className="bg-surface-card border border-border rounded-2xl overflow-hidden">
@@ -298,9 +226,7 @@ export const AdminStatsPage = () => {
               </div>
               <div className="text-right">
                 <p className="text-2xl font-bold text-accent">{user.total_sent.toLocaleString()}</p>
-                <p className="text-sm text-text-muted">
-                  {user.campaign_count} campaign{user.campaign_count !== 1 ? 's' : ''}
-                </p>
+                <p className="text-sm text-text-muted">emails sent</p>
               </div>
             </motion.div>
           ))}
@@ -322,8 +248,6 @@ export const AdminStatsPage = () => {
         return renderUsers();
       case 'emails':
         return renderEmails();
-      case 'campaigns':
-        return renderCampaigns();
       case 'leaderboard':
         return renderLeaderboard();
       default:
@@ -360,8 +284,8 @@ export const AdminStatsPage = () => {
       {/* Content */}
       {loading ? (
         <div className="space-y-6 animate-pulse">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {[1, 2, 3, 4].map((i) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
               <div key={i} className="h-32 bg-surface-card rounded-2xl" />
             ))}
           </div>

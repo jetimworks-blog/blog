@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Users,
-  Send,
   Mail,
-  TrendingUp,
   Activity,
 } from 'lucide-react';
 import { adminAPI } from '../../lib/api';
@@ -60,8 +58,8 @@ export const AdminDashboardPage = () => {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map((i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
             <div key={i} className="bg-surface-card border border-border rounded-2xl p-6 animate-pulse">
               <div className="h-4 w-24 bg-surface-elevated rounded mb-4" />
               <div className="h-8 w-16 bg-surface-elevated rounded" />
@@ -85,7 +83,7 @@ export const AdminDashboardPage = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <StatCard
           icon={Users}
           label="Total Users"
@@ -94,25 +92,18 @@ export const AdminDashboardPage = () => {
           delay={0}
         />
         <StatCard
-          icon={Send}
-          label="Total Campaigns"
-          value={stats?.total_campaigns || 0}
-          sublabel={`${stats?.active_campaigns || 0} active`}
-          delay={0.1}
-        />
-        <StatCard
           icon={Mail}
           label="Emails Sent Today"
           value={stats?.today_emails || 0}
           sublabel="Last 24 hours"
-          delay={0.2}
+          delay={0.1}
         />
         <StatCard
           icon={Activity}
           label="System Status"
           value="Healthy"
           sublabel="All systems operational"
-          delay={0.3}
+          delay={0.2}
         />
       </div>
 
