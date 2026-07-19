@@ -16,8 +16,20 @@ const applyTheme = (theme) => {
   document.documentElement.setAttribute('data-theme', effectiveTheme);
 };
 
+// Apply the default theme synchronously so users don't see a flash of light theme
+// before the React effect runs.
+if (typeof document !== 'undefined') {
+  const initialStored = typeof localStorage !== 'undefined'
+    ? localStorage.getItem(STORAGE_KEY)
+    : null;
+  const initialTheme = (initialStored === 'light' || initialStored === 'dark' || initialStored === 'system')
+    ? initialStored
+    : 'dark';
+  applyTheme(initialTheme);
+}
+
 export const ThemeProvider = ({ children }) => {
-  const [theme, setThemeState] = useState('system');
+  const [theme, setThemeState] = useState('dark');
   const [mounted, setMounted] = useState(false);
 
   // Initialize theme from localStorage on mount
